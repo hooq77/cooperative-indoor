@@ -12,7 +12,7 @@ var io = {
 describe('MapHandler', function() {
   var mapHandlerService, map, drawnItems;
 
-  beforeEach(module('CollaborativeMap'));
+  beforeEach(module('CooperativeIndoorMap'));
 
   beforeEach(inject(function(MapHandler) {
     mapHandlerService = MapHandler;

@@ -10,7 +10,7 @@ describe('Service: Users', function() {
 
   // load the service's module
   beforeEach(function() {
-    module('CollaborativeMap');
+    module('CooperativeIndoorMap');
 
     inject(function(Users) {
       UsersService = Users;

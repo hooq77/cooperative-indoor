@@ -1,17 +1,17 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Toolbox directive for all sidebar related functions (User, Tools, History, Help).
  *
  * @requires $compile
  * @requires MapHandler
  *
- * @exports CollaborativeMap.toolbox
+ * @exports CooperativeIndoorMap.toolbox
  *
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .directive('toolbox', ['$compile', 'MapHandler','Users',
     function($compile, MapHandler, Users) {
       return {

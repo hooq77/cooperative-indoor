@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Leaflet map directive.
  * Initializes the map.
  * Loads already existing features from the Database.
  * Initializes the map Synchronization and the MapHandler
- * @exports CollaborativeMap.MapDirective
+ * @exports CooperativeIndoorMap.MapDirective
  *
  * @requires  ApiService
  * @requires MapHandler
@@ -14,7 +14,7 @@
  *
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .directive('map', ['MapHandler', 'SynchronizeMap', 'ApiService', 'DataImport',
     function(MapHandler, SynchronizeMap, ApiService, DataImport) {
       var mapLoadingDiv;

@@ -1,8 +1,8 @@
 'use strict';
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Directive which to handle feature properties. Allows adding/editing/deleting properties
- * @exports CollaborativeMap.FeaturePropertiesDirective *
+ * @exports CooperativeIndoorMap.FeaturePropertiesDirective *
  *
  * @requires  $compile
  * @requires ApiService
@@ -10,7 +10,7 @@
  *
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .directive('featureproperties', ['$compile', 'MapHandler', 'ApiService',
     function($compile, MapHandler, ApiService) {
 

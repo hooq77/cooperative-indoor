@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .controller('StartCtrl', ['$scope', '$rootScope', '$location', 'Utils', 'TesterService',
     function($scope, $rootScope, $location, Utils, TesterService) {
 

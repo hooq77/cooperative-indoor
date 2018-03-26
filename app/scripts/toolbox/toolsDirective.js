@@ -1,16 +1,16 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Tools directive. Provides GUI functionality to various tools (import/export)
- * @exports CollaborativeMap.tools
+ * @exports CooperativeIndoorMap.tools
  *
  * @requires MapHandler
  * @requires DataImport
  *
  * @author Norwin Roosen
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .directive('tools', ['DataImport',
     function(DataImport) {
       return {

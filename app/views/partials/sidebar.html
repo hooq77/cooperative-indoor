@@ -3,11 +3,11 @@
     <div class="sidebar-tabs">
         <ul role="tablist">
             <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-            <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
-            <li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>
-            <li><a href="https://github.com/Turbo87/sidebar-v2" role="tab" target="_blank"><i class="fa fa-github"></i></a></li>
+            <li><a href="#user" role="tab" id="message"><i class="fa fa-user"></i></a></li>
+            <li><a href="#history" role="tab"><i class="fa fa-code-fork"></i></a></li>
+            <li><a href="#propertis" role="tab"><i class="fa fa-tags"></i></a></li>
+            <li><a href="#tools" role="tab"> <i class="fa fa-wrench"></i></a></li>
         </ul>
-
         <ul role="tablist">
             <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
         </ul>
@@ -16,32 +16,48 @@
     <!-- Tab panes -->
     <div class="sidebar-content">
         <div class="sidebar-pane" id="home">
-            <h1 class="sidebar-header">
-                sidebar-v2
-                <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-            </h1>
+            <h1 class="sidebar-header">室内地图协同编辑器<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            欢迎使用室内地图协同编辑器，祝你使用愉快
+        </div>
+        <div class="sidebar-pane" id="user">
+            <h1 class="sidebar-header">用户<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            <div class="sidebar-body">
+                <div class="btn btn-default" ng-class="{'watching': isWatchingAll}" ng-click="watchAll()"
+                     title="Your map will automatically change if other users zoom or pan in their map so you can see what they are editing.">
+                    追踪所有用户视图
+                </div>
+                <div class="btn btn-default" ng-click="getAllUserBounds()" style="position: absolute; right: 0;"
+                     title="Displays the map extent of all users.">显示所有用户工作区
+                </div>
 
-            <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
-
-            <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-
-            <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-
-            <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-
-            <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <div ng-repeat="(key, value) in users">
+                    <span ng-if="value.name !== userName" style="display: inline-block;">
+                        <div class="btn btn-default" ng-class="{'watching': watchUsers[key]}"
+                             ng-click="watchUser(key, $event)"
+                             title="Your map will automatically change if the user zooms or pans in the map.">追踪视图 </div>
+                        <div class="btn btn-default" ng-click="getUserBounds(key)"
+                             title="Displays the map extent the user is currently able to see.">显示工作区</div>
+                        <span style="border-left: solid {{value.color}}; padding-left: 3px; display: inline-block;">{{value.name}}</span>
+                    </span>
+                </div>
+                <message></message>
+            </div>
         </div>
 
-        <div class="sidebar-pane" id="profile">
-            <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+        <div class="sidebar-pane" id="history">
+            <h1 class="sidebar-header">历史<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
         </div>
 
-        <div class="sidebar-pane" id="messages">
-            <h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+        <div class="sidebar-pane" id="propertis">
+            <h1 class="sidebar-header">属性<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+        </div>
+
+        <div class="sidebar-pane" id="tools">
+            <h1 class="sidebar-header">工具<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
         </div>
 
         <div class="sidebar-pane" id="settings">
-            <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            <h1 class="sidebar-header">设置<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
         </div>
     </div>
 </div>

@@ -1,11 +1,11 @@
 'use strict';
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Handles the WebSocket connection for the map synchronization (map movements, draw events)
- * @exports CollaborativeMap.SynchronizeMap
+ * @exports CooperativeIndoorMap.SynchronizeMap
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .service('SynchronizeMap', ['MapMovementEvents', 'MapDrawEvents', 'Socket', 'MapHandler', 'Users',
     function(MapMovementEvents, MapDrawEvents, Socket, MapHandler, Users) {
 

@@ -1,16 +1,16 @@
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Data import directive.
  * Provides import functionality to the map.
  * Supported formats are currently: GeoJSON
- * @exports CollaborativeMap.DataImport
+ * @exports CooperativeIndoorMap.DataImport
  *
  * @author Norwin Roosen
  */
 
 'use strict';
 
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .service('DataImport', ['MapHandler', 'Utils',
     function(MapHandler, Utils) {
 

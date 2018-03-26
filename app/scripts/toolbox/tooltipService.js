@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Show/hide a tooltip and update it's position.
- * @exports CollaborativeMap.tooltip
+ * @exports CooperativeIndoorMap.tooltip
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .service('Tooltip', [
     function() {
 

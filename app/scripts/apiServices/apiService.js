@@ -1,16 +1,16 @@
 'use strict';
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Provides functions for different API requests.
  * Methods exist for: map history, feature history, preset data, and map features
- * @exports CollaborativeMap.ApiService
+ * @exports CooperativeIndoorMap.ApiService
  *
  * @requires $http
  * @requires $q
  *
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .service('ApiService', ['$http', '$q',
     function($http, $q) {
 

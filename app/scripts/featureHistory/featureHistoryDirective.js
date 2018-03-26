@@ -1,16 +1,16 @@
 'use strict';
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview History diretctive. Shows the history of a single feature within a bootstrap modal. Allows reverting features.
  * Shows diffs either as a map view or as a textual diff.
- * @exports CollaborativeMap.History
+ * @exports CooperativeIndoorMap.History
  *
  * @requires ApiService
  * @requires MapHandler
  *
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .directive('featureHistory', ['MapHandler', 'ApiService',
     function(MapHandler, ApiService) {
 

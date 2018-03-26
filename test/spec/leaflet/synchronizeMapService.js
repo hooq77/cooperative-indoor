@@ -19,7 +19,7 @@ var io = {
 describe('SynchronizeMap', function() {
   var synchronizeMapService, map, drawnItems;
 
-  beforeEach(module('CollaborativeMap'));
+  beforeEach(module('CooperativeIndoorMap'));
 
   beforeEach(inject(function(SynchronizeMap) {
     synchronizeMapService = SynchronizeMap;

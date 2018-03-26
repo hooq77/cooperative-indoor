@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Util factory.
- * @exports CollaborativeMap.MapHandler
+ * @exports CooperativeIndoorMap.MapHandler
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap').
+angular.module('CooperativeIndoorMap').
   factory('Utils', function() {
     return {
 

@@ -1,11 +1,11 @@
 'use strict';
 
 /**
- * @fileOverview Initializes the CollaborativeMap module
+ * @fileOverview Initializes the CooperativeIndoorMap module
  * @author Dennis Wilhelm
- * @namespace CollaborativeMap
+ * @namespace CooperativeIndoorMap
  */
-angular.module('CollaborativeMap', [
+angular.module('CooperativeIndoorMap', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
@@ -21,10 +21,6 @@ angular.module('CollaborativeMap', [
       .when('/map/:mapid', {
         templateUrl: 'partials/main',
         controller: 'MainCtrl'
-      })
-      .when('/about', {
-        templateUrl: 'partials/about',
-        controller: 'AboutCtrl'
       })
       .otherwise({
         redirectTo: '/'

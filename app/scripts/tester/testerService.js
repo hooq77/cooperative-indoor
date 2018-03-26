@@ -1,14 +1,14 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Tester factory which connects to a WebSocket Stream.
  * Helps testing the software on multiple computers by loading the correct map on all machines, toogles the watchAll variable.
  * Should be removed before used in production!
- * @exports CollaborativeMap.TesterService
+ * @exports CooperativeIndoorMap.TesterService
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap').
+angular.module('CooperativeIndoorMap').
 factory('TesterService', ['Socket',
   function(Socket) {
 

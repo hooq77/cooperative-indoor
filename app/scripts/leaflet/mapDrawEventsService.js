@@ -1,18 +1,18 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  *
  * @fileOverview Adds listeners for all leaflet specific draw events.
  *
  * Adds click handlers for new features (through the MapHandler).
  * Edit/delete events call a Callback (further handling is done in the SynchronizeMapService)
  *
- * @exports CollaborativeMap.MapHandler
+ * @exports CooperativeIndoorMap.MapHandler
  * @requires  MapHandler
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .service('MapDrawEvents', ['MapHandler',
     function(MapHandler) {
 

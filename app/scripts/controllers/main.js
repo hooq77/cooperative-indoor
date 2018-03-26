@@ -1,13 +1,13 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Main controller of the app. 
  * Initializes the TesterService (remove before using in production!)
- * @exports CollaborativeMap.MainCtrl
+ * @exports CooperativeIndoorMap.MainCtrl
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .controller('MainCtrl', ['$scope', '$rootScope', '$routeParams',
     function($scope, $rootScope, $routeParams) {
 

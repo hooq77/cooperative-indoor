@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * @memberof CollaborativeMap
+ * @memberof CooperativeIndoorMap
  * @fileOverview Chat directive. Provides the GUI functionality as well as the WebSocket connection for the chat.
- * @exports CollaborativeMap.chat
+ * @exports CooperativeIndoorMap.chat
  *
  * @requires Socket
  * @requires MapHandler
@@ -11,7 +11,7 @@
  *
  * @author Dennis Wilhelm
  */
-angular.module('CollaborativeMap')
+angular.module('CooperativeIndoorMap')
   .directive('chat', ['Socket', 'MapHandler', 'Tooltip',
     function(Socket, MapHandler, Tooltip) {
 
