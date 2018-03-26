@@ -180,7 +180,7 @@ module.exports.getFeaturesStream = function(mapId, resultStream) {
 /**
  * Gets all map actions from the database
  * @param  {String}   mapId    the map id
- * @param  {Function} callback callback(error, actions)
+ * @param  {Function} resultStream result stream
  */
 module.exports.getActionsStream = function(mapId, resultStream) {
   if (mapId) {

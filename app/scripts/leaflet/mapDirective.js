@@ -67,39 +67,44 @@ angular.module('CollaborativeMap')
 
       return {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
-        template: '<div id="map"></div>',
+        template: '<div id="map" class="sidebar-map"></div>',
         replace: true,
         scope: {
           mapId: '=mapid'
         },
         // transclude: true,
         link: function postLink($scope) {
-
+          var normal = L.tileLayer('http://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}', {
+              maxZoom: 22,
+              minZoom: 5
+          });
+          var satellite = L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
+              maxZoom: 20,
+              minZoom: 5
+          });
+          var baseLayers = {
+              '地图': normal,
+              '影像': satellite
+          };
           //expose map for debugging purposes
-          //var map = window._map = L.mapbox.map('map', 'dnns.h8dkb1bh');
-          var map = window._map = L.mapbox.map('map')
-            .setView([51.95577098349905, 7.635455131530762], 14);
+          var map = window._map = L.map('map', {
+              center: [30.50891, 114.40718],
+              // center: [49.41873, 8.67689],
+              zoom: 18,
+              layers: [normal],
+              zoomControl: false
+          });
 
-
-          var mapLink = '<a href="http://www.esri.com/">Esri</a>';
-          var wholink = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
-          var aerial = L.tileLayer(
-            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-              maxZoom: 18,
-              attribution: '&copy; ' + mapLink + ', ' + wholink
-            });
-
-          //var osm = L.tileLayer('http://{s}.tiles.mapbox.com/v3/dnns.tm2-basemap/{z}/{x}/{y}.png').addTo(map);
-          var osm = L.mapbox.tileLayer('dnns.tm2-basemap').addTo(map);
-
-          L.control.layers({
-            'Aerial': aerial,
-            'OpenStreetMap': osm
-          }, {}, {
-            position: 'topleft'
+          L.control.zoom({
+              zoomInTitle: '放大',
+              zoomOutTitle: '缩小',
+              position: 'topleft'
           }).addTo(map);
 
-          map.infoControl.setPosition('bottomleft');
+          L.control.layers(baseLayers, {}, {
+            position: 'bottomleft'
+          }).addTo(map);
+
           // Initialise the FeatureGroup to store editable layers
           var drawnItems = window.drawnItems = new L.FeatureGroup();
           map.addLayer(drawnItems);
@@ -110,8 +115,9 @@ angular.module('CollaborativeMap')
             draw: {
               circle: false,
               rectangle: false,
+              circlemarker: false,
               marker: {
-                icon: L.mapbox.marker.icon({})
+                icon: L.icon({})
               },
               polyline: {
                 shapeOptions: {

@@ -1,4 +1,4 @@
-var couchdb = require('../lib/couchdb.js');
+var couchdb = require('../server/couchdb.js');
 var nano = require('nano')('http://localhost:5984')
 
 function getOrCreateDb(name, callback) {

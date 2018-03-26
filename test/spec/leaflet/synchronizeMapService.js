@@ -30,7 +30,7 @@ describe('SynchronizeMap', function() {
     //Create the map element
     var element = document.createElement('div');
     /*global L:false */
-    map = L.mapbox.map(element);
+    map = L.map(element);
     drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
   });

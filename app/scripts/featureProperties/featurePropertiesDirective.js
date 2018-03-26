@@ -43,8 +43,6 @@ angular.module('CollaborativeMap')
            */
           $scope.selectFeature = function(feature, editByUser) {
 
-            //TODO: filter simplestyle spec items: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
-
             //jshint camelcase:false
             activateToolbox();
 

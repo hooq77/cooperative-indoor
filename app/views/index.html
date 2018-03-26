@@ -22,15 +22,18 @@
   <!-- endbower -->
   <!-- endbuild -->
   <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
-  <link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css' rel='stylesheet' />
-  <link rel='stylesheet' href='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.css' />
+  <link href='https://cdn.bootcss.com/leaflet/1.3.1/leaflet.css' rel='stylesheet' />
+  <link rel='stylesheet' href='https://cdn.bootcss.com/leaflet.draw/1.0.2/leaflet.draw-src.css' />
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="asset/sidebar/css/leaflet-sidebar.css">
 
   <!-- build:css({.tmp,app}) styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild -->
 
-  <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
-  <script src='//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.2.3/leaflet.draw.js'></script>
+  <script src="https://cdn.bootcss.com/leaflet/1.3.1/leaflet-src.js"></script>
+  <script src='https://cdn.bootcss.com/leaflet.draw/1.0.2/leaflet.draw-src.js'></script>
+  <script src="/asset/sidebar/js/leaflet-sidebar.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -47,7 +50,6 @@
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-
   <!-- Add your site or application content here -->
   <div class="map-container" ng-view=""></div>
 
@@ -85,6 +87,7 @@
   <script src="scripts/socketio/socketio.js"></script>
   <script src="scripts/socketio/socketStatusDirective.js"></script>
   <script src="scripts/leaflet/mapDirective.js"></script>
+  <script src="scripts/leaflet/sidebarDirective.js"></script>
   <script src="scripts/leaflet/mapHandlerService.js"></script>
   <script src="scripts/leaflet/mapMovementEventsService.js"></script>
   <script src="scripts/leaflet/mapDrawEventsService.js"></script>

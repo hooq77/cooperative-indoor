@@ -17,8 +17,8 @@ module.exports = function(config) {
       'app/bower_components/angular-cookies/angular-cookies.js',
       'app/bower_components/angular-sanitize/angular-sanitize.js',
       'app/bower_components/angular-route/angular-route.js',
-      // 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.2.3/leaflet.draw.js',
-      'https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js',
+      // 'https://cdn.bootcss.com/leaflet.draw/1.0.2/leaflet.draw-src.js',
+      // 'https://cdn.bootcss.com/leaflet/1.3.1/leaflet-src.js',
       'app/scripts/*.js',
       'app/scripts/**/*.js',
       'test/spec/**/*.js'

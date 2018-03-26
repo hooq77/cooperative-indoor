@@ -12,6 +12,8 @@ module.exports = function(grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
+  grunt.loadNpmTasks('grunt-wiredep');
+
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -30,7 +32,7 @@ module.exports = function(grunt) {
       },
       dev: {
         options: {
-          script: 'server.js',
+          script: 'server/index.js',
           debug: true
         }
       },
@@ -79,8 +81,8 @@ module.exports = function(grunt) {
       },
       express: {
         files: [
-          'server.js',
-          'lib/**/*.{js,json}'
+          'server/index.js',
+          'server/**/*.{js,json}'
         ],
         tasks: ['newer:jshint:server', 'express:dev', 'wait'],
         options: {
@@ -98,9 +100,9 @@ module.exports = function(grunt) {
       },
       server: {
         options: {
-          jshintrc: 'lib/.jshintrc'
+          jshintrc: 'server/.jshintrc'
         },
-        src: ['lib/{,*/}*.js']
+        src: ['server/{,*/}*.js']
       },
       all: [
         '<%= yeoman.app %>/scripts/{,*/}*.js'
@@ -123,16 +125,6 @@ module.exports = function(grunt) {
             '<%= yeoman.dist %>/views/*',
             '<%= yeoman.dist %>/public/*',
             '!<%= yeoman.dist %>/public/.git*',
-          ]
-        }]
-      },
-      heroku: {
-        files: [{
-          dot: true,
-          src: [
-            'heroku/*',
-            '!heroku/.git*',
-            '!heroku/Procfile'
           ]
         }]
       },
@@ -270,7 +262,6 @@ module.exports = function(grunt) {
           dest: '<%= yeoman.dist %>/public',
           src: [
             '*.{ico,png,txt}',
-            '.htaccess',
             'bower_components/**/*',
             'images/{,*/}*.{webp}',
             'fonts/**/*'
@@ -291,8 +282,7 @@ module.exports = function(grunt) {
           dest: '<%= yeoman.dist %>',
           src: [
             'package.json',
-            'server.js',
-            'lib/**/*'
+              'server/**/*'
           ]
         }]
       },
@@ -357,7 +347,7 @@ module.exports = function(grunt) {
 
     jsdoc: {
       dist: {
-        src: ['./lib/**/*.js', './app/scripts/**/*.js'],
+        src: ['./server/**/*.js', './app/scripts/**/*.js'],
         options: {
           destination: 'doc'
         }
@@ -374,15 +364,10 @@ module.exports = function(grunt) {
       },
       'server': {
         files: {
-          'lib': ['*.js', './**/*.json'],
-          './': ['server.js']
+          'server': ['*.js', './**/*.json']
         }
       }
     }
-
-
-
-
   });
 
   // Used for delaying livereload until after server has restarted
@@ -408,18 +393,13 @@ module.exports = function(grunt) {
 
     grunt.task.run([
       'clean:server',
-      'bower-install',
+      'grunt-wiredep',
       'concurrent:server',
       'autoprefixer',
       'express:dev',
       'open',
       'watch'
     ]);
-  });
-
-  grunt.registerTask('server', function() {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve']);
   });
 
   grunt.registerTask('test', [
@@ -431,7 +411,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'bower-install',
+    'grunt-wiredep',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
@@ -446,11 +426,6 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('docs', ['clean:docs', 'jsdoc']);
-
-  grunt.registerTask('heroku', function() {
-    grunt.log.warn('The `heroku` task has been deprecated. Use `grunt build` to build for deployment.');
-    grunt.task.run(['build']);
-  });
 
   grunt.registerTask('default', [
     'newer:jshint',

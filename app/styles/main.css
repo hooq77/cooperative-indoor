@@ -430,21 +430,21 @@ select {
   background-color: #E0DFDF;
 }
 .polygonFeature {
-  background-image: url('http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/images/spritesheet.png');
+  background-image: url('https://cdn.bootcss.com/leaflet.draw/1.0.2/images/spritesheet.png');
   background-repeat: no-repeat;
   background-position: -35px -6px;
   height: 20px;
   width: 20px;
 }
 .lineFeature {
-  background-image: url('http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/images/spritesheet.png');
+  background-image: url('https://cdn.bootcss.com/leaflet.draw/1.0.2/images/spritesheet.png');
   background-repeat: no-repeat;
   background-position: -5px -6px;
   height: 20px;
   width: 20px;
 }
 .markerFeature {
-  background-image: url('http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/images/spritesheet.png');
+  background-image: url('https://cdn.bootcss.com/leaflet.draw/1.0.2/images/spritesheet.png');
   background-repeat: no-repeat;
   background-position: -125px -6px;
   height: 20px;

@@ -428,19 +428,19 @@ angular.module('CollaborativeMap')
         },
 
         /**
-         * Creates Leaflet geojson layers with the Mapbox SimpleStyle specification
+         * Creates Leaflet geojson layers with the SimpleStyle specification
          * @param  {Object} geojson feature
          * @return {Object} leaflet layer
          */
         createSimpleStyleGeoJSONFeature: function(geoJsonFeature) {
           return L.geoJson(geoJsonFeature, {
-            style: L.mapbox.simplestyle.style,
-            pointToLayer: function(feature, latlon) {
-              if (!feature.properties) {
-                feature.properties = {};
-              }
-              return L.mapbox.marker.style(feature, latlon);
-            }
+            // style: L.mapbox.simplestyle.style,
+            // pointToLayer: function(feature, latlon) {
+            //   if (!feature.properties) {
+            //     feature.properties = {};
+            //   }
+            //   return L.mapbox.marker.style(feature, latlon);
+            // }
           });
         },
 

@@ -21,7 +21,7 @@ describe('MapHandler', function() {
   beforeEach(function() {
     var element = document.createElement('div');
     /*global L:false */
-    map = L.mapbox.map(element);
+    map = L.map(element);
     drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
   });
