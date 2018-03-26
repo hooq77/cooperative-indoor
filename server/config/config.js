@@ -2,13 +2,11 @@
 
 var _ = require('lodash');
 var path = require('path');
-
-var rootPath = path.normalize(__dirname + '/../..');
-
 var common = {
-    root: rootPath,
+    root: path.normalize(__dirname + '/../..'),
     port: process.env.PORT || 3000
-}
+};
+
 /**
  * Load environment configuration
  */

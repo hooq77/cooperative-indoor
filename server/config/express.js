@@ -1,8 +1,12 @@
 'use strict';
 
-var express = require('express'),
-    path = require('path'),
-    config = require('./config');
+var express = require('express');
+var path = require('path');
+var config = require('./config');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
 /**
  * Express configuration
@@ -13,7 +17,7 @@ module.exports = function(app) {
       // livereload is incompatible with the current method
       // of streaming data from the API for some maps.
       // see https://github.com/mscdex/busboy/issues/79#issuecomment-108684031
-      ignore: [/api/],
+      ignore: [/api/]
     }));
 
     // Disable caching of scripts for easier testing
@@ -25,28 +29,25 @@ module.exports = function(app) {
       }
       next();
     });
-    app.use(express.compress());
+    app.use(favicon(path.join(config.root, 'app', 'favicon.ico')));
     app.use(express.static(path.join(config.root, '.tmp')));
     app.use(express.static(path.join(config.root, 'app')));
-    app.use(express.errorHandler());
     app.set('views', config.root + '/app/views');
   }
 
   if(app.get('env') === 'production'){
-    app.use(express.favicon(path.join(config.root, 'public', 'favicon.ico')));
-    app.use(express.compress());
+    app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
     app.use(express.static(path.join(config.root, 'public')));
     app.set('views', config.root + '/views');
   }
 
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
-  app.use(express.logger('dev'));
-  app.use(express.json());
-  app.use(express.urlencoded());
-  app.use(express.methodOverride());
+  app.use(logger('dev'));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(cookieParser());
   // Router needs to be last
-  app.use(app.router);
 
 };
 

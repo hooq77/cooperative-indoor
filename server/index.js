@@ -1,16 +1,12 @@
 'use strict';
 
 var express = require('express');
-
+var http = require('http');
 //Catch all errors so that the node app won't crash
 process.on('uncaughtException', function (err) {
   console.error(err);
   console.log('Node NOT Exiting...');
 });
-
-/**
- * Main application file
- */
 
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -20,16 +16,17 @@ var config = require('./config/config');
 
 var app = express();
 
-// Express settings
+// Express
 require('./config/express')(app);
 
 // Routing
 require('./routes')(app);
 
+var server = http.createServer(app);
+server.listen(config.port);
 
-//WebSocket   Starts the
-var websocketServer = require('./socketio')(app);
-websocketServer.listen(config.port);
+//WebSocket
+require('./socketio')(server);
 
 
 console.log('Express server listening on port %d in %s mode', config.port, app.get('env'));

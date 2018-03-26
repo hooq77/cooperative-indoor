@@ -1,28 +1,12 @@
-var http = require('http'),
-  couchdbHandler = require('./dbHandler.js');
+var couchdbHandler = require('./dbHandler.js');
 
 /**
  * Initializes the Websocket listeners.
- * @param  {Object} app The express app
+ * @param  {Object} server The httpServer
  * @return {Object}     Websocket http server
  */
-module.exports = function(app) {
-
-  var server = http.createServer(app);
+module.exports = function(server) {
   var socketIO = require('socket.io').listen(server);
-
-  // socketIO.enable('browser client minification'); // send minified client
-  // socketIO.enable('browser client etag'); // apply etag caching logic based on version number
-  // socketIO.enable('browser client gzip'); // gzip the file
-  // socketIO.set('log level', 1); // reduce logging
-
-  // enable all transports (optional if you want flashsocket support, please note that some hosting
-  // providers do not allow you to create servers that listen on a port different than 80 or their
-  // default port)
-  // socketIO.set('transports', [
-  //   'websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling'
-  // ]);
-
   var maps = {};
 
   socketIO.sockets.on('connection', function(socket) {
@@ -172,6 +156,4 @@ module.exports = function(app) {
       }
     });
   });
-
-  return server;
 };

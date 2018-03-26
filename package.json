@@ -4,12 +4,17 @@
   "description": "Cooperative, version controlled indoor map editor",
   "author": "Huqiang",
   "dependencies": {
-    "express": "~3.21.1",
     "lodash": "~2.4.1",
     "ejs": "~0.8.4",
     "socket.io": "~2.0.4",
     "nano": "^6.4.3",
-    "q": "^1.0.1"
+    "q": "^1.0.1",
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "express": "~4.15.5",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
