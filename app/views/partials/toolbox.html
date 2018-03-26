@@ -1,0 +1,37 @@
+<div>
+  <div class="toolbox-buttons">
+    <input type="button" class="btn btn-dark" ng-click="toggleToolbar('userView')" value="Users" data-intro='Shows all users within this map and provides a chat function. The watch function within this tab allows you to keep the current map synchronized with another user. <br><a href="images/users.gif" target="_blank">Demo</a>' data-step="2">
+    <input type="button" class="btn btn-dark" ng-click="toggleToolbar('historyView')" value="History" data-intro='Shows all actions performed in this map.<br><a href="images/history.gif" target="_blank">Demo</a>' data-step="3">
+    <input type="button" class="btn btn-dark" ng-click="toggleToolbar('propertiesView')" value="Feature" data-intro='Edit or delete the properties of a single feature within the map. This view will automatically open if you click on a feature in the map.<br><a href="images/feature.gif" target="_blank">Demo</a>' data-step="4">
+    <input type="button" class="btn btn-dark" ng-click="toggleToolbar('toolsView')" value="Tools" data-intro='Shows various tools (data import/export).' data-step="5">
+    <input type="button" class="btn btn-dark" ng-click="startIntroJS()" value="Help">
+  </div>
+  <div id="toolbox" class="toolbox animate-slideIn" ng-class="{'zeroWidth':views.toolBarIn}">
+
+    <div class="toolbox-content" ng-class="{'hide': views.userView}">
+      <div class="users">
+        <div class="btn btn-default" ng-class="{'watching': isWatchingAll}" ng-click="watchAll()" title="Your map will automatically change if other users zoom or pan in their map so you can see what they are editing.">Watch all</div>
+        <div class="btn btn-default" ng-click="getAllUserBounds()" title="Displays the map extent of all users.">Show all Workareas</div>
+
+        <div ng-repeat="(key, value) in users">
+          <span ng-if="value.name !== userName" style="display: inline-block;">
+            <div class="btn btn-default" ng-class="{'watching': watchUsers[key]}" ng-click="watchUser(key, $event)" title="Your map will automatically change if the user zooms or pans in the map.">Watch</div>
+            <div class="btn btn-default" ng-click="getUserBounds(key)" title="Displays the map extent the user is currently able to see.">Show Workarea</div>
+            <span style="border-left: solid {{value.color}}; padding-left: 3px; display: inline-block;">{{value.name}}</span>
+          </span>
+        </div>
+      </div>
+      <chat></chat>
+
+    </div>
+    <div class="toolbox-content" ng-class="{'hide': views.historyView}">
+      <map-history></map-history>
+    </div>
+    <div class="toolbox-content" ng-class="{'hide': views.propertiesView}">
+      <featureproperties></featureproperties>
+    </div>
+    <div class="toolbox-content" ng-class="{'hide': views.toolsView}">
+      <tools></tools>
+    </div>
+  </div>
+</div>

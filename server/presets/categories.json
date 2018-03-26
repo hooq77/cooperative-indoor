@@ -1,0 +1,182 @@
+{
+  "category-building": {
+    "geometry": "area",
+    "name": "Building",
+    "icon": "building",
+    "members": [
+      "building/house",
+      "building/apartments",
+      "building/commercial",
+      "building/industrial",
+      "building/residential",
+      "building"
+    ],
+    "style": {
+      "stroke": "#F00",
+      "fill": "#F00"
+    }
+  },
+  "category-landuse": {
+    "geometry": "area",
+    "name": "Land Use",
+    "icon": "land-use",
+    "members": [
+      "landuse/residential",
+      "landuse/industrial",
+      "landuse/commercial",
+      "landuse/retail",
+      "landuse/farm",
+      "landuse/farmyard",
+      "landuse/forest",
+      "landuse/meadow",
+      "landuse/cemetery",
+      "landuse/military"
+    ],
+    "style": {
+      "stroke": "rgba(140, 208, 95, 0.9)",
+      "fill": "rgba(140, 208, 95, 0.7)"
+    }
+  },
+  "category-path": {
+    "geometry": "line",
+    "name": "Path",
+    "icon": "category-path",
+    "members": [
+      "highway/footway",
+      "highway/cycleway",
+      "highway/bridleway",
+      "highway/path",
+      "highway/steps"
+    ],
+    "style": {}
+  },
+  "category-rail": {
+    "geometry": "line",
+    "name": "Rail",
+    "icon": "category-rail",
+    "members": [
+      "railway/rail",
+      "railway/subway",
+      "railway/tram",
+      "railway/monorail",
+      "railway/disused",
+      "railway/abandoned"
+    ],
+    "style": {}
+  },
+  "category-road": {
+    "geometry": "line",
+    "name": "Road",
+    "icon": "category-roads",
+    "members": [
+      "highway/residential",
+      "highway/motorway",
+      "highway/trunk",
+      "highway/primary",
+      "highway/secondary",
+      "highway/tertiary",
+      "highway/service",
+      "highway/motorway_link",
+      "highway/trunk_link",
+      "highway/primary_link",
+      "highway/secondary_link",
+      "highway/tertiary_link",
+      "highway/unclassified",
+      "highway/track",
+      "highway/road"
+    ],
+    "style": {
+      "stroke": "#555555"
+    }
+  },
+  "category-route": {
+    "geometry": "relation",
+    "name": "Route",
+    "icon": "route",
+    "members": [
+      "type/route/road",
+      "type/route/bicycle",
+      "type/route/foot",
+      "type/route/hiking",
+      "type/route/bus",
+      "type/route/train",
+      "type/route/tram",
+      "type/route/ferry",
+      "type/route/power",
+      "type/route/pipeline",
+      "type/route/detour",
+      "type/route_master",
+      "type/route"
+    ],
+    "style": {
+      "stroke": "#555555"
+    }
+  },
+  "category-water-area": {
+    "geometry": "area",
+    "name": "Water",
+    "icon": "water",
+    "members": [
+      "natural/water/lake",
+      "natural/water/pond",
+      "natural/water/reservoir",
+      "natural/water"
+    ],
+    "style": {
+      "stroke": "rgba(119, 211, 222, 0.9)",
+      "fill": "rgba(119, 211, 222, 0.7)"
+    }
+  },
+  "category-water-line": {
+    "geometry": "line",
+    "name": "Water",
+    "icon": "category-water",
+    "members": [
+      "waterway/river",
+      "waterway/stream",
+      "waterway/canal",
+      "waterway/ditch",
+      "waterway/drain"
+    ],
+    "style": {
+      "stroke": "rgb(119, 211, 222)"
+    }
+  },
+  "category-amenity": {
+    "geometry": "point",
+    "name": "Amenity",
+    "members": [
+      "amenity/hospital",
+      "amenity/place_of_worship",
+      "amenity/cafe",
+      "amenity/restaurant",
+      "amenity/bar",
+      "amenity/bank"
+    ],
+    "style": {}
+  },
+  "category-leisure": {
+    "geometry": "point",
+    "name": "Leisure",
+    "members": [
+      "leisure/common",
+      "leisure/park",
+      "leisure/ice_rink",
+      "leisure/playground"
+
+    ],
+    "style": {}
+  },
+  "category-shop": {
+    "geometry": "point",
+    "name": "Shop",
+    "members": [
+      "shop/supermarket",
+      "shop/alcohol",
+      "shop/art",
+      "shop/bakery",
+      "shop/bicycle"
+    ],
+    "style": {}
+  }
+}

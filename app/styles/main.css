@@ -1,0 +1,523 @@
+/* Space out content a bit */
+ body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-family:'Roboto', sans-serif;
+  background-color: #3c4e5a;
+  overflow: hidden;
+}
+h1, h2, h3 {
+  font-family:'Roboto', sans-serif;
+  font-weight: 300;
+}
+/* Everything but the jumbotron gets side spacing for mobile first views */
+ .header, .marketing, .footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+/* Custom page header */
+ .header {
+  border-bottom: 1px solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+ .header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+  padding-bottom: 19px;
+}
+/* Custom page footer */
+ .footer {
+  color: rgb(231, 231, 231);
+  position: absolute;
+  bottom: 0;
+  height: 30px;
+  width: 100%;
+}
+.footerContainer{
+  padding: 5px;
+  width: 300px;
+  background-color: #3c4e5a;
+  right: 0;
+  position: absolute;
+}
+.footerText{
+  margin: auto;
+  width: 200px;
+  padding-top: 2px;
+}
+/* Customize container */
+ @media (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+}
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Responsive: Portrait tablets and up */
+ @media screen and (min-width: 768px) {
+  /* Remove the padding we set earlier */
+  .header, .footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+}
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.map-container {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+#map {
+  height: 100%;
+  width: 100%;
+}
+.leaflet-bar {
+  border-radius: 0;
+}
+.container {
+  height: 20em;
+  background-color: rgb(231, 231, 231);
+  margin-top: 10em;
+}
+.startContainer {
+  text-align: center;
+  margin-top: 2em;
+  width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.border {
+  border: solid 1px lightgray;
+  border-radius: 3px;
+}
+.startLogo {
+  margin-left: 180px;
+  margin-top: -130px;
+  height: 150px;
+  position: absolute;
+}
+input {
+  margin-bottom: 10px;
+}
+.startContainer input[type="button"] {
+  margin-left: 125px;
+}
+.toolbox {
+  position: fixed;
+  right: 0;
+  top: 50px;
+  bottom: 0;
+  height: 100%;
+  width: 381px;
+  background-color: rgba(231, 231, 231, 0.9);
+  z-index: 1000;
+}
+.toolbox-buttons {
+  position: fixed;
+  right: -3px;
+  top: 0;
+  background-color: rgb(60, 78, 90);
+  width: 381px;
+  height: 50px;
+}
+.animate-slideIn {
+  /*transition-property*/
+  -webkit-transition-property:width;
+  -moz-transition-property:width;
+  -o-transition-property:width;
+  transition-property:width;
+  /*transition-duration*/
+  -webkit-transition-duration:100ms;
+  -moz-transition-duration:100ms;
+  -o-transition-duration:100ms;
+  transition-duration:100ms;
+  /*transition-timing-function*/
+  -webkit-transition-timing-function:ease-in;
+  -moz-transition-timing-function:ease-in;
+  -o-transition-timing-function:ease-in;
+  transition-timing-function:ease-in;
+}
+.zeroWidth {
+  width: 0;
+}
+.btn-dark {
+  background-color: #3c4e5a;
+  border-radius: 0;
+  color: rgb(231, 231, 231);
+  border-top: 0;
+  border-bottom: 0;
+  border-left:0;
+  border-right:0;
+  height: 50px;
+  width: 73px;
+  transition: background-color .25s ease-in-out;
+}
+.btn-dark:hover, .btn-dark:active {
+  background-color: white;
+  color: #3c4e5a;
+}
+.btn-default {
+  background-color: #3c4e5a;
+  border-radius: 0;
+  color: rgb(231, 231, 231);
+  border: 0;
+  margin: 5px;
+  transition: background-color .25s ease-in-out;
+}
+.btn-default:hover, .btn-default:active {
+  background-color: white;
+  color: #3c4e5a;
+}
+.toolbox-content {
+  margin-top: 20px;
+  width: 375px;
+  max-height: 290;
+  overflow: auto;
+}
+.watching {
+  background-color: white;
+  color: #3c4e5a;
+}
+.watching, .watching:active {
+  background-color: white;
+  color: #3c4e5a;
+}
+.hide {
+  position: absolute;
+  right: -500px;
+}
+.chat {
+  position: absolute;
+  width: 100%;
+  padding: 10px 10px 10px 10px;
+  bottom: 50px;
+}
+.chatMessages {
+  overflow: auto;
+  position: absolute;
+  top: 250px;
+  bottom: 150px;
+  width: 100%;
+}
+.history {
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  padding: 15px;
+  -moz-border-radius: 5px;
+  border-radius: 0;
+  margin: 3px;
+}
+.history:hover {
+  background-color: #ddd;
+}
+.historyDate {
+  font-size: 12px;
+  float:right;
+}
+.historyContainer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  top: 10px;
+  overflow: auto;
+}
+.tools {
+  margin: 10px;
+}
+.tools .btn {
+  margin: 0;
+}
+.tools textarea {
+  font-family: monospace;
+  resize: vertical;
+  border:1px solid #999999;
+  width:100%;
+  height: 200px;
+  margin:5px 0;
+  padding:3px;
+}
+.btn {
+  border-radius: 0;
+}
+.chatMessage {
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  padding: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 0;
+  margin: 3px;
+}
+.chatUser {
+  font-size: 12px;
+  float: right;
+}
+.users {
+  overflow: auto;
+  position: absolute;
+  max-height: 200px;
+  width: 100%;
+}
+.historyDropdown {
+  float: right;
+}
+.stringLink {
+  color: #2a6496;
+}
+.stringLink:hover {
+  text-decoration: underline;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: initial;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  list-style: none;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+.docRevRevertBtn {
+  display: inline;
+}
+.propertyLabel {
+  display: block;
+  background-color: rgb(192, 192, 192);
+  width: 100%;
+  border-radius: 0;
+  margin: 0;
+  height: 25px;
+}
+.propertyInput {
+  width: 295px;
+}
+.propertyRemoveBtn {
+  bottom: 5px;
+  height: 59px;
+  padding-right: 10px;
+}
+.diff-typeName {
+  color: gray;
+}
+.diff-changed {
+  background-color: #fcff7f;
+}
+.diff-added {
+  background-color: #8bff7f;
+}
+.diff-removed {
+  background-color: #fd7f7f;
+}
+.highlight {
+  box-shadow: 0 0 20px 5px #FFFF03;
+  stroke-width: 5px;
+  stroke: yellow;
+}
+.animateAll {
+  /*transition-property*/
+  -webkit-transition-property:all;
+  -moz-transition-property:all;
+  -o-transition-property:all;
+  transition-property:all;
+  /*transition-duration*/
+  -webkit-transition-duration:1000ms;
+  -moz-transition-duration:1000ms;
+  -o-transition-duration:1000ms;
+  transition-duration:1000ms;
+  /*transition-timing-function*/
+  -webkit-transition-timing-function:ease-out;
+  -moz-transition-timing-function:ease-out;
+  -o-transition-timing-function:ease-out;
+  transition-timing-function:ease-out;
+}
+.introjs-helperLayer {
+  position: absolute;
+  z-index: 9999998;
+  background-color: #FFF;
+  background-color: rgba(255, 255, 255, .5);
+  border: 1px solid #777;
+  border: 1px solid rgba(0, 0, 0, .5);
+  border-radius: 4px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, .4);
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+path:hover {
+  cursor: pointer;
+}
+.leaflet-marker-icon {
+  cursor:pointer;
+}
+.stopEditBtn {
+  position: fixed;
+  left: 0;
+  top: 200px;
+}
+select {
+  width: 265px;
+  height: 30px;
+}
+.orangeBackground {
+  background-color: orange;
+  color: black;
+}
+.greenBackground {
+  background-color: rgb(7, 189, 7) !important;
+}
+.socketStatus {
+  position: fixed;
+  top: 0;
+  left: 150px;
+  padding: 10px;
+  background-color: red;
+}
+.featureRevisionId {
+  width: 100px;
+  display: inline-block;
+}
+.loading {
+  background-image: url(../images/ajax-loader.gif);
+  height: 11px;
+  width: 43px;
+  margin: auto;
+}
+.introjs-helperNumberLayer {
+  display:none;
+}
+.stacked {
+  box-shadow: 2px 2px #9B9898, 4px 4px #747474;
+  margin-bottom: 7px;
+  margin-right: 7px;
+}
+.leaflet-editing-icon {
+  height: 10px !important;
+  width: 10px !important;
+}
+.featureInChat {
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  display: inline-block;
+}
+.featureInChat:hover {
+  background-color: #E0DFDF;
+}
+.polygonFeature {
+  background-image: url('http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/images/spritesheet.png');
+  background-repeat: no-repeat;
+  background-position: -35px -6px;
+  height: 20px;
+  width: 20px;
+}
+.lineFeature {
+  background-image: url('http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/images/spritesheet.png');
+  background-repeat: no-repeat;
+  background-position: -5px -6px;
+  height: 20px;
+  width: 20px;
+}
+.markerFeature {
+  background-image: url('http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/images/spritesheet.png');
+  background-repeat: no-repeat;
+  background-position: -125px -6px;
+  height: 20px;
+  width: 20px;
+}
+.tooltip-leafletstyle {
+  position: absolute;
+  left: 100px;
+  top: 100px;
+  margin-top: -12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid transparent;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  color: #fff;
+  font: 12px/18px"Helvetica Neue", Arial, Helvetica, sans-serif;
+  margin-left: 20px;
+  padding: 4px 8px;
+  white-space: nowrap;
+  z-index: 100000;
+  display:none;
+}
+.tooltip-leafletstyle:before {
+  border-right: 6px solid black;
+  border-right-color: rgba(0, 0, 0, 0.5);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  content:"";
+  position: absolute;
+  top: 7px;
+  left: -7px;
+}
+.paddingLeft {
+  padding-left: 10px;
+}
+.verticalSlider {
+  writing-mode: bt-lr;
+  /* IE */
+  -webkit-appearance: slider-vertical;
+  /* WebKit */
+  width: 15px;
+  height: 95%;
+  padding: 0 5px;
+}
+.slider {
+  position: fixed;
+  right: 375px;
+  top: 50px;
+  bottom: 0;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding-bottom: 20px;
+}
+.otherEditors {
+  bottom: 100px;
+  position: absolute;
+  height: 100px;
+  overflow: auto;
+}
+.featureProperties {
+  position: absolute;
+  overflow-y: auto;
+  bottom: 60px;
+  top: 10px;
+}
+.mapLoading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  background-color: #3c4e5a;
+  height: 100px;
+  width: 200px;
+  margin-left: -100px;
+  margin-top: -100px;
+  padding-top: 45px;
+}

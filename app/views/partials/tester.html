@@ -1,0 +1,28 @@
+<input type="button" value="Load map" ng-click="loadMap()" />
+<br>
+<input type="button" value="Watch All" ng-click="watchAll()" />
+<br>
+<input type="button" value="Set random name" ng-click="setRandomName()" />
+<br>
+<input type="text" ng-model="destinationMap"/>
+<br>
+
+<span style="color: white">Random Markers</span><br>
+<input type="number" ng-model="numberOfMarkerFeatures" placeholder="Number of features"/>
+<input type="number" ng-model="randomMarkerFeatureDelay" placeholder="Delay" />
+<input type="button" value="Send random Features" ng-click="createRandomFeatures()" /><br><br>
+
+<span style="color: white">Random Münster Buildings</span><br>
+<input type="number" ng-model="numberOfBuildingFeatures" placeholder="Number of features"/>
+<input type="number" ng-model="randomFeatureBuildingDelay" placeholder="Delay" />
+<input type="button" value="Send Münster Buildings" ng-click="createRandomBuildings()" /><br><br>
+
+<span style="color: white">Random Movements</span><br>
+<input type="number" ng-model="numberOfMovements" placeholder="Number of movements"/>
+<input type="number" ng-model="movementDelay" placeholder="Delay" />
+<input type="button" value="Send random Movements" ng-click="createMapMovementEvents()" /><br><br>
+
+<span style="color: white">Playback from Database</span><br>
+<input type="text" ng-model="playbackDatabase" placeholder="Database name"/>
+<input type="number" ng-model="playbackDelay" placeholder="Delay" />
+<input type="button" value="Start" ng-click="playbackFromDb()" /><br><br>
