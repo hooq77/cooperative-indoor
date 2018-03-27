@@ -64,9 +64,6 @@ angular.module('CooperativeIndoorMap')
             }
           }
         }
-
-
-
       };
     }
   ]);

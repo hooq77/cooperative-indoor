@@ -8,8 +8,6 @@
 angular.module('CooperativeIndoorMap')
   .service('SynchronizeMap', ['MapMovementEvents', 'MapDrawEvents', 'Socket', 'MapHandler', 'Users',
     function(MapMovementEvents, MapDrawEvents, Socket, MapHandler, Users) {
-
-
       var mapScope;
 
 

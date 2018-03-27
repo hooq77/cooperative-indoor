@@ -232,7 +232,7 @@ input {
   overflow: auto;
   position: absolute;
   top: 250px;
-  bottom: 150px;
+  bottom: 100px;
   width: 100%;
 }
 .history {

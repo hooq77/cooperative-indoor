@@ -1,14 +1,13 @@
 angular.module('CooperativeIndoorMap')
-  .directive('sidebar', ['$compile', 'MapHandler', 'Users',
-    function ($compile, MapHandler, Users) {
+  .directive('sidebar', ['$compile', 'MapHandler','Users',
+    function($compile, MapHandler, Users) {
       return {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'partials/sidebar',
         replace: true,
         link: function postLink($scope, elements) {
           var map = window._map;
-          var sidebar = L.control.sidebar('sidebar').addTo(map);
-
+          var sidebar = window._sidebar = L.control.sidebar('sidebar').addTo(map);
           /**
            * Store all users which are supposed to be watched. Is used by the mapMovement service to check if the map should change when other users move the map
            */
@@ -58,7 +57,7 @@ angular.module('CooperativeIndoorMap')
            * Pans to a selcted featured
            * @param {String} id feature id
            */
-          $scope.panToFeature = function (id) {
+          $scope.panToFeature = function(id) {
             MapHandler.panToFeature(id);
             MapHandler.highlightFeatureId(id);
           };
@@ -66,16 +65,15 @@ angular.module('CooperativeIndoorMap')
           /**
            * Highlights the user Button if a chat message comes in and the user tab is not opened
            */
-
           function highlightOnChatMessage() {
             $scope.$on('chatmessage', function () {
-              if ($scope.views.userView) {
-                $("#message").attr({class:"orangeBackground"});
-              }
+              if(!$("#message").hasClass("active"))
+                $("#message").addClass("orangeBackground");
             });
-
-            $scope.$on('toolbox', function (e, event) {
-                $("#message").attr({class:""});
+            sidebar.on('content', function (evt) {
+              if (evt.id === 'user') {
+                $("#message").removeClass("orangeBackground");
+              }
             });
           }
 
@@ -83,4 +81,4 @@ angular.module('CooperativeIndoorMap')
 
         }
       };
-    }])
+  }]);

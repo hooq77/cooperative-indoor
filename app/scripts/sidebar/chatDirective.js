@@ -15,7 +15,6 @@ angular.module('CooperativeIndoorMap')
   .directive('chat', ['Socket', 'MapHandler', 'Tooltip',
     function(Socket, MapHandler, Tooltip) {
 
-
       return {
         templateUrl: 'partials/chat',
         restrict: 'E',
