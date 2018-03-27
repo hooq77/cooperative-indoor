@@ -40,6 +40,7 @@ angular.module('CooperativeIndoorMap')
             activateToolbox();
 
             cleanSelection();
+            console.log(feature)
             var lastEditedBy;
             if (feature.feature && feature.feature.user) {
               lastEditedBy = feature.feature.user;

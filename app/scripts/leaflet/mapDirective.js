@@ -88,17 +88,16 @@ angular.module('CooperativeIndoorMap')
           };
           //expose map for debugging purposes
           var map = window._map = L.map('map', {
-              center: [30.50891, 114.40718],
-              // center: [49.41873, 8.67689],
-              zoom: 18,
-              layers: [normal],
-              zoomControl: false
+            center: [30.50891, 114.40718],
+            zoom: 18,
+            layers: [normal],
+            zoomControl: false
           });
 
           L.control.zoom({
-              zoomInTitle: '放大',
-              zoomOutTitle: '缩小',
-              position: 'topleft'
+            zoomInTitle: '放大',
+            zoomOutTitle: '缩小',
+            position: 'topleft'
           }).addTo(map);
 
           L.control.layers(baseLayers, {}, {

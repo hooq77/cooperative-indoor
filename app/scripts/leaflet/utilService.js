@@ -4,7 +4,7 @@
  * @memberof CooperativeIndoorMap
  * @fileOverview Util factory.
  * @exports CooperativeIndoorMap.MapHandler
- * @author Dennis Wilhelm
+ * @author Huqiang
  */
 angular.module('CooperativeIndoorMap').
   factory('Utils', function() {
@@ -12,7 +12,7 @@ angular.module('CooperativeIndoorMap').
 
       c: 1,
       /**
-       * Create ids based on the date
+       * 基于时间产生id
        * @return {String} new id
        */
       createId: function() {
@@ -24,15 +24,16 @@ angular.module('CooperativeIndoorMap').
       },
 
       /**
-       * Overrides leaflets id function to create more unique ids.
+       * 用户自定义Stamp函数，用于产生唯一的layer id
        */
       patchLStamp: function() {
-          L.stamp = function(obj) {
-            // jshint camelcase: false
-            obj._leaflet_id = obj._leaflet_id || this.createId();
-            return obj._leaflet_id;
-          }.bind(this);
-        }
+        L.userStamp = function(obj) {
+          // jshint camelcase: false
+          console.log("user define stamp function has run")
+          obj._leaflet_id = obj._leaflet_id || this.createId();
+          return obj._leaflet_id;
+        }.bind(this);
+      }
 
     };
   });
