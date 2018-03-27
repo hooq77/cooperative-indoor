@@ -46,9 +46,8 @@ angular.module('CooperativeIndoorMap')
           mapScope = scope;
 
           map.on('draw:created', function(event) {
-            console .log(event);
-            scope.selectFeature(event.layer);
-            MapHandler.addClickEvent(event.layer);
+            // scope.selectFeature(event.layer);
+            // MapHandler.addClickEvent(event.layer);
             callback(eventToMessage(event, event.action || 'created feature'));
           });
 

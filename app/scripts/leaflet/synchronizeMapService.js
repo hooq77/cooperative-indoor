@@ -98,6 +98,7 @@ angular.module('CooperativeIndoorMap')
         //without a timeout, the autobinding of angular doesn't seem to work
         setTimeout(function() {
           mapScope.selectFeature(map._layers[event.fid]);
+          // TODO: 这里的event.fid需要处理下，否则程序不会正常运行
         }, 50);
       }
 
@@ -108,13 +109,14 @@ angular.module('CooperativeIndoorMap')
        * @param  {Object} event = mapDraw event
        */
 
-      function refreshToolbox(map, event) {
-        var views = mapScope.views;
-        if (!views.propertiesView) {
-          if (mapScope.selectedFeature.fid === event.fid) {
-            updatePropertiesView(map, event);
-          }
-        }
+      function refreshSidebar(map, event) {
+        // console.log(mapScope.selectedFeature)
+        // console.log(event)
+        // if (mapScope.username === event.user
+        //   && mapScope.selectedFeature
+        //   && mapScope.selectedFeature.fid === event.fid) {
+        //   updatePropertiesView(map, event);
+        // }
       }
 
 
@@ -131,7 +133,7 @@ angular.module('CooperativeIndoorMap')
 
         Socket.on(mapId + '-mapDraw', function(res) {
           if (res && res.event) {
-            refreshToolbox(map, res.event);
+            refreshSidebar(map, res.event);
 
             var event = res.event;
 
@@ -201,7 +203,6 @@ angular.module('CooperativeIndoorMap')
         });
       }
 
-
       return {
 
         /**
@@ -231,10 +232,6 @@ angular.module('CooperativeIndoorMap')
 
           editFeatureEvents(scope.mapId);
         }
-
-
-
       };
-
     }
   ]);

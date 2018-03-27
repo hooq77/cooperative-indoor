@@ -20,7 +20,6 @@ angular.module('CooperativeIndoorMap')
       }
 
       loadName();
-      //TODO: random map id generator
       $scope.$root.mapId = $scope.mapId = $routeParams.mapid.toLowerCase();
 
       // TesterService.init($scope, undefined);

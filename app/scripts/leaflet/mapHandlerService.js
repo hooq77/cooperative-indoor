@@ -41,7 +41,13 @@ angular.module('CooperativeIndoorMap')
               this.removeEditHandler();
             }
           }.bind(this));
-
+          map.on('click', function() {
+            // console.log(map._events['click'])
+            // TODO: layer的click事件也会触发map的click事件，marker例外
+            // if (editHandler) {
+            //     this.removeEditHandler();
+            // }
+          }.bind(this));
         },
 
         /**
@@ -276,6 +282,8 @@ angular.module('CooperativeIndoorMap')
             if (!this.disableClick) {
               mapScope.selectFeature(layer, this.editByUser[layer._leaflet_id]);
               this.editFeature(layer);
+              // console.log(layer)
+              // console.log('lid=' + layer._leaflet_id)
             }
           }.bind(this));
         },
@@ -336,7 +344,7 @@ angular.module('CooperativeIndoorMap')
           });
           bound.addTo(map);
           map.fitBounds(bound, {
-            'paddingBottomRight': [300, 1],
+            'paddingBottomRight': [1, 1],
             'paddingTopLeft': [1, 1]
           });
           setTimeout(function() {
@@ -365,7 +373,7 @@ angular.module('CooperativeIndoorMap')
           var allBounds = lGroup.getBounds();
           if (allBounds.isValid()) {
             map.fitBounds(lGroup.getBounds(), {
-              'paddingBottomRight': [300, 1],
+              'paddingBottomRight': [1, 1],
               'paddingTopLeft': [1, 1]
             });
           }
@@ -429,8 +437,7 @@ angular.module('CooperativeIndoorMap')
 
         /**
          * Creates Leaflet geojson layers with the SimpleStyle specification
-         * @param  {Object} geojson feature
-         * @return {Object} leaflet layer
+         * @param  {Object} geoJsonFeature feature
          */
         createSimpleStyleGeoJSONFeature: function(geoJsonFeature) {
           return L.geoJson(geoJsonFeature, {
@@ -462,7 +469,8 @@ angular.module('CooperativeIndoorMap')
             }
             tmpLayer.addTo(drawnItems);
             //If action is available (edit, create, delete) highight the feature
-            if (event.action) {
+            console.log(mapScope.userName)
+            if (event.action && mapScope.userName !== event.user) {
               this.highlightFeature(tmpLayer, color);
             }
           }

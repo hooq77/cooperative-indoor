@@ -22,7 +22,7 @@ require('./config/express')(app);
 // Routing
 require('./routes')(app);
 
-var server = http.createServer(app);
+var server = http.Server(app);
 server.listen(config.port);
 
 //WebSocket

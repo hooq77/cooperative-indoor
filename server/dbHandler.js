@@ -102,15 +102,13 @@ module.exports.recordMapAction = function(mapId, event){
  * @param  {String} mapId the map id
  * @param  {Object} event map draw event {feature, fid, action, user}
  */
-module.exports.saveFeature = function(mapId, event) {
-  if (mapId && event && event.feature && event.fid && event.action) {
+module.exports.saveFeature = function(mapId, event, callback) {
+  if (mapId && event && event.feature && event.action) {
     if (event.action === 'deleted feature') {
       deleteFeature(mapId, event);
     } else {
       storeFeature(mapId, event, function(err, res){
-        //TODO errorhandling!
-        if(err) console.log(err);
-        //else console.log(res);
+        callback(err, res);
       });
     }
 

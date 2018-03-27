@@ -6,7 +6,7 @@ var couchdbHandler = require('./dbHandler.js');
  * @return {Object}     Websocket http server
  */
 module.exports = function(server) {
-  var socketIO = require('socket.io').listen(server);
+  var socketIO = require('socket.io')(server);
   var maps = {};
 
   socketIO.sockets.on('connection', function(socket) {
@@ -62,9 +62,16 @@ module.exports = function(server) {
     socket.on('mapDraw', function(data) {
       if (data.mapId && data.event) {
         storeMapAction(data, 'draw');
-        couchdbHandler.saveFeature(data.mapId, data.event);
-        socket.broadcast.emit(data.mapId + '-mapDraw', {
-          'event': data.event
+        couchdbHandler.saveFeature(data.mapId, data.event, function (err, res) {
+          if(err) {
+            console.error(err);
+          } else {
+            data.event.fid = res.id;
+            console.log(data);
+            socket.emit(data.mapId + '-mapDraw', {
+              'event': data.event
+            });
+          }
         });
       }
     });

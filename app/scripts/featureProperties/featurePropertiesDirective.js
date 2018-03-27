@@ -40,7 +40,6 @@ angular.module('CooperativeIndoorMap')
             activateToolbox();
 
             cleanSelection();
-            console.log(feature)
             var lastEditedBy;
             if (feature.feature && feature.feature.user) {
               lastEditedBy = feature.feature.user;
@@ -154,7 +153,6 @@ angular.module('CooperativeIndoorMap')
           $scope.deleteFeature = function() {
             MapHandler.deleteFeature();
             $scope.selectedFeature = undefined;
-            $scope.toggleToolbar('propertiesView');
           };
 
           /**

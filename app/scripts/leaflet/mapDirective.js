@@ -115,9 +115,7 @@ angular.module('CooperativeIndoorMap')
               circle: false,
               rectangle: false,
               circlemarker: false,
-              marker: {
-                icon: L.icon({})
-              },
+              marker: true,
               polyline: {
                 shapeOptions: {
                   color: '#555555',
@@ -142,8 +140,8 @@ angular.module('CooperativeIndoorMap')
 
           //Drawn features have to be added to the layer group
           map.on('draw:created', function(e) {
-            drawnItems.addLayer(e.layer);
-            MapHandler.editFeature(e.layer);
+            // drawnItems.addLayer(e.layer);
+            // MapHandler.editFeature(e.layer);
           });
 
           //Out of some unknown reasons the leaflet.draw tooltips where deactivated
