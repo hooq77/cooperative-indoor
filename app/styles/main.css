@@ -416,10 +416,11 @@ select {
 }
 .socketStatus {
   position: fixed;
-  top: 0;
-  left: 150px;
+  top: 10px;
+  left: 45%;
   padding: 10px;
   background-color: red;
+  z-index: 1000;
 }
 .featureRevisionId {
   width: 100px;

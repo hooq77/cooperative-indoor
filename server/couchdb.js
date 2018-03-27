@@ -192,9 +192,7 @@ module.exports.listStream = function(dbId, options, resultStream) {
       "include_docs": true
     };
     extendObject(params, options);
-    console.log(dbId)
     db.list(params).pipe(resultStream);
-
   });
 };
 

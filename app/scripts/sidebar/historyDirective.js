@@ -179,9 +179,6 @@ angular.module('CooperativeIndoorMap')
             return dateString;
           }
 
-
-
-
         }
       };
     }
