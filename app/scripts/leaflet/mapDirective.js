@@ -143,6 +143,7 @@ angular.module('CooperativeIndoorMap')
 
           //Drawn features have to be added to the layer group
           map.on('draw:created', function(e) {
+            console.log("layer has draw");
             drawnItems.addLayer(e.layer);
             MapHandler.editFeature(e.layer);
           });

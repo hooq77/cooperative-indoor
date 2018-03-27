@@ -25,14 +25,7 @@ angular.module('CooperativeIndoorMap')
            */
 
           function activateToolbox() {
-            if ($scope.views.toolBarIn) {
-              $scope.toggleToolbar('propertiesView');
-              $scope.safeApply();
-            } else if ($scope.views.propertiesView) {
-              $scope.toggleToolbar('propertiesView');
-              $scope.safeApply();
-            }
-
+            window._sidebar.open('propertis');
           }
 
           /**
