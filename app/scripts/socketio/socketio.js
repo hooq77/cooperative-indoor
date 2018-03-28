@@ -35,6 +35,8 @@ angular.module('SocketModule')
          */
         on: function(eventName, callback) {
           socket.on(eventName, function() {
+            console.log("on " + eventName);
+            console.log(arguments[0]);
             var args = arguments;
             $rootScope.$apply(function() {
               callback.apply(socket, args);
@@ -46,9 +48,11 @@ angular.module('SocketModule')
          * Emits/Sends a message to a WebSocket stream
          * @param {String} eventName name of the stream
          * @param {Object} data  the data to be send
-         * @param {Function} callbak
+         * @param {Function} callback
          */
         emit: function(eventName, data, callback) {
+          console.log("emit " + eventName);
+          console.log(data);
           socket.emit(eventName, data, function() {
             var args = arguments;
             $rootScope.$apply(function() {

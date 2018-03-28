@@ -6,10 +6,12 @@ var couchdbHandler = require('./dbHandler.js');
  * @return {Object}     Websocket http server
  */
 module.exports = function(server) {
-  var socketIO = require('socket.io')(server);
+  var io = require('socket.io')(server);
+
   var maps = {};
 
-  socketIO.sockets.on('connection', function(socket) {
+  io.on('connection', function(socket) {
+    console.log("a user connected");
 
     function storeMapAction(data, action) {
       data.action = action;
@@ -22,7 +24,8 @@ module.exports = function(server) {
      * @param  {Object} data tester data for the TesterService methods
      */
     socket.on('tester', function(data) {
-      socketIO.sockets.emit('tester-commands', data);
+      console.log(data)
+      io.sockets.emit('tester-commands', data);
     });
 
     /**
@@ -39,7 +42,7 @@ module.exports = function(server) {
           };
           maps[data.mapId].users[socket.id] = data.user;
         }
-        socketIO.sockets.emit(data.mapId + '-users', maps[data.mapId]);
+        io.sockets.emit(data.mapId + '-users', maps[data.mapId]);
       }
     });
 
@@ -66,9 +69,9 @@ module.exports = function(server) {
           if(err) {
             console.error(err);
           } else {
-            data.event.fid = res.id;
+            data.event.fid = data.event.fid || res.id;
             console.log(data);
-            socket.emit(data.mapId + '-mapDraw', {
+            io.sockets.emit(data.mapId + '-mapDraw', {
               'event': data.event
             });
           }
@@ -92,7 +95,7 @@ module.exports = function(server) {
     socket.on('chat', function(data) {
       if (data.mapId && data.message && data.user) {
         storeMapAction(data, 'chat');
-        socketIO.sockets.emit(data.mapId + '-chat', {
+        io.sockets.emit(data.mapId + '-chat', {
           'user': data.user,
           'message': data.message
         });
@@ -108,7 +111,7 @@ module.exports = function(server) {
         storeMapAction(data, 'revert');
         couchdbHandler.revertFeature(data.mapId, data.fid, data.toRev, data.user, function(err, res, feature) {
           if (err) {
-            socketIO.sockets.emit(data.mapId + '-mapDraw', err);
+            io.sockets.emit(data.mapId + '-mapDraw', err);
           } else {
             var drawEvent = {
               'action': 'reverted',
@@ -116,7 +119,7 @@ module.exports = function(server) {
               'fid': data.fid,
               'user': data.user
             };
-            socketIO.sockets.emit(data.mapId + '-mapDraw', {
+            io.sockets.emit(data.mapId + '-mapDraw', {
               'event': drawEvent
             });
           }
@@ -133,7 +136,7 @@ module.exports = function(server) {
         storeMapAction(data, 'restored');
         couchdbHandler.restoreDeletedFeature(data.mapId, data, function(err, res) {
           if (err) {
-            socketIO.sockets.emit(data.mapId + '-mapDraw', err);
+            io.sockets.emit(data.mapId + '-mapDraw', err);
           } else {
             var drawEvent = {
               'action': 'created',
@@ -141,7 +144,7 @@ module.exports = function(server) {
               'fid': data.fid,
               'user': data.user
             };
-            socketIO.sockets.emit(data.mapId + '-mapDraw', {
+            io.sockets.emit(data.mapId + '-mapDraw', {
               'event': drawEvent
             });
           }
@@ -154,11 +157,12 @@ module.exports = function(server) {
      * Removes a user from the users list and emits the new userlist to the map clients
      */
     socket.on('disconnect', function() {
+      console.log("disconnect")
       for (var key in maps) {
         if (maps[key].users && maps[key].users[socket.id]) {
           storeMapAction({'mapId': key}, 'connect');
           delete maps[key].users[socket.id];
-          socketIO.sockets.emit(key + '-users', maps[key]);
+          io.sockets.emit(key + '-users', maps[key]);
         }
       }
     });

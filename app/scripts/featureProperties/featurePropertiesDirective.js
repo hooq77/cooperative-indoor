@@ -21,7 +21,7 @@ angular.module('CooperativeIndoorMap')
         link: function postLink($scope) {
 
           /**
-           * Toggles the visibility of the featureproprties view
+           * 打开属性视图
            */
 
           function activateToolbox() {
@@ -29,13 +29,11 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Opens the featureproperties view, sets the feature as the selected feature within the scope
-           * Pushes the properties to the scope array which is used in ng-repeat
-           * Called from the feature onClick through the map services.
-           * @param {Object} feature the leaflet layer
+           * 通过属性视图给选定的feature设置属性，将属性数组放入到scope中，
+           * 并使用ng-repeat指令在mapService中使用
+           * @param {Object} feature leaflet中的layer的信息
            */
           $scope.selectFeature = function(feature, editByUser) {
-
             //jshint camelcase:false
             activateToolbox();
 
@@ -470,9 +468,7 @@ angular.module('CooperativeIndoorMap')
                 //Scope array for the GUI
                 $scope.fields.push(fields[member]);
               });
-
             }
-
           };
 
           /**
@@ -488,9 +484,6 @@ angular.module('CooperativeIndoorMap')
           }
 
           getPresetData();
-
-
-
         }
       };
     }

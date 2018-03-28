@@ -11,6 +11,7 @@ angular.module('CooperativeIndoorMap')
           /**
            * Store all users which are supposed to be watched. Is used by the mapMovement service to check if the map should change when other users move the map
            */
+
           $scope.watchUsers = {};
           $scope.watchUser = function (userId, event) {
             if ($scope.watchUsers[userId]) {
@@ -34,6 +35,21 @@ angular.module('CooperativeIndoorMap')
               window.alert('The user hasn\'t moved since you logged in');
             }
           };
+
+          $scope.currentView = "";
+
+          function getCurrentView() {
+            sidebar.on('content', function (event) {
+              if(event && event.id){
+                $scope.currentView = event.id;
+              }
+            });
+            sidebar.on('closing', function () {
+              $scope.currentView = undefined;
+            });
+          }
+
+          getCurrentView();
 
           $scope.getAllUserBounds = function () {
             var users = {};

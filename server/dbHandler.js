@@ -74,13 +74,13 @@ function storeFeature(mapId, event, cb) {
  * Deletes a feature within the database. If successfull, also store the action.
  * @param  {String}   mapId the map id
  * @param  {Object}   event map event {feature, fid, action, user}
+ * @param   {callback} callback function
  */
 
-function deleteFeature(mapId, event) {
+function deleteFeature(mapId, event, callback) {
   couchdb.delete(mapId, event.feature, event.fid, function(err, res) {
-    if (err) {
-      console.log(err);
-    } else {
+    callback(err, res);
+    if (!err) {
       storeAction(mapId, event, res);
     }
   });
@@ -105,13 +105,14 @@ module.exports.recordMapAction = function(mapId, event){
 module.exports.saveFeature = function(mapId, event, callback) {
   if (mapId && event && event.feature && event.action) {
     if (event.action === 'deleted feature') {
-      deleteFeature(mapId, event);
+      deleteFeature(mapId, event, function (err, res) {
+        callback(err, res);
+      });
     } else {
       storeFeature(mapId, event, function(err, res){
         callback(err, res);
       });
     }
-
   }
 };
 

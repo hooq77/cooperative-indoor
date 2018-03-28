@@ -143,7 +143,6 @@ angular.module('CooperativeIndoorMap')
 
             } else if (event.action === 'edited' || event.action === 'edited geometry' || event.action === 'edited properties' || event.action === 'reverted') {
 
-              MapHandler.removeLayer(map, event, drawnItems);
               MapHandler.addGeoJSONFeature(map, event, drawnItems, false, Users.getUserColorByName(res.event.user));
 
             } else if (event.action === 'deleted' || event.action === 'deleted feature') {

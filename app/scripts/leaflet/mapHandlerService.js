@@ -68,7 +68,6 @@ angular.module('CooperativeIndoorMap')
             featureGroup: L.featureGroup([layer]),
             selectedPathOptions: editPathOptions
           });
-
           //jshint camelcase:false
           editFeatureId = layer._leaflet_id;
           editHandler.enable();
@@ -140,7 +139,7 @@ angular.module('CooperativeIndoorMap')
                 this.editByUser[event.fid] = [event.user];
               }
             } else if (this.editByUser[event.fid]) {
-              this.editByUser[event.fid].splice(this.editByUser[event.fid].indexOf(event.user));
+              this.editByUser[event.fid].splice(this.editByUser[event.fid].indexOf(event.user), 1);
               if (this.editByUser[event.fid].length === 0) {
                 delete this.editByUser[event.fid];
               }
@@ -244,18 +243,6 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * If a feature gets update, it is redrawn and the editMode is lost. Therefore, restart the editHandler
-         * @param  {Object} layer map layer
-         */
-        handleEditModeOnFeatureUpdate: function(layer) {
-          //jshint camelcase:false
-          if (editHandler && editFeatureId === layer._leaflet_id) {
-            this.removeEditHandler();
-            this.editFeature(layer);
-          }
-        },
-
-        /**
          * Update the properties of a layer but reuse the existing geometry. Used by the featurePropertiesDirective.
          * Prevents the loss of geometry changes which may have occured while editing the properties.
          * @param  {Object} layer feature
@@ -282,8 +269,6 @@ angular.module('CooperativeIndoorMap')
             if (!this.disableClick) {
               mapScope.selectFeature(layer, this.editByUser[layer._leaflet_id]);
               this.editFeature(layer);
-              // console.log(layer)
-              // console.log('lid=' + layer._leaflet_id)
             }
           }.bind(this));
         },
@@ -459,6 +444,12 @@ angular.module('CooperativeIndoorMap')
          */
         addGeoJSONFeature: function(map, event, drawnItems, isntEditable, color) {
           //jshint camelcase:false
+          var editModeOnFeatureUpdate = editHandler && editFeatureId === event.fid
+          if (editModeOnFeatureUpdate) {
+            this.removeEditHandler();
+          }
+          if (event.action === 'edited' || event.action === 'edited geometry' || event.action === 'edited properties' || event.action === 'reverted')
+            this.removeLayer(map, event, drawnItems);
           var newLayer = this.createSimpleStyleGeoJSONFeature(event.feature);
           var tmpLayer;
           for (var key in newLayer._layers) {
@@ -469,12 +460,12 @@ angular.module('CooperativeIndoorMap')
             }
             tmpLayer.addTo(drawnItems);
             //If action is available (edit, create, delete) highight the feature
-            console.log(mapScope.userName)
             if (event.action && mapScope.userName !== event.user) {
               this.highlightFeature(tmpLayer, color);
             }
           }
-          this.handleEditModeOnFeatureUpdate(tmpLayer);
+          if (editModeOnFeatureUpdate)
+            this.editFeature(tmpLayer);
         },
 
 

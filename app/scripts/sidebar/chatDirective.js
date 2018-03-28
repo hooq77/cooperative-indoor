@@ -108,7 +108,7 @@ angular.module('CooperativeIndoorMap')
               },50);
               Tooltip.hideTooltip();
               $scope.isReferTo = false;
-              $scope.safeApply();
+              // $scope.safeApply();
             });
           };
 
