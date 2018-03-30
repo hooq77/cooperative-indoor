@@ -433,14 +433,26 @@ Line.belongsTo(Poi, {as: "end", foreignKey: "to"});
 LineHistory.belongsTo(Poi, {as: "start", foreignKey: "from"});
 LineHistory.belongsTo(Poi, {as: "end", foreignKey: "to"});
 
-sequelize.sync().then(() => console.log("数据库已连接"))
+sequelize.sync()
+  .then(() => console.log("数据库已连接"))
   .catch(err => {
-    console.log("数据库同步失败！")
+    console.log("数据库同步失败！");
     console.error(err.stack)
   });
 
-exports = {User, Building, BuildingHistory, Floor, FloorHistory,
-  Area, AreaHistory, Poi, PoiHistory, Line, LineHistory, Style, sequelize};
+exports.User = User;
+exports.Building = Building;
+exports.BuildingHistory = BuildingHistory;
+exports.Floor = Floor;
+exports.FloorHistory = FloorHistory;
+exports.Area = Area;
+exports.AreaHistory = AreaHistory;
+exports.Poi = Poi;
+exports.PoiHistory = PoiHistory;
+exports.Line =  Line;
+exports.LineHistory = LineHistory;
+exports.Style = Style;
+exports.sequelize = sequelize;
 
 //
 // const User = sequelize.define('user', {

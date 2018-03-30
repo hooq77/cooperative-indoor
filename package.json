@@ -17,7 +17,8 @@
     "sequelize": "^4.37.4",
     "serve-favicon": "~2.4.5",
     "socket.io": "~2.0.4",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "wkx": "^0.4.4"
   },
   "devDependencies": {
     "connect-livereload": "~0.6.0",
