@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('temp', 'root', '123456', {
+const sequelize = new Sequelize('indoordb', 'root', '123456', {
   host: 'localhost',
   dialect: 'postgres',
   pool: {

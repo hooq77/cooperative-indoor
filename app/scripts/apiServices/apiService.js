@@ -15,7 +15,21 @@ angular.module('CooperativeIndoorMap')
     function($http, $q) {
 
       return {
-
+        getBuildings: function(bounds){
+          return $http.post('/api/buildings', bounds);
+        },
+        getFloors: function(mapId){
+          return $http.get('/api/floors/' + mapId);
+        },
+        getAreas: function(floorId){
+          return $http.get('/api/areas/' + floorId);
+        },
+        getPois: function(floorId) {
+          return $http.get('/api/pois/' + floorId);
+        },
+        getLines: function(floorId) {
+          return $http.get('/api/lines/' + floorId);
+        },
         /**
          * Returns a promise which will be resolved current features of the map
          * @param  {String} mapId the map id

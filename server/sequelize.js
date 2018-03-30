@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('temp', 'root', '123456', {
+const sequelize = new Sequelize('indoordb', 'root', '123456', {
   host: 'localhost',
   dialect: 'postgres',
   pool: {
@@ -434,7 +434,7 @@ LineHistory.belongsTo(Poi, {as: "start", foreignKey: "from"});
 LineHistory.belongsTo(Poi, {as: "end", foreignKey: "to"});
 
 sequelize.sync()
-  .then(() => console.log("数据库已连接"))
+  .then(() => console.log("数据库已同步"))
   .catch(err => {
     console.log("数据库同步失败！");
     console.error(err.stack)

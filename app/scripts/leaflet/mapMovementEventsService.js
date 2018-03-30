@@ -11,7 +11,7 @@
  * @author Dennis Wilhelm
  */
 angular.module('CooperativeIndoorMap')
-  .service('MapMovementEvents', function() {
+  .service('MapMovementEvents', ['ApiService', function(ApiService) {
     return {
 
       /**
@@ -23,14 +23,11 @@ angular.module('CooperativeIndoorMap')
         // catches any map movements (drag, zoom, resize, ...)
         map.on('moveend', function(e) {
           var bounds = map.getBounds();
-          console.log(bounds.toBBoxString());
           callback({
             'nE': [bounds._northEast.lat, bounds._northEast.lng],
             'sW': [bounds._southWest.lat, bounds._southWest.lng]
           });
         });
       },
-
-
     };
-  });
+  }]);
