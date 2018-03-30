@@ -14,10 +14,8 @@ const sequelize = new Sequelize('temp', 'root', '123456', {
   },
   operatorsAliases: false
 });
-const pg = require('pg');
-client = new pg.Client('postgres://root:123456@localhost:5432/indoor_new');
 
-var User = sequelize.define('user', {
+let User = sequelize.define('user', {
   name:{
     type: Sequelize.DataTypes.STRING(30),
     primaryKey: true
@@ -41,7 +39,7 @@ var User = sequelize.define('user', {
   tableName: "sys_user"
 });
 
-var Building = sequelize.define('building', {
+let Building = sequelize.define('building', {
   id: {
     type: Sequelize.DataTypes.UUID,
     defaultValue: Sequelize.DataTypes.UUIDV1(),
@@ -71,8 +69,7 @@ var Building = sequelize.define('building', {
   tableName: "indoor_building"
 });
 
-
-var BuildingHistory = sequelize.define('buildingHistory', {
+let BuildingHistory = sequelize.define('buildingHistory', {
   key:{
     type:Sequelize.DataTypes.INTEGER,
     autoIncrement: true,
@@ -109,7 +106,7 @@ var BuildingHistory = sequelize.define('buildingHistory', {
   tableName: "history_building"
 });
 
-var Floor = sequelize.define('floor', {
+let Floor = sequelize.define('floor', {
   id:{
     type: Sequelize.DataTypes.UUID,
     defaultValue: Sequelize.DataTypes.UUIDV1(),
@@ -136,8 +133,7 @@ var Floor = sequelize.define('floor', {
   tableName: "indoor_floor"
 });
 
-
-var FloorHistory = sequelize.define('floorHistory', {
+let FloorHistory = sequelize.define('floorHistory', {
   key:{
     type:Sequelize.DataTypes.INTEGER,
     autoIncrement: true,
@@ -172,8 +168,7 @@ var FloorHistory = sequelize.define('floorHistory', {
   tableName: "history_floor"
 });
 
-
-var Area = sequelize.define('area', {
+let Area = sequelize.define('area', {
   id:{
     type: Sequelize.DataTypes.UUID,
     defaultValue: Sequelize.DataTypes.UUIDV1(),
@@ -200,8 +195,7 @@ var Area = sequelize.define('area', {
   tableName: "indoor_area"
 });
 
-
-var AreaHistory = sequelize.define('areaHistory', {
+let AreaHistory = sequelize.define('areaHistory', {
   key:{
     type:Sequelize.DataTypes.INTEGER,
     autoIncrement: true,
@@ -233,9 +227,9 @@ var AreaHistory = sequelize.define('areaHistory', {
 }, {
   freezeTableName: true,
   tableName: "history_area"
-})
+});
 
-var Style = sequelize.define('style', {
+let Style = sequelize.define('style', {
   id:{
     type: Sequelize.DataTypes.INTEGER,
     autoIncrement: true,
@@ -253,8 +247,7 @@ var Style = sequelize.define('style', {
   tableName: "sys_style"
 });
 
-
-var Poi = sequelize.define('poi', {
+let Poi = sequelize.define('poi', {
   id: {
     type: Sequelize.DataTypes.UUID,
     defaultValue: Sequelize.DataTypes.UUIDV1(),
@@ -282,10 +275,9 @@ var Poi = sequelize.define('poi', {
 }, {
   freezeTableName: true,
   tableName: "indoor_poi"
-})
+});
 
-
-var PoiHistory = sequelize.define('poiHistory', {
+let PoiHistory = sequelize.define('poiHistory', {
   key:{
     type:Sequelize.DataTypes.INTEGER,
     autoIncrement: true,
@@ -322,7 +314,7 @@ var PoiHistory = sequelize.define('poiHistory', {
   tableName: "history_poi"
 });
 
-var Line = sequelize.define('line', {
+let Line = sequelize.define('line', {
   id: {
     type: Sequelize.DataTypes.UUID,
     defaultValue: Sequelize.DataTypes.UUIDV1(),
@@ -348,7 +340,7 @@ var Line = sequelize.define('line', {
   tableName: "indoor_line"
 });
 
-var LineHistory = sequelize.define('lineHistory', {
+let LineHistory = sequelize.define('lineHistory', {
   key:{
     type:Sequelize.DataTypes.INTEGER,
     autoIncrement: true,
@@ -441,144 +433,14 @@ Line.belongsTo(Poi, {as: "end", foreignKey: "to"});
 LineHistory.belongsTo(Poi, {as: "start", foreignKey: "from"});
 LineHistory.belongsTo(Poi, {as: "end", foreignKey: "to"});
 
-sequelize.sync({force: true}).then(res => {
-  console.log(res.models);
-  User.create({
-    name: 'huqiang',
-    password:'123456',
-    real_name: '胡强',
-    role: 'admin',
-    mobile: '15071197759',
-    email: 'huhooo@126.com',
-    organization: '华中科技大学',
-    occupation: '学生',
-    reg_time: new Date('2017-11-16 03:14:24.326308'),
-    last_login: new Date('2017-11-16 03:14:24.326308')
-  }).then( data => {
-    client.connect((err) => {
-      if (err) {
-        console.error(err.stack);
-        return;
-      }
-      client.query("select *, st_asgeojson(outline) as geo, st_asgeojson(center_point) as point from bld_info;", (err, res) => {
-        if (err) {
-          return console.error('查询出错...', err);
-        }
-        console.log("数据库连接成功...");
-        if(res.rows.length !== 0) {
-          for (var i in res.rows) {
-            copyBuilding(res.rows[i])
-          }
-        }
-      })
-    })
-  })
-});
+sequelize.sync().then(() => console.log("数据库已连接"))
+  .catch(err => {
+    console.log("数据库同步失败！")
+    console.error(err.stack)
+  });
 
-
-function copyBuilding(building) {
-  var id = building.id;
-  var crs =  { type: 'name', properties: { name: 'EPSG:4326'}};
-  building.owner = 'huqiang';
-  building.deleted = false;
-  building.time = building.create_time;
-  building.outline = JSON.parse(building.geo);
-  building.center_point = JSON.parse(building.point);
-  building.outline.crs = crs;
-  building.center_point.crs = crs;
-  delete building.point;
-  delete building.geo;
-  delete building.create_time;
-  delete building.create_by_user;
-  delete building.init_layer;
-  delete building.id;
-  Building.create(building).then((res) => {
-    console.log("building复制成功");
-    var buildingHistory = res.dataValues;
-    buildingHistory.operation = 'insert';
-    buildingHistory.outline = building.outline;
-    buildingHistory.center_point = building.center_point;
-    BuildingHistory.create(buildingHistory).then(() => {
-      console.log("building history 复制成功");
-      client.query("select *, st_asgeojson(outline) as geo from bld_floor where bld_floor.building = " + id, [], (err, res) => {
-        if(err) {
-          console.error(err.stack);
-        } else {
-          for (var key in res.rows) {
-            // console.log(res.rows[key]);
-            copyFloor(res.rows[key], buildingHistory.id)
-          }
-        }
-      })
-    })
-  })
-}
-
-function copyFloor(floor, buildingId) {
-  var id = floor.id;
-  var crs =  { type: 'name', properties: { name: 'EPSG:4326'}};
-  delete floor.building;
-  floor.building_id = buildingId;
-  delete floor.create_by_user;
-  floor.owner = 'huqiang';
-  floor.time = floor.create_time;
-  delete floor.create_time;
-  floor.number = floor.layer_number;
-  delete floor.layer_number;
-  floor.name = floor.layer_name;
-  delete floor.layer_name;
-  floor.outline = JSON.parse(floor.geo);
-  delete floor.geo;
-  floor.outline.crs = crs;
-  delete floor.id;
-  floor.deleted = false;
-  Floor.create(floor).then((res) => {
-    console.log("floor 复制成功");
-    // console.log(res.dataValues);
-    var floorHistory = res.dataValues;
-    floorHistory.operation = 'insert';
-    floorHistory.outline = floor.outline;
-
-    FloorHistory.create(floorHistory).then(() => {
-      console.log("floor history 复制成功")
-      client.query("select *, st_asgeojson(geo) as outline from bld_part where bld_part.floor = " + id, [], (err, res) => {
-        if(err) {
-          console.error(err.stack);
-        } else {
-          for (var key in res.rows) {
-            // console.log(res.rows[key]);
-            copyPart(res.rows[key], floorHistory.id);
-          }
-        }
-      })
-    })
-  })
-}
-
-function copyPart(part, floorId) {
-  var area = {};
-  area.floor_id = floorId;
-  area.outline = JSON.parse(part.outline);
-  area.outline.crs = { type: 'name', properties: { name: 'EPSG:4326'}};
-  area.name = part.name;
-  area.type = part.type;
-  area.number = part.number;
-  area.version = part.version;
-  area.deleted = false;
-  area.time = part.create_time;
-  area.owner = 'huqiang';
-  
-  Area.create(area).then((res) => {
-    console.log('area 复制成功');
-    var areaHistory = res.dataValues;
-    areaHistory.outline = area.outline;
-    areaHistory.operation = 'insert';
-    AreaHistory.create(areaHistory).then((res) => {
-      console.log('area history 复制成功')
-    })
-  })
-  
-}
+exports = {User, Building, BuildingHistory, Floor, FloorHistory,
+  Area, AreaHistory, Poi, PoiHistory, Line, LineHistory, Style, sequelize};
 
 //
 // const User = sequelize.define('user', {
