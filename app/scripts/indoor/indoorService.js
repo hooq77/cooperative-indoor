@@ -15,7 +15,7 @@ angular.module('CooperativeIndoorMap')
       let indoors = {};
       let currentBuilding = {};
       let currentBuildingId = undefined;
-      let geojson = L.geoJSON({type: 'FeatureCollection',features: []});
+
       /**
        * 获取当前视图下室内地图列表
        */
@@ -29,7 +29,7 @@ angular.module('CooperativeIndoorMap')
               if (building.id && !indoors[building.id]) {
                 if(!currentBuildingId)
                   currentBuildingId = building.id;
-                indoors[building.id] = building;
+                indoors[building.id] = L.indoor(building,{});
                 loadIndoorMap(building.id);
               }
             }
@@ -37,14 +37,6 @@ angular.module('CooperativeIndoorMap')
           .error((data, status) => {
             console.log("获取地图列表失败，错误代码" + status);
           });
-      }
-      function getLayer(feature) {
-        geojson.addData(feature.outline);
-        let layer = geojson.getLayers()[0];
-        geojson.removeLayer(layer);
-        layer._leaflet_id = feature.id;
-        layer.feature = feature;
-        return layer
       }
       /**
        * 获取室内地图
@@ -55,19 +47,12 @@ angular.module('CooperativeIndoorMap')
           .success(floors =>{
             console.log("楼层数为", floors.length)
             let indoor = indoors[mapId];
-            indoor.floors = {};
+            indoor.addFloors(floors);
             for(let key in floors) {
               let floorId = floors[key].id;
-              if(floorId) {
-                indoor.floors[floorId] = floors[key];
-                if(mapId === currentBuildingId) {
-                  let floor = L.featureGroup([getLayer(floors[key])]);
-                  floor._leaflet_id = floors[key].id;
-                  currentBuilding[floors[key].number] = floor
-                }
-                loadAreas(mapId ,floorId);
-              }
+              loadAreas(mapId ,floorId);
             }
+            indoor.addTo(map);
           })
       }
       /**
@@ -79,19 +64,8 @@ angular.module('CooperativeIndoorMap')
         ApiService.getAreas(floorId)
           .success(areas =>{
             console.log("区域数为", areas.length)
-            let floor = indoors[mapId].floors[floorId];
-            floor.areas = {};
-            for (let key in areas) {
-              let id = areas[key].id;
-              if(id) {
-                floor.areas[id] = areas[key];
-                if(mapId === currentBuildingId) {
-                  let num = floor.number;
-                  currentBuilding[num].addLayer(getLayer(areas[key]));
-                }
-              }
-            }
-            console.log(currentBuilding)
+            indoors[mapId].addFeatures(floorId, areas);
+            console.log(indoors[mapId])
           })
       }
 
