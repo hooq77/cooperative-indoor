@@ -1,6 +1,6 @@
 angular.module('CooperativeIndoorMap')
-  .directive('sidebar', ['$compile', 'MapHandler','Users',
-    function($compile, MapHandler, Users) {
+  .directive('sidebar', ['$compile', 'MapHandler','Users', 'IndoorHandler',
+    function($compile, MapHandler, Users, IndoorHandler) {
       return {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'partials/sidebar',
@@ -42,9 +42,17 @@ angular.module('CooperativeIndoorMap')
             sidebar.on('content', function (event) {
               if(event && event.id){
                 $scope.currentView = event.id;
+                if($scope.currentView === "propertis") {
+                  IndoorHandler.enableIndoorEdit();
+                } else {
+                  IndoorHandler.disableIndoorEdit();
+                }
               }
             });
             sidebar.on('closing', function () {
+              if($scope.currentView === "propertis") {
+                IndoorHandler.disableIndoorEdit();
+              }
               $scope.currentView = undefined;
             });
           }

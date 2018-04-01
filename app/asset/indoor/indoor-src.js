@@ -107,8 +107,11 @@ L.Indoor = L.Evented.extend({
     this._geojson = L.geoJSON({type: 'FeatureCollection',features: []}, this.options);
     this._map = null;
     this._data = {};
-    this._baseFloor = {};
-    this._fullFloor = {};
+    this._floors = {};
+    this._areas = {};
+    this._lines = {};
+    this._pois = {};
+
     this._level = null;
     this._levels = [];
     
@@ -124,8 +127,10 @@ L.Indoor = L.Evented.extend({
       this._data[props.id] = features[i];
       this._levels.push(props.number);
       names.push(props.name);
-      this._baseFloor[props.number] = this._getGeoJSON(features[i]);
-      this._fullFloor[props.number] = L.featureGroup([]);
+      this._floors[props.number] = this._getGeoJSON(features[i]);
+      this._areas[props.number] = L.featureGroup([]);
+      this._lines[props.number] = L.featureGroup([]);
+      this._pois[props.number] = L.featureGroup([]);
     }
     this._levelControl = L.Control.level(this, {
       levels: this._levels,
@@ -134,12 +139,43 @@ L.Indoor = L.Evented.extend({
     })
     this.fire("indoor:loaded", {indoor: this._leaflet_id})
   },
-  addFeatures: function(floorId, features) {
+  addAreas: function(floorId, features) {
+    let floorNum = this._data[floorId].properties.number;
+    var map = this._map;
+    for (let i  = 0; i < features.length; i ++) {
+      let props = features[i].properties;
+      this._data[props.id] = features[i];
+      let area = this._getGeoJSON(features[i]);
+      this._areas[floorNum].addLayer(area)
+      area.addTo(map);
+      let point = area.getCenter();
+      area.remove();
+      let poi = L.marker(point, {
+        icon: L.divIcon({
+          html: props.name,
+          iconSize: [40, 20],
+          bgPos: [15, 10],
+          className: "leaflet-marker-poi"
+        })
+      });
+      poi.bindPopup(JSON.stringify(props));
+      this._pois[floorNum].addLayer(poi)
+    }
+  },
+  addLines: function(floorId, features) {
     let floorNum = this._data[floorId].properties.number;
     for (let i  = 0; i < features.length; i ++) {
       let props = features[i].properties;
       this._data[props.id] = features[i];
-      this._fullFloor[floorNum].addLayer(this._getGeoJSON(features[i]))
+      this._areas[floorNum].addLayer(this._getGeoJSON(features[i]))
+    }
+  },
+  addPois: function(floorId, features) {
+    let floorNum = this._data[floorId].properties.number;
+    for (let i  = 0; i < features.length; i ++) {
+      let props = features[i].properties;
+      this._data[props.id] = features[i];
+      this._areas[floorNum].addLayer(this._getGeoJSON(features[i]))
     }
   },
   addTo: function (map) {
@@ -152,22 +188,19 @@ L.Indoor = L.Evented.extend({
     }
 
     if (this._level !== null) {
-      if (this._level in this._baseFloor) {
-        this._baseFloor[this._level].addTo(map);
-        this._fullFloor[this._level].addTo(map);
-      } else {
-        // TODO: Display warning?
-      }
+      this._floors[this._level].addTo(map);
+      this._areas[this._level].addTo(map);
+      this._lines[this._level].addTo(map);
+      this._pois[this._level].addTo(map);
       this._levelControl.addTo(map);
     }
   },
   remove: function () {
-    if (this._baseFloor[this._level]) {
-      this._map.removeLayer(this._baseFloor[this._level])
-    }
-    if (this._baseFloor[this._level]) {
-      this._map.removeLayer(this._fullFloor[this._level])
-    }
+    this._map.removeLayer(this._floors[this._level])
+    this._map.removeLayer(this._areas[this._level])
+    this._map.removeLayer(this._lines[this._level])
+    this._map.removeLayer(this._pois[this._level])
+
     this._levelControl.remove();
     this._map = null
   },
@@ -180,14 +213,15 @@ L.Indoor = L.Evented.extend({
     this._level = newLevel
 
     if (this._map !== null) {
-      if (this._map.hasLayer(this._fullFloor[oldLevel])) {
-        this._map.removeLayer(this._fullFloor[oldLevel])
-      }
-      if (this._map.hasLayer(this._baseFloor[oldLevel])) {
-        this._map.removeLayer(this._baseFloor[oldLevel])
-      }
-      this._map.addLayer(this._baseFloor[newLevel])
-      this._map.addLayer(this._fullFloor[newLevel])
+      this._map.removeLayer(this._areas[oldLevel])
+      this._map.removeLayer(this._floors[oldLevel])
+      this._map.removeLayer(this._lines[oldLevel])
+      this._map.removeLayer(this._pois[oldLevel])
+
+      this._map.addLayer(this._floors[newLevel])
+      this._map.addLayer(this._areas[newLevel])
+      this._map.addLayer(this._lines[newLevel])
+      this._map.addLayer(this._pois[newLevel])
     }
 
 

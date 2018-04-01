@@ -338,6 +338,10 @@ input {
 .propertyInput {
   width: 295px;
 }
+
+.indoor-div-poi {
+
+}
 .propertyRemoveBtn {
   bottom: 5px;
   height: 59px;
@@ -398,6 +402,12 @@ path:hover {
 .leaflet-marker-icon {
   cursor:pointer;
 }
+
+.leaflet-marker-poi {
+  cursor:pointer;
+  background: transparent;
+  border: transparent;
+}
 .stopEditBtn {
   position: fixed;
   left: 0;
@@ -443,6 +453,8 @@ select {
 .leaflet-editing-icon {
   height: 10px !important;
   width: 10px !important;
+  margin-left: -5px !important;
+  margin-top:-5px !important;
 }
 .featureInChat {
   cursor: pointer;

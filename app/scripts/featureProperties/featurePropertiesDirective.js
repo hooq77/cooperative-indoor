@@ -35,8 +35,6 @@ angular.module('CooperativeIndoorMap')
            */
           $scope.selectFeature = function(feature, editByUser) {
             //jshint camelcase:false
-            activateToolbox();
-
             cleanSelection();
             var lastEditedBy;
             if (feature.feature && feature.feature.user) {

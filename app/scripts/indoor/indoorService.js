@@ -75,7 +75,7 @@ angular.module('CooperativeIndoorMap')
         ApiService.getAreas(floorId)
           .success(areas =>{
             console.log("区域数为", areas.length)
-            indoors[mapId].addFeatures(floorId, areas);
+            indoors[mapId].addAreas(floorId, areas);
             console.log(indoors[mapId])
           })
       }
@@ -138,6 +138,26 @@ angular.module('CooperativeIndoorMap')
           mapScope = scope;
           map.on('moveend', getBuildings)
           map._indoor = indoors;
+        },
+
+        enableIndoorEdit: function () {
+          let indoor = indoors[indoorId]
+          if(indoor) {
+            let level = indoor._level;
+            DrawEditHandler.enableFeatureDrawEidt(indoor._areas[level]);
+            DrawEditHandler.enableFeatureDrawEidt(indoor._lines[level]);
+            DrawEditHandler.enableFeatureDrawEidt(indoor._pois[level]);
+          }
+        }
+
+        disableIndoorEdit: function () {
+          let indoor = indoors[indoorId]
+          if(indoor) {
+            let level = indoor._level;
+            DrawEditHandler.enableFeatureDrawEidt(indoor._areas[level]);
+            DrawEditHandler.enableFeatureDrawEidt(indoor._lines[level]);
+            DrawEditHandler.enableFeatureDrawEidt(indoor._pois[level]);
+          }
         }
       }
     }]);

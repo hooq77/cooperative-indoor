@@ -15,8 +15,8 @@
  * @author Dennis Wilhelm
  */
 angular.module('CooperativeIndoorMap')
-  .directive('map', ['MapHandler', 'SynchronizeMap', 'ApiService', 'DataImport','IndoorHandler',
-    function(MapHandler, SynchronizeMap, ApiService, DataImport, IndoorHandler) {
+  .directive('map', ['MapHandler', 'SynchronizeMap', 'ApiService', 'DataImport','IndoorHandler','DrawEditHandler',
+    function(MapHandler, SynchronizeMap, ApiService, DataImport, IndoorHandler, DrawEditHandler) {
       var mapLoadingDiv;
 
       /**
@@ -155,6 +155,9 @@ angular.module('CooperativeIndoorMap')
 
           //初始化室内地图服务
           IndoorHandler.initIndoorHandler(map, $scope.$parent);
+
+          //初始化地图编辑服务
+          DrawEditHandler.initDrawEditHandler(map, drawnItems, $scope.$parent, drawControl);
 
           //Initialize the map synchronization (handles all Websocket related sync stuff)
           SynchronizeMap.init(map, $scope.$parent, drawnItems);

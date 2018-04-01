@@ -12,7 +12,6 @@ angular.module('CooperativeIndoorMap')
   .service('DrawEditHandler', ['Socket',
     function (Socket) {
       var map, drawnItems, mapScope, drawControl;
-      var layerGroup;
       var editHandler, editFeatureId;
       return {
 
@@ -24,7 +23,7 @@ angular.module('CooperativeIndoorMap')
          * @param  {Object} scope Angular scope
          * @param  {Object} dControl the drawControl of leaflet.draw
          */
-        initMapHandler: function(m, dI, scope, dControl) {
+        initDrawEditHandler: function(m, dI, scope, dControl) {
           map = m;
           drawnItems = dI;
           mapScope = scope;
@@ -417,7 +416,6 @@ angular.module('CooperativeIndoorMap')
           for (let key in layergroup._layers) {
             let tmpLayer = layergroup._layers[key];
             this.addClickEvent(tmpLayer);
-            tmpLayer.addTo(drawnItems);
           }
         },
         /**

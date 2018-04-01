@@ -1805,10 +1805,8 @@ L.Edit.Poly = L.Handler.extend({
 	// Compatibility method to normalize Poly* objects
 	// between 0.7.x and 1.0+
 	_defaultShape: function () {
-		if (!L.Polyline._flat) {
-			return this._poly._latlngs;
-		}
-		return L.Polyline._flat(this._poly._latlngs) ? this._poly._latlngs : this._poly._latlngs[0];
+		return L.LineUtil.isFlat(this._poly._latlngs) ? this._poly._latlngs :
+			L.LineUtil.isFlat(this._poly._latlngs[0]) ? this._poly._latlngs[0] : this._poly._latlngs[0][0];
 	},
 
 	_eachVertexHandler: function (callback) {
@@ -1900,10 +1898,8 @@ L.Edit.PolyVerticesEdit = L.Handler.extend({
 	// Compatibility method to normalize Poly* objects
 	// between 0.7.x and 1.0+
 	_defaultShape: function () {
-		if (!L.Polyline._flat) {
-			return this._latlngs;
-		}
-		return L.Polyline._flat(this._latlngs) ? this._latlngs : this._latlngs[0];
+		return L.LineUtil.isFlat(this._latlngs) ? this._latlngs :
+			L.LineUtil.isFlat(this._latlngs[0]) ? this._latlngs[0] : this._latlngs[0][0];
 	},
 
 	// @method addHooks(): void
