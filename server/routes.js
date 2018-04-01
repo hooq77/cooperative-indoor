@@ -6,7 +6,7 @@
  */
 
 const dbHandler = require('./dbHandler.js');
-const dbHelper = require('./dbHelper');
+const indoor = require('./indoor');
 const index = require('./controllers');
 const fs = require('fs');
 
@@ -19,7 +19,7 @@ module.exports = function(app) {
   app.post('/api/buildings', function (req, res) {
     if(req.body || req.body.geometry || req.body.geometry.type ||
       req.body.geometry.type === 'Polygon') {
-      dbHelper.findBuildingsByBounds(req.body, (err, blds) => {
+      indoor.getIndoorListByBounds(req.body, (err, blds) => {
           if(err) {
             console.error(err.stack);
             res.send([]);
@@ -34,7 +34,7 @@ module.exports = function(app) {
 
   app.get('/api/floors/:mapId', function (req, res) {
     console.log("floors")
-    dbHelper.findFloorsById(req.params.mapId, (err, floors) => {
+    indoor.getFloorsById(req.params.mapId, (err, floors) => {
       if(err) {
         console.error(err.stack);
         res.send([]);
@@ -45,7 +45,7 @@ module.exports = function(app) {
   });
 
   app.get('/api/areas/:floorId', function (req, res) {
-    dbHelper.findAreasById(req.params.floorId, (err, floors) => {
+    indoor.getAreasById(req.params.floorId, (err, floors) => {
       if(err) {
         console.error(err.stack);
         res.send([]);

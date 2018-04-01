@@ -13,8 +13,7 @@ angular.module('CooperativeIndoorMap')
     function (Socket, ApiService, DrawEditHandler) {
       var map, mapScope;
       let indoors = {};
-      let currentBuilding = {};
-      let currentBuildingId = undefined;
+      let indoorId = undefined;
 
       /**
        * 获取当前视图下室内地图列表
@@ -24,13 +23,25 @@ angular.module('CooperativeIndoorMap')
         ApiService.getBuildings(L.rectangle(bounds).toGeoJSON())
           .success(blds => {
             console.log("获取地图列表成功，地图数目：" + blds.length);
+            if(blds.length === 0 && indoorId) {
+              // 当前区域没有室内地图
+              indoors[indoorId].remove();
+              indoorId = null
+            }
             for(let key in blds) {
               let building = blds[key];
-              if (building.id && !indoors[building.id]) {
-                if(!currentBuildingId)
-                  currentBuildingId = building.id;
+              if (!indoorId)
+                indoorId = building.id;
+              if (!indoors[building.id]) {
                 indoors[building.id] = L.indoor(building,{});
                 loadIndoorMap(building.id);
+                indoors[building.id].on("indoor:loaded", function (evt) {
+                  if(evt.id === indoorId)
+                    indoors[indoorId].addTo(map);
+                })
+              } else {
+                if(building.id === indoorId)
+                  indoors[indoorId].addTo(map);
               }
             }
           })
@@ -126,6 +137,7 @@ angular.module('CooperativeIndoorMap')
           map = m;
           mapScope = scope;
           map.on('moveend', getBuildings)
+          map._indoor = indoors;
         }
       }
     }]);

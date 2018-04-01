@@ -31,11 +31,9 @@ L.Control.Level = L.Control.extend({
 
     for (let i = 0; i < this.options.levels.length; i++) {
       let levelNum = this.options.levels[i]
-
       let levelName = this.options.names[i]
-
       levels.push({
-        num: levelNum,
+        num: Number.parseInt(levelNum),
         label: levelName
       })
     }
@@ -62,24 +60,20 @@ L.Control.Level = L.Control.extend({
     }
     return div
   },
-  setLevel: function (level) {
-    if (level === this._level) {
+  setLevel: function (newLevel) {
+    let oldLevel = this._level
+    if (newLevel === oldLevel) {
       return
     }
 
-    let oldLevel = this._level
-    this._level = level
-
-    this._indoor.setLevel({
-      oldLevel: oldLevel,
-      newLevel: level
-    })
+    this._level = newLevel
+    this._indoor.setLevel(newLevel)
     
     if (this._map !== null) {
       if (typeof oldLevel !== 'undefined') {
         this._buttons[oldLevel].style.backgroundColor = '#FFFFFF'
       }
-      this._buttons[level].style.backgroundColor = '#b0b0b0'
+      this._buttons[newLevel].style.backgroundColor = '#b0b0b0'
     }
   }
 })
@@ -88,7 +82,7 @@ L.Control.level = function (indoor, options) {
   return new L.Control.Level(indoor, options)
 };
 
-L.Indoor = L.Layer.extend({
+L.Indoor = L.Evented.extend({
   options: {
     style: function (feature) {
       let fill = 'white'
@@ -110,12 +104,13 @@ L.Indoor = L.Layer.extend({
 
   initialize: function (building, options) {
     L.setOptions(this, options);
-    this.geojson = L.geoJSON({type: 'FeatureCollection',features: []}, this.options);
+    this._geojson = L.geoJSON({type: 'FeatureCollection',features: []}, this.options);
     this._map = null;
     this._data = {};
     this._baseFloor = {};
     this._fullFloor = {};
     this._level = null;
+    this._levels = [];
     
     this._leaflet_id = building.id;
     this._data[building.id] = building;
@@ -123,36 +118,36 @@ L.Indoor = L.Layer.extend({
   },
   addFloors: function(features) {
     let names = [];
-    
-    for (let k in features) {
-      let feature = features[k];
-      this._data[feature.id] = feature;
-      names.push(feature.name);
-      this._baseFloor[feature.number] = this._getGeoJSON(feature);
-      this._fullFloor[feature.number] = L.featureGroup([]);
+
+    for (let i = 0; i < features.length; i++) {
+      let props = features[i].properties;
+      this._data[props.id] = features[i];
+      this._levels.push(props.number);
+      names.push(props.name);
+      this._baseFloor[props.number] = this._getGeoJSON(features[i]);
+      this._fullFloor[props.number] = L.featureGroup([]);
     }
     this._levelControl = L.Control.level(this, {
-      levels: this.getLevels(),
-      level: this.getLevels()[0],
+      levels: this._levels,
+      level: this._levels[0],
       names: names
     })
+    this.fire("indoor:loaded", {indoor: this._leaflet_id})
   },
   addFeatures: function(floorId, features) {
-    let floorNum = this._data[floorId].number;
-    for (let k in features) {
-      let feature = features[k];
-      this._data[feature.id] = feature;
-      this._fullFloor[floorNum].addLayer(this._getGeoJSON(feature))
+    let floorNum = this._data[floorId].properties.number;
+    for (let i  = 0; i < features.length; i ++) {
+      let props = features[i].properties;
+      this._data[props.id] = features[i];
+      this._fullFloor[floorNum].addLayer(this._getGeoJSON(features[i]))
     }
   },
-  onAdd: function (map) {
+  addTo: function (map) {
     this._map = map
 
     if (this._level === null) {
-      let levels = this.getLevels()
-
-      if (levels.length !== 0) {
-        this._level = levels[0]
+      if (this._levels.length !== 0) {
+        this._level = this._levels[0]
       }
     }
 
@@ -166,39 +161,36 @@ L.Indoor = L.Layer.extend({
       this._levelControl.addTo(map);
     }
   },
-  onRemove: function (map) {
-    if (this._level in this._layers) {
+  remove: function () {
+    if (this._baseFloor[this._level]) {
       this._map.removeLayer(this._baseFloor[this._level])
+    }
+    if (this._baseFloor[this._level]) {
       this._map.removeLayer(this._fullFloor[this._level])
     }
     this._levelControl.remove();
     this._map = null
   },
-  getLevels: function () {
-    return Object.keys(this._baseFloor)
-  },
-  setLevel: function (level) {
-    if (typeof (level) === 'object') {
-      level = level.newLevel
-    }
-
-    if (this._level === level) {
+  setLevel: function (newLevel) {
+    let oldLevel = this._level
+    if (oldLevel === newLevel) {
       return
     }
 
+    this._level = newLevel
+
     if (this._map !== null) {
-      if (this._map.hasLayer(this._fullFloor[this._level])) {
-        this._map.removeLayer(this._fullFloor[this._level])
+      if (this._map.hasLayer(this._fullFloor[oldLevel])) {
+        this._map.removeLayer(this._fullFloor[oldLevel])
       }
-      if (this._map.hasLayer(this._baseFloor[this._level])) {
-        this._map.removeLayer(this._baseFloor[this._level])
+      if (this._map.hasLayer(this._baseFloor[oldLevel])) {
+        this._map.removeLayer(this._baseFloor[oldLevel])
       }
-      this._map.addLayer(this._baseFloor[level])
-      this._map.addLayer(this._fullFloor[level])
+      this._map.addLayer(this._baseFloor[newLevel])
+      this._map.addLayer(this._fullFloor[newLevel])
     }
 
-    this._level = level
-    this.fire("levelchange", {level: level})
+
   },
   resetStyle: function (layer) {
     // reset any custom styles
@@ -207,9 +199,9 @@ L.Indoor = L.Layer.extend({
     return this
   },
   _getGeoJSON: function(feature) {
-    this.geojson.addData(feature.outline);
-    let layer = this.geojson.getLayers()[0];
-    this.geojson.removeLayer(layer);
+    this._geojson.addData(feature);
+    let layer = this._geojson.getLayers()[0];
+    this._geojson.removeLayer(layer);
     
     layer._leaflet_id = feature.id;
     return layer
