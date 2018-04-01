@@ -11,15 +11,14 @@
  * @author Dennis Wilhelm
  */
 angular.module('CooperativeIndoorMap')
-  .directive('featureproperties', ['$compile', 'MapHandler', 'ApiService',
-    function($compile, MapHandler, ApiService) {
+  .directive('featureproperties', ['$compile', 'MapHandler', 'ApiService', 'DrawEditHandler',
+    function($compile, MapHandler, ApiService, DrawEditHandler) {
 
       return {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'partials/featureproperties',
         replace: true,
         link: function postLink($scope) {
-
           /**
            * 打开属性视图
            */
@@ -134,13 +133,14 @@ angular.module('CooperativeIndoorMap')
               }
             }, 1000);
           };
-
+  
           /**
            * Calls the MapHandler functions to revert/cancel the current editing
            */
-          $scope.cancelEditMode = function() {
+          $scope.saveEdit = function() {
             MapHandler.removeEditHandler();
-            hideStopEditingBtn();
+            DrawEditHandler.removeEditHandler();
+            $('#saveEdit').removeClass('orangeBackground')
           };
 
           /**
@@ -148,6 +148,7 @@ angular.module('CooperativeIndoorMap')
            */
           $scope.deleteFeature = function() {
             MapHandler.deleteFeature();
+            DrawEditHandler.deleteFeature();
             $scope.selectedFeature = undefined;
           };
 
@@ -177,6 +178,7 @@ angular.module('CooperativeIndoorMap')
                 $scope.newValue = '';
                 updateFeature();
               }
+              $scope.hideNewProperty = true;
             };
 
             if (key && key.keyCode === 13) {
@@ -216,50 +218,9 @@ angular.module('CooperativeIndoorMap')
            * @param {Object} e html button
            */
           $scope.addNewProperty = function(e) {
-            var element = e.currentTarget;
-            if (element.value.indexOf('Add') > -1) {
-              element.value = 'Hide new Property';
-            } else {
-              element.value = 'Add new Property';
-            }
-            $scope.hideNewProperty = !$scope.hideNewProperty;
+            $scope.hideNewProperty = false;
           };
-
-          /**
-           * Show the button to stop the edit mode
-           */
-
-          function showStopEditingBtn() {
-            if ($('#stopEditBtn').length > 0) {
-              var newClassName = replaceAll(' hidden', '', $('#stopEditBtn')[0].className);
-              $('#stopEditBtn')[0].className = newClassName;
-
-            }
-          }
-
-          function replaceAll(find, replace, str) {
-            return str.replace(new RegExp(find, 'g'), replace);
-          }
-
-          /**
-           * Hide the button to stop the edit mode
-           */
-
-          function hideStopEditingBtn() {
-            $('#stopEditBtn').addClass('hidden');
-          }
-
-          /**
-           * Listen to the editHandler events to show or hide the "Stop Editing" button
-           */
-          $scope.$on('editHandler', function(e, eventValue) {
-            if (!eventValue) {
-              hideStopEditingBtn();
-            } else {
-              showStopEditingBtn();
-            }
-          });
-
+          
           /**
            * Remove a given property from the feature. Updates the feature afterwards.
            * @param {Number} i index of the properties Array
@@ -270,17 +231,7 @@ angular.module('CooperativeIndoorMap')
             $scope.selectedFeature.properties.splice(i, 1);
             updateFeature();
           };
-
-          /**
-           * Cancel the edit mode if the toolbox window is closed.
-           */
-          $scope.$on('toolbox', function() {
-            if ($scope.views.propertiesView) {
-              MapHandler.removeEditHandler();
-            }
-          });
-
-
+          
           //NEW CATEGORIES SYSTEM
           var presets;
           var fields;

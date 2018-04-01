@@ -91,7 +91,6 @@ angular.module('CooperativeIndoorMap')
 
           $scope.cancelReferToFeature = function() {
             $scope.isReferTo = false;
-            MapHandler.disableClick = false;
             Tooltip.hideTooltip();
           };
 

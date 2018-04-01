@@ -241,43 +241,18 @@ angular.module('CooperativeIndoorMap')
           }
           this.updateFeature(layer);
         },
-
-
-        //used to temporily disable the "edit" click
-        disableClick: false,
-
-        /**
-         * Adds a click event to a layer.
-         * Select a feature on click and highlight it's geometry.
-         * @param {Object} layer leaflet layer
-         */
-        addClickEvent: function(layer) {
-          //jshint camelcase:false
-          layer.on('click', function() {
-            if (!this.disableClick) {
-              mapScope.selectFeature(layer, this.editByUser[layer._leaflet_id]);
-              this.editFeature(layer);
-            }
-          }.bind(this));
-        },
-
+        
         /**
          * Disable the default click event and return the
          */
         getLayerIdOnce: function(cb) {
           //jshint camelcase:false
-          this.disableClick = true;
           drawnItems.once('click', function(layer) {
-            if (this.disableClick) {
-              this.disableClick = false;
               var fid;
               if (layer && layer.layer && layer.layer._leaflet_id) {
                 fid = layer.layer._leaflet_id;
               }
               cb(fid);
-            } else {
-              cb('');
-            }
           }.bind(this));
         },
 
@@ -406,7 +381,11 @@ angular.module('CooperativeIndoorMap')
             map.fitBounds(bounds);
           }
         },
-
+        onLayerClick: function(e) {
+          let layer = e.target;
+          mapScope.selectFeature(layer, this.editByUser[layer._leaflet_id]);
+          this.editFeature(layer);
+        },
         /**
          * 对地图中的某一层启用编辑功能
          * @param  {LayerGroup} layergroup feature array
@@ -414,8 +393,23 @@ angular.module('CooperativeIndoorMap')
         enableFeatureDrawEidt: function(layergroup) {
           //jshint camelcase:false
           for (let key in layergroup._layers) {
-            let tmpLayer = layergroup._layers[key];
-            this.addClickEvent(tmpLayer);
+            let layer = layergroup._layers[key];
+            layer.on('click', this.onLayerClick, this);
+          }
+        },
+  
+        /**
+         * 对地图中的某一层启用编辑功能
+         * @param  {LayerGroup} layergroup feature array
+         */
+        disableFeatureDrawEidt: function(layergroup) {
+          //jshint camelcase:false
+          if (editHandler) {
+            this.removeEditHandler();
+          }
+          for (let key in layergroup._layers) {
+            let layer = layergroup._layers[key];
+            layer.off('click', this.onLayerClick, this);
           }
         },
         /**

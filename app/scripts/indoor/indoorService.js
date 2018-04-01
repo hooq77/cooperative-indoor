@@ -148,15 +148,15 @@ angular.module('CooperativeIndoorMap')
             DrawEditHandler.enableFeatureDrawEidt(indoor._lines[level]);
             DrawEditHandler.enableFeatureDrawEidt(indoor._pois[level]);
           }
-        }
+        },
 
         disableIndoorEdit: function () {
           let indoor = indoors[indoorId]
           if(indoor) {
             let level = indoor._level;
-            DrawEditHandler.enableFeatureDrawEidt(indoor._areas[level]);
-            DrawEditHandler.enableFeatureDrawEidt(indoor._lines[level]);
-            DrawEditHandler.enableFeatureDrawEidt(indoor._pois[level]);
+            DrawEditHandler.disableFeatureDrawEidt(indoor._areas[level]);
+            DrawEditHandler.disableFeatureDrawEidt(indoor._lines[level]);
+            DrawEditHandler.disableFeatureDrawEidt(indoor._pois[level]);
           }
         }
       }

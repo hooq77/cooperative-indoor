@@ -1,26 +1,17 @@
 <div style="margin-left: 3px">
   <div class="featureProperties">
     <div ng-if="selectedFeature">
-      <input type="button" class="btn btn-default" ng-click="showFeatureHistory(selectedFeature.fid)" value="Show Changes">
+      <button type="button" class="btn btn-default" id="saveEdit" ng-click="saveEdit()">
+        <span class="glyphicon glyphicon-floppy-saved"></span>  保存
+      </button>
       <button type="button" class="btn btn-default" style="float: right" ng-click="deleteFeature()">
-        <span class="glyphicon glyphicon-trash"></span>  Delete
+        <span class="glyphicon glyphicon-trash"></span>  删除
       </button>
       <br>
-      Last edited by: {{selectedFeature.user}}
-      <select ng-model="$parent.selectedCategory" id="categorySelect" ng-change="selectPresets()">
-        <option value="" disabled selected>Select a category</option>
-        <option value="{{key}}" ng-repeat="(key, value) in categories">{{categories[key].name}}</option>
-      </select>
+      最近修改人： {{selectedFeature.user}}
       <br>
-      <span ng-show="presets">
-        <select id="presetSelect" ng-model="$parent.selectedPreset" ng-change="selectFields()">
-          <option value="" disabled selected>Select a sub category</option>
-          <option value="{{key}}" ng-repeat="(key, value) in presets">{{presets[key].name}}</option>
-        </select>
-        <br>
-      </span>
+      最近修改时间：
       <br>
-
       <div id="featurePropsForm" ng-repeat="prop in selectedFeature.properties">
         <div class="input-group">
           <label class="input-group-addon propertyLabel" for="{{prop.key}}">{{prop.key}}</label>
@@ -30,35 +21,44 @@
           </span>
         </div>
       </div>
-      <div ng-hide="selectedFeature.properties.length">This feature has no properties yet.</div>
-      <input type="button" class="btn btn-default" ng-click="addNewProperty($event)" value="Add new Property">
+      <div ng-class="{'hide': hideNewProperty}">
+        <div class="input-group">
+          <input id="newKey" type="text" class="form-control input-group-addon propertyLabel" ng-model="newKey" >
+          <input id="newValue" type="text" class="form-control" ng-model="newValue" ng-keypress="newProperty($event)">
+          <span class="input-group-btn">
+            <button class="btn btn-default propertyRemoveBtn" type="button" ng-click="newProperty()">+</button>
+          </span>
+        </div>
+      </div>
+      <input type="button" class="btn btn-default" ng-click="addNewProperty($event)" value="增加属性">
+      <div ng-hide="selectedFeature.properties.length">这个元素还没有任何属性.</div>
       <br>
-      <input type="button" class="btn btn-default orangeBackground" id="stopEditBtn" ng-click="cancelEditMode()" value="Stop Editing">
+      <select ng-model="$parent.selectedCategory" id="categorySelect" ng-change="selectPresets()">
+        <option value="" disabled selected>选择一个类别</option>
+        <option value="{{key}}" ng-repeat="(key, value) in categories">{{categories[key].name}}</option>
+      </select>
+      <br>
+      <span ng-show="presets">
+        <select id="presetSelect" ng-model="$parent.selectedPreset" ng-change="selectFields()">
+          <option value="" disabled selected>选择一个子类</option>
+          <option value="{{key}}" ng-repeat="(key, value) in presets">{{presets[key].name}}</option>
+        </select>
+        <br>
+      </span>
+
     </div>
 
     <div ng-if="!selectedFeature">
-      Click on a feature to open it's properties...
+      点击地图中的元素，进入编辑状态
     </div>
 
-    <div ng-class="{'hide': hideNewProperty}">
-      <h3>New Property</h3>
-      <label for="newKey">Property Name</label>
-      <br>
-      <input id="newKey" type="text" ng-model="newKey">
-      <br>
-      <label for="newValue">Value</label>
-      <br>
-      <input id="newValue" type="text" ng-model="newValue" ng-keypress="newProperty($event)">
-      <input type="button" class="btn btn-default" ng-click="newProperty()" value="Save">
-    </div>
+
   </div>
 
   <div class="otherEditors" ng-show="editByUser.length > 0">
-    <h4>Other users editing this feature</h4>
+    <h4>当前协同编辑用户列表</h4>
     <div ng-repeat="editUser in editByUser">
       {{editUser}}
     </div>
   </div>
-
-
 </div>
