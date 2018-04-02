@@ -93,6 +93,23 @@ angular.module('CooperativeIndoorMap')
             $scope.$root.$broadcast('openToolbox', 'historyView');
           };
 
+          /**
+           * Checks if a property should be displayed or not
+           * @param  {String} prop the property
+           * @return {Boolean}      true if the property should be displayed, false if not
+           */
+
+          function allowedProp(prop) {
+            var notAllowed = ['category', 'preset', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'fill'];
+            //var notAllowed = ['category', 'preset'];
+            if (notAllowed.indexOf(prop) > -1) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+
+
           var lastChange = -1;
           /**
            * 对于属性的更改，每秒钟同步一次
