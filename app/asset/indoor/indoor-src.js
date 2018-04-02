@@ -161,6 +161,10 @@ L.Indoor = L.Evented.extend({
       poi.bindPopup(JSON.stringify(props));
       this._pois[floorNum].addLayer(poi)
     }
+    if(map.hasLayer(this._areas[floorNum])) {
+      map.removeLayer(this._areas[floorNum]);
+      map.addLayer(this._areas[floorNum]);
+    }
   },
   addLines: function(floorId, features) {
     let floorNum = this._data[floorId].properties.number;

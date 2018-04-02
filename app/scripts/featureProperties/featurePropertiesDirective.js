@@ -135,12 +135,13 @@ angular.module('CooperativeIndoorMap')
           };
   
           /**
-           * Calls the MapHandler functions to revert/cancel the current editing
+           * Calls the DrawEditHandler to save the current editing
            */
           $scope.saveEdit = function() {
             MapHandler.removeEditHandler();
             DrawEditHandler.removeEditHandler();
-            $('#saveEdit').removeClass('orangeBackground')
+            cleanSelection();
+            $scope.selectedFeature = undefined;
           };
 
           /**
@@ -149,6 +150,7 @@ angular.module('CooperativeIndoorMap')
           $scope.deleteFeature = function() {
             MapHandler.deleteFeature();
             DrawEditHandler.deleteFeature();
+            cleanSelection();
             $scope.selectedFeature = undefined;
           };
 

@@ -156,6 +156,8 @@ angular.module('CooperativeIndoorMap')
           }
           //Create a delete handler
           var delLayer = map._layers[editFeatureId];
+          if(!delLayer)
+            return;
           var deleteHandler = new L.EditToolbar.Delete(map, {
             featureGroup: L.featureGroup([delLayer]),
           });

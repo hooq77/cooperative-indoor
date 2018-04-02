@@ -1,6 +1,9 @@
 <div style="margin-left: 3px">
   <div class="featureProperties">
-    <div ng-if="selectedFeature">
+    <div ng-show="!selectedFeature">
+      点击地图中的元素，进入编辑状态
+    </div>
+    <div ng-show="selectedFeature">
       <button type="button" class="btn btn-default" id="saveEdit" ng-click="saveEdit()">
         <span class="glyphicon glyphicon-floppy-saved"></span>  保存
       </button>
@@ -45,14 +48,7 @@
         </select>
         <br>
       </span>
-
     </div>
-
-    <div ng-if="!selectedFeature">
-      点击地图中的元素，进入编辑状态
-    </div>
-
-
   </div>
 
   <div class="otherEditors" ng-show="editByUser.length > 0">
