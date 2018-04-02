@@ -44,9 +44,14 @@ angular.module('CooperativeIndoorMap')
           //If a feature is already in editing mode, stop before creating a new editHandler
           if (editHandler) {
             this.removeEditHandler();
-            editFeatureId = undefined;
           }
 
+          if (layer instanceof L.Marker) {
+            let icon = layer._icon;
+            if (L.DomUtil.hasClass(icon, 'leaflet-marker-poi')) {
+              L.DomUtil.removeClass(icon, 'leaflet-marker-poi');
+            }
+          }
           var editPathOptions = this.getEditStyle();
 
           //Create a new edit handler
@@ -105,8 +110,17 @@ angular.module('CooperativeIndoorMap')
          */
         removeEditHandler: function() {
           if (editHandler) {
+            let layer = editHandler._featureGroup.getLayer(editFeatureId);
+            if (layer && layer instanceof L.Marker) {
+              let icon = layer._icon;
+              if (!L.DomUtil.hasClass(icon, 'leaflet-marker-poi')) {
+                L.DomUtil.addClass(icon, 'leaflet-marker-poi');
+              }
+            }
+
             editHandler.disable();
             editHandler = undefined;
+            editFeatureId = undefined;
             mapScope.$emit('editHandler', false, editFeatureId);
           }
         },
@@ -368,7 +382,6 @@ angular.module('CooperativeIndoorMap')
           });
         },
 
-
         /**
          * Zoom/Pan to feature with a given ID
          * @param  {String} id feature id (= layer id)
@@ -383,11 +396,20 @@ angular.module('CooperativeIndoorMap')
             map.fitBounds(bounds);
           }
         },
+
+        /**
+         * 元素点选事件处理函数
+         * @param  {e} e event
+         */
         onLayerClick: function(e) {
           let layer = e.target;
+          if(layer instanceof L.Marker && layer.isPopupOpen()) {
+            layer.closePopup();
+          }
           mapScope.selectFeature(layer, this.editByUser[layer._leaflet_id]);
           this.editFeature(layer);
         },
+
         /**
          * 对地图中的某一层启用编辑功能
          * @param  {LayerGroup} layergroup feature array

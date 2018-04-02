@@ -136,8 +136,8 @@ angular.module('CooperativeIndoorMap')
           });
           map.addControl(drawControl);
 
-          L.drawLocal.edit.handlers.edit.tooltip.subtext = 'Click "Stop Editing" to stop the edit mode';
-
+          L.drawLocal.edit.handlers.edit.tooltip.subtext = '点击保存或删除退出编辑状态';
+          L.drawLocal.edit.handlers.edit.tooltip.text = '进入编辑状态';
           //Drawn features have to be added to the layer group
           map.on('draw:created', function(e) {
             // drawnItems.addLayer(e.layer);

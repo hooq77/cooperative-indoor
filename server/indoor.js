@@ -18,7 +18,7 @@ exports.getIndoorListByBounds = function (bounds, callback) {
         geojson.geometry = building.outline;
         if(geojson.properties.outline)
           delete geojson.properties.outline;
-        if(geojson.properties.deleted)
+        if(geojson.properties.deleted !== undefined)
           delete geojson.properties.deleted;
         geojsons.push(geojson);
       }
@@ -45,7 +45,7 @@ exports.getFloorsById = function (indoorId, callback) {
         geojson.geometry = floor.outline;
         if(geojson.properties.outline)
           delete geojson.properties.outline;
-        if(geojson.properties.deleted)
+        if(geojson.properties.deleted !== undefined)
           delete geojson.properties.deleted;
         geojsons.push(geojson);
       }
@@ -72,7 +72,7 @@ exports.getAreasById = function (floorId, callback) {
         geojson.model = "area";
         if(geojson.properties.outline)
           delete geojson.properties.outline;
-        if(geojson.properties.deleted)
+        if(geojson.properties.deleted !== undefined)
           delete geojson.properties.deleted;
         geojsons.push(geojson);
       }

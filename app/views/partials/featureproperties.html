@@ -15,6 +15,7 @@
       <br>
       最近修改时间：
       <br>
+      <div ng-hide="selectedFeature.properties.length">这个元素还没有任何属性.</div>
       <div id="featurePropsForm" ng-repeat="prop in selectedFeature.properties">
         <div class="input-group">
           <label class="input-group-addon propertyLabel" for="{{prop.key}}">{{prop.key}}</label>
@@ -34,7 +35,6 @@
         </div>
       </div>
       <input type="button" class="btn btn-default" ng-click="addNewProperty($event)" value="增加属性">
-      <div ng-hide="selectedFeature.properties.length">这个元素还没有任何属性.</div>
       <br>
       <select ng-model="$parent.selectedCategory" id="categorySelect" ng-change="selectPresets()">
         <option value="" disabled selected>选择一个类别</option>

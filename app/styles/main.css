@@ -407,6 +407,7 @@ path:hover {
   cursor:pointer;
   background: transparent;
   border: transparent;
+  text-align: center;
 }
 .stopEditBtn {
   position: fixed;

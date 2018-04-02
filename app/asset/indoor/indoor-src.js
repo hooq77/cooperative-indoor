@@ -153,8 +153,8 @@ L.Indoor = L.Evented.extend({
       let poi = L.marker(point, {
         icon: L.divIcon({
           html: props.name,
-          iconSize: [40, 20],
-          bgPos: [15, 10],
+          iconSize: [60, 20],
+          bgPos: [30, 10],
           className: "leaflet-marker-poi"
         })
       });
