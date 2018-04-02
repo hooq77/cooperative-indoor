@@ -20,14 +20,6 @@ angular.module('CooperativeIndoorMap')
         replace: true,
         link: function postLink($scope) {
           /**
-           * 打开属性视图
-           */
-
-          function activateToolbox() {
-            window._sidebar.open('propertis');
-          }
-
-          /**
            * 通过属性视图给选定的feature设置属性，将属性数组放入到scope中，
            * 并使用ng-repeat指令在mapService中使用
            * @param {Object} feature leaflet中的layer的信息
@@ -92,9 +84,8 @@ angular.module('CooperativeIndoorMap')
             $scope.safeApply();
           });
 
-
           /**
-           * Opens a bootstrap modal to show the history of a single feature
+           * 打开历史界面，显示元素的编辑历史
            * @param {String} id the feature id
            */
           $scope.showFeatureHistory = function(id) {
@@ -102,26 +93,9 @@ angular.module('CooperativeIndoorMap')
             $scope.$root.$broadcast('openToolbox', 'historyView');
           };
 
-          /**
-           * Checks if a property should be displayed or not
-           * @param  {String} prop the property
-           * @return {Boolean}      true if the property should be displayed, false if not
-           */
-
-          function allowedProp(prop) {
-            var notAllowed = ['category', 'preset', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'fill'];
-            //var notAllowed = ['category', 'preset'];
-            if (notAllowed.indexOf(prop) > -1) {
-              return false;
-            } else {
-              return true;
-            }
-          }
-
-
           var lastChange = -1;
           /**
-           * Gets called if a property changes. Only send a change every 1s if no further changes have been made in between to prevent submits on every keystroke.
+           * 对于属性的更改，每秒钟同步一次
            */
           $scope.propertyChanged = function() {
             lastChange = new Date().getTime();
@@ -135,7 +109,7 @@ angular.module('CooperativeIndoorMap')
           };
   
           /**
-           * Calls the DrawEditHandler to save the current editing
+           * 保存并退出元素编辑状态
            */
           $scope.saveEdit = function() {
             MapHandler.removeEditHandler();
@@ -145,7 +119,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Deletes the currently selected feature
+           * 删除当前的元素
            */
           $scope.deleteFeature = function() {
             MapHandler.deleteFeature();
@@ -155,7 +129,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Include the feature properties back into the layer and call the update function
+           * 更新列表元素属性显示
            */
 
           function updateFeature() {
@@ -166,8 +140,8 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Adds a new property to the feature.
-           * @param {Number} key key code of the ng-key event
+           * 增加一个新属性
+           * @param {event} key 按键
            */
           $scope.newProperty = function(key) {
             var newProp = function() {
@@ -191,7 +165,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Adds a new property to the feature.
+           * 设定元素类型
            * @param {String} type the property type
            */
 
@@ -203,6 +177,10 @@ angular.module('CooperativeIndoorMap')
             updateFeature();
           }
 
+          /**
+           * 去除元素类型
+           * @param type
+           */
           function removePropertyType(type) {
             for (var i = $scope.selectedFeature.properties.length - 1; i >= 0; i--) {
               if ($scope.selectedFeature.properties[i].key === type) {
@@ -216,15 +194,14 @@ angular.module('CooperativeIndoorMap')
           $scope.hideNewProperty = true;
 
           /**
-           * Show the GUI form to create new properties
-           * @param {Object} e html button
+           * 显示增加新元素的输入框
            */
-          $scope.addNewProperty = function(e) {
+          $scope.addNewProperty = function() {
             $scope.hideNewProperty = false;
           };
           
           /**
-           * Remove a given property from the feature. Updates the feature afterwards.
+           * 删除特定属性
            * @param {Number} i index of the properties Array
            */
           $scope.removeProperty = function(i) {

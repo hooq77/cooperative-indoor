@@ -126,6 +126,7 @@ angular.module('CooperativeIndoorMap')
         if (editModeOnFeatureUpdate)
           this.editFeature(tmpLayer);
       }
+
       return {
         /**
          * Initialize the service.
