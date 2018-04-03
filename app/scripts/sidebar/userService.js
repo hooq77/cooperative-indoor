@@ -1,14 +1,4 @@
 'use strict';
-
-/**
- * @memberof CooperativeIndoorMap
- * @fileOverview Stores the users currently within the map with their WebSockt ID and user name
- * Creates a randomColor for every user. 
- * Provides getters for the userName and the userColor
- * @exports CooperativeIndoorMap.Users
- * @author Dennis Wilhelm
- */
-
 angular.module('CooperativeIndoorMap')
   .service('Users', [
     function() {

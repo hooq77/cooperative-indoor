@@ -1,13 +1,4 @@
 'use strict';
-/**
- * @memberof SocketModule
- * @fileOverview Handles the WebSocket connection. Provides the method to connect to a stream as well to emit messages.
- * 
- * @requires $rootScope
- * 
- * @exports SocketModule.Socket
- * @author Dennis Wilhelm
- */
 angular.module('SocketModule')
   .factory('Socket', ['$rootScope',
     function($rootScope) {

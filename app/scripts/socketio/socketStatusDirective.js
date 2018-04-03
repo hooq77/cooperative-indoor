@@ -1,13 +1,4 @@
 'use strict';
-
-/**
- * @memberof SocketModule
- * @fileOverview Listens to the socketIO events to display a message if the connection is lost or established.
- *
- * @exports SocketModule.socketStatus
- *
- * @author Dennis Wilhelm
- */
 angular.module('SocketModule').directive('socketStatus', [
   function() {
 

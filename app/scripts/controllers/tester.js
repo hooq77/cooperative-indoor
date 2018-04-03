@@ -1,11 +1,5 @@
 'use strict';
 
-/**
- * @memberof CooperativeIndoorMap
- * @fileOverview Tester controller. GUI to send the WebSocket commands for the TesterService. Used to make testing on several computers easier.
- * @exports CooperativeIndoorMap.TesterCtrl
- * @author Dennis Wilhelm
- */
 angular.module('CooperativeIndoorMap')
   .controller('TesterCtrl', ['$http', '$scope', 'Socket', 'Utils',
     function($http, $scope, Socket, Utils) {

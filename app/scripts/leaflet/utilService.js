@@ -1,11 +1,5 @@
 'use strict';
 
-/**
- * @memberof CooperativeIndoorMap
- * @fileOverview Util factory.
- * @exports CooperativeIndoorMap.MapHandler
- * @author Huqiang
- */
 angular.module('CooperativeIndoorMap').
   factory('Utils', function() {
     return {

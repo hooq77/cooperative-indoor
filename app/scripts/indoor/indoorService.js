@@ -1,13 +1,5 @@
 'use strict';
-/**
- * @memberof CooperativeIndoorMap
- *
- * @fileOverview Wrapper for all indoor map interactions.
- *
- * @exports CooperativeIndoorMap.Indoor
- * @requires  Socket
- * @author Huqiang
- */
+
 angular.module('CooperativeIndoorMap')
   .service('IndoorHandler', ['Socket', 'ApiService', 'DrawEditHandler',
     function (Socket, ApiService, DrawEditHandler) {

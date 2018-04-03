@@ -1,13 +1,5 @@
 'use strict';
-/**
- * @memberof CooperativeIndoorMap
- *
- * @fileOverview Wrapper for all leaflet.draw based edit interactions.
- *
- * @exports CooperativeIndoorMap.EditHandler
- * @requires  Socket
- * @author Huqiang
- */
+
 angular.module('CooperativeIndoorMap')
   .service('DrawEditHandler', ['Socket',
     function (Socket) {

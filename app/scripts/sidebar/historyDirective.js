@@ -1,17 +1,5 @@
 'use strict';
 
-/**
- * @memberof CooperativeIndoorMap
- * @fileOverview MapHistory directive. Displays the actions which where performed on the map as a list (feature editing/creating/removing/reverting, etc.)
- *
- * @requires ApiService
- * @requires MapHandler
- *
- * @exports CooperativeIndoorMap.mapHistory
- *
- * @author Dennis Wilhelm
- */
-
 angular.module('CooperativeIndoorMap')
   .directive('history', ['MapHandler', 'ApiService',
     function(MapHandler, ApiService) {

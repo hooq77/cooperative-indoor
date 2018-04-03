@@ -1,10 +1,5 @@
 var couchdbHandler = require('./dbHandler.js');
 
-/**
- * Initializes the Websocket listeners.
- * @param  {Object} server The httpServer
- * @return {Object}     Websocket http server
- */
 module.exports = function(server) {
   var io = require('socket.io')(server);
 

@@ -1,10 +1,5 @@
 'use strict';
 
-/**
- * @fileOverview Handles the express routing
- * @author Dennis Wilhelm
- */
-
 const dbHandler = require('./dbHandler.js');
 const indoor = require('./indoor');
 const index = require('./controllers');

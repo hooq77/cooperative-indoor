@@ -1,10 +1,4 @@
 'use strict';
-
-/**
- * @fileOverview Initializes the CooperativeIndoorMap module
- * @author Dennis Wilhelm
- * @namespace CooperativeIndoorMap
- */
 angular.module('CooperativeIndoorMap', [
   'ngCookies',
   'ngResource',

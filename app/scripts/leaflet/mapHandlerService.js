@@ -1,15 +1,5 @@
 'use strict';
-/**
- * @memberof CooperativeIndoorMap
- *
- * @fileOverview Wrapper for all leaflet based map interactions.
- * Used to keep leaflet specific code out of other modules.
- *
- * @exports CooperativeIndoorMap.MapHandler
- * @requires  Utils
- * @requires  Socket
- * @author Dennis Wilhelm
- */
+
 angular.module('CooperativeIndoorMap')
   .service('MapHandler', ['Utils', 'Socket',
     function(Utils, Socket) {

@@ -1,15 +1,5 @@
 'use strict';
 
-/**
- * @memberof CooperativeIndoorMap
- *
- * @fileOverview Listeners for mouse drage and scroll events to catch map movements.
- * Used instead of direct leaflet events to prevent back coupling problems.
- * Callbacks of all events are handled in the SynchronizeMapService.
- *
- * @exports CooperativeIndoorMap.MapMovementEvents
- * @author Dennis Wilhelm
- */
 angular.module('CooperativeIndoorMap')
   .service('MapMovementEvents', ['ApiService', function(ApiService) {
     return {
