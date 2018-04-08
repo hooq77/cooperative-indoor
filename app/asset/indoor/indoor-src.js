@@ -137,7 +137,7 @@ L.Indoor = L.Evented.extend({
       level: this._levels[0],
       names: names
     })
-    this.fire("indoor:loaded", {indoor: this._leaflet_id})
+    this.fire("indoor:loaded", {id: this._leaflet_id})
   },
   addAreas: function(floorId, features) {
     let floorNum = this._data[floorId].properties.number;
@@ -228,7 +228,7 @@ L.Indoor = L.Evented.extend({
       this._map.addLayer(this._pois[newLevel])
     }
 
-
+    this.fire('indoor:level', {level: this._level})
   },
   resetStyle: function (layer) {
     // reset any custom styles

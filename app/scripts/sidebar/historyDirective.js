@@ -17,12 +17,11 @@ angular.module('CooperativeIndoorMap')
           /**
            * Listen to the historyView event. Called when the toolbox history view is opened/closed
            */
-          scope.$on('toolbox', function(e, view, hidden) {
-            if (view === 'historyView' && !hidden) {
+          scope.$on('sidebar:on', function(e, view) {
+            if (view === 'history') {
               loadMapHistory();
             }
           });
-
           /**
            * Is this still used?
            */

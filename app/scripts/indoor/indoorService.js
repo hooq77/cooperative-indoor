@@ -6,6 +6,7 @@ angular.module('CooperativeIndoorMap')
       var map, mapScope;
       let indoors = {};
       let indoorId = undefined;
+      let indoorLevel = null;
 
       /**
        * 获取当前视图下室内地图列表
@@ -30,6 +31,10 @@ angular.module('CooperativeIndoorMap')
                 indoors[building.id].on("indoor:loaded", function (evt) {
                   if(evt.id === indoorId)
                     indoors[indoorId].addTo(map);
+                })
+                indoors[building.id].on("indoor:level", function (evt) {
+                  indoorLevel = evt.level;
+                  $scope.$root.$broadcast("indoor:level", {level: evt.level, id: building.id});
                 })
               } else {
                 if(building.id === indoorId)
@@ -129,7 +134,8 @@ angular.module('CooperativeIndoorMap')
         initIndoorHandler: function(m, scope) {
           map = m;
           mapScope = scope;
-          map.on('moveend', getBuildings)
+          map.on('moveend', getBuildings);
+          getBuildings();
           map._indoor = indoors;
         },
 

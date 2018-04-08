@@ -47,9 +47,11 @@ angular.module('CooperativeIndoorMap')
                 } else {
                   IndoorHandler.disableIndoorEdit();
                 }
+                $scope.$root.$broadcast('sidebar:on', event.id);
               }
             });
             sidebar.on('closing', function () {
+              $scope.$root.$broadcast('sidebar:off');
               if($scope.currentView === "propertis") {
                 IndoorHandler.disableIndoorEdit();
               }
