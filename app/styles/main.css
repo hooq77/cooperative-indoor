@@ -238,10 +238,10 @@ input {
 .history {
   background-color: #FFFFFF;
   border: 1px solid #CCCCCC;
-  padding: 15px;
+  box-shadow: 4px 4px #9B9898;
   -moz-border-radius: 5px;
   border-radius: 0;
-  margin: 3px;
+  margin: 10px;
 }
 .history:hover {
   background-color: #ddd;
@@ -249,6 +249,14 @@ input {
 .historyDate {
   font-size: 12px;
   float:right;
+}
+.historyInfo {
+  font-size: 12px;
+}
+.historyHeader   {
+  height: 20px;
+  color: #fff;
+  background-color: #15241a;
 }
 .historyContainer {
   position: absolute;
@@ -299,6 +307,7 @@ input {
 }
 .stringLink {
   color: #2a6496;
+  float: right;
 }
 .stringLink:hover {
   text-decoration: underline;

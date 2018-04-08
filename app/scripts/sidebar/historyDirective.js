@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('CooperativeIndoorMap')
-  .directive('history', ['MapHandler', 'ApiService',
-    function(MapHandler, ApiService) {
-
+  .directive('history', ['MapHandler', 'ApiService', 'IndoorHandler',
+    function(MapHandler, ApiService, IndoorHandler) {
+    
+      
       return {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'partials/history',
@@ -11,32 +12,55 @@ angular.module('CooperativeIndoorMap')
         scope: {},
         link: function(scope) { //, iElm, iAttrs, controller) {
 
-          scope.isShowMapHistory = true;
+          scope.isShowFloorHistory = true;
           scope.isShowFeatureHistory = false;
 
           /**
-           * Listen to the historyView event. Called when the toolbox history view is opened/closed
+           * 监听history侧边栏打开事件，侧边栏打开的时候加载历史版本信息
            */
           scope.$on('sidebar:on', function(e, view) {
             if (view === 'history') {
-              loadMapHistory();
+              loadFloorHistory();
             }
           });
+          
           /**
-           * Is this still used?
+           * 加载当前楼层中每个feature的最新版本
            */
-          scope.$on('appendToHistory', function(e, updateEvent) {
-            appendToHistory(updateEvent);
-          });
-
+          function loadFloorHistory() {
+            let indoor = IndoorHandler.getCurrentBuildingAndLevel();
+            scope.isShowFloorHistory = true;
+            scope.isShowFeatureHistory = false;
+            scope.history = IndoorHandler.getCurrentFloorFeatures();
+          }
+  
           /**
-           * Event listener for the feature history event. Called when the "show changes" buttons are clicked.
-           * toggles the view so that the feature history can be shown
+           * 浏览单个feature的历史版本信息
+           * @param {String} id feature的id
            */
-          scope.$on('showFeatureHistory', function() {
+          scope.showFeatureHistory = function(id) {
             scope.isShowFeatureHistory = true;
-            scope.isShowMapHistory = false;
-          });
+            scope.isShowFloorHistory = false;
+            let feature = IndoorHandler.getFeatureById(id);
+            switch (feature.model) {
+              case 'area':
+                getAreaHistory(id);
+                break;
+              case 'line':
+                getLineHistory(id);
+                break;
+              case 'poi':
+                getPoiHistory(id);
+                break;
+              case 'floor':
+                getFloorHistory(id);
+                break;
+              case 'building':
+                getBuildingHistory(id);
+                break;
+            }
+            // scope.$root.$broadcast('showFeatureHistory', id);
+          };
 
           /**
            * Event listener for the feature history close event.
@@ -44,35 +68,47 @@ angular.module('CooperativeIndoorMap')
            */
           scope.$on('closeFeatureHistory', function() {
             scope.isShowFeatureHistory = false;
-            scope.isShowMapHistory = true;
-            loadMapHistory();
+            scope.isShowFloorHistory = true;
+            // loadFloorHistory();
           });
-
-          /**
-           * Manually append actions to the history.
-           * Used to prevent multiple ajax calls to update the history.
-           * Can result in different timestamps on different computers
-           * @param {Object} event map draw event
+          scope.closeFeatureHistory = function(){
+            scope.isShowFeatureHistory = false;
+            scope.isShowFloorHistory = true;
+            // loadFloorHistory();
+          };
+           /**
+           * Replace aggregated object in the history with the single actions
+           * @param  {Object} action the aggregated object
            */
-
-          function appendToHistory(event) {
-            if (event.date) {
-              if (!scope.history) {
-                scope.history = [];
-              }
-              event.dateString = createDateString(event.date);
-              scope.history.push(event);
-            }
-          }
-
+          scope.showHistoryDetails = function(fid) {
+            var index = scope.history.indexOf(action);
+            var tmp = scope.history[index];
+            delete scope.history[index];
+            scope.history = scope.history.concat(tmp.actions);
+          };
+          
           /**
-           * Loads the current history for the map.
-           * Appends the history to the scope for the history directive
+           * Pan to the a selected feature
+           * @param  {String} fid feature id (= leaflet layer id)
            */
-
-          function loadMapHistory() {
+          scope.panToFeature = function(fid) {
+            MapHandler.panToFeature(fid);
+          };
+  
+  
+          function getAreaHistory(id) {
+            scope.currentfId = id;
             scope.loading = true;
-
+            ApiService.getAreaHistory(id)
+              .then(function(result) {
+                scope.loading = false;
+                if (result.data) {
+                  scope.featureHistory = reduceActions(result.data);
+                }
+              });
+          }
+  
+          function getFloorHistory(id) {
             ApiService.getMapHistory(scope.$root.mapId)
               .then(function(result) {
                 if (result && result.data) {
@@ -83,36 +119,84 @@ angular.module('CooperativeIndoorMap')
                   });
                   scope.history = reduceActions(result.data);
                 }
-                scope.loading = false;
-
               });
+    
+            scope.$root.$broadcast('showFeatureHistory', id);
           }
-
+          function getBuildingHistory(id) {
+            ApiService.getMapHistory(scope.$root.mapId)
+              .then(function(result) {
+                if (result && result.data) {
+                  result.data.forEach(function(action) {
+                    if (action.date) {
+                      action.dateString = createDateString(action.date);
+                    }
+                  });
+                  scope.history = reduceActions(result.data);
+                }
+              });
+    
+            scope.$root.$broadcast('showFeatureHistory', id);
+          }
+  
+          function getLineHistory(id) {
+            ApiService.getMapHistory(scope.$root.mapId)
+              .then(function(result) {
+                if (result && result.data) {
+                  result.data.forEach(function(action) {
+                    if (action.date) {
+                      action.dateString = createDateString(action.date);
+                    }
+                  });
+                  scope.history = reduceActions(result.data);
+                }
+              });
+    
+            scope.$root.$broadcast('showFeatureHistory', id);
+          }
+  
+          function getPoiHistory(id) {
+            ApiService.getMapHistory(scope.$root.mapId)
+              .then(function(result) {
+                if (result && result.data) {
+                  result.data.forEach(function(action) {
+                    if (action.date) {
+                      action.dateString = createDateString(action.date);
+                    }
+                  });
+                  scope.history = reduceActions(result.data);
+                }
+              });
+    
+            scope.$root.$broadcast('showFeatureHistory', id);
+          }
+  
+  
           /**
            * Combine similar actions to avoid a map history pollution if one person makes many changes.
            * @param  {Array} values the history actions
            * @return {Array}        the aggregated history actions
            */
-
+  
           function reduceActions(values) {
             var result = [];
             values.forEach(function(elem) {
               if (result.length === 0) {
                 result.push(elem);
               } else {
-                if (elem.user === result[result.length - 1].user) {
+                if (elem.owner === result[result.length - 1].owner) {
                   if (result[result.length - 1].actions) {
                     result[result.length - 1].actions.push(elem);
                     result[result.length - 1].number++;
-                    result[result.length - 1].date = elem.date;
-                    result[result.length - 1].dateString = elem.dateString;
+                    result[result.length - 1].time = elem.time;
+                    result[result.length - 1].to = elem.version;
                   } else {
                     result[result.length - 1] = {
-                      user: elem.user,
+                      owner: elem.owner,
                       actions: [result[result.length - 1], elem],
                       number: 2,
-                      dateString: elem.dateString,
-                      date: elem.date
+                      time: elem.time,
+                      from: elem.version
                     };
                   }
                 } else {
@@ -122,50 +206,6 @@ angular.module('CooperativeIndoorMap')
             });
             return result;
           }
-
-          /**
-           * Replace aggregated object in the history with the single actions
-           * @param  {Object} action the aggregated object
-           */
-          scope.showHistoryDetails = function(action) {
-            var index = scope.history.indexOf(action);
-            var tmp = scope.history[index];
-            delete scope.history[index];
-            scope.history = scope.history.concat(tmp.actions);
-          };
-
-          /**
-           * Opens a bootstrap modal to show the history of a single feature
-           * @param {String} id the feature id
-           */
-          scope.showFeatureHistory = function(id) {
-            scope.$root.$broadcast('showFeatureHistory', id);
-          };
-
-          /**
-           * Pan to the a selected feature
-           * @param  {String} fid feature id (= leaflet layer id)
-           */
-          scope.panToFeature = function(fid) {
-            MapHandler.panToFeature(fid);
-          };
-
-          /**
-           * Create a human readable string out of the unix timestamp
-           * @param {String} date  unix timestamp
-           */
-
-          function createDateString(date) {
-            var tmpDate = new Date(date);
-            var dateString = tmpDate.getHours() + ':' +
-              tmpDate.getMinutes() + ':' + tmpDate.getSeconds() +
-              ' - ' + tmpDate.getDate() + '.' +
-              (tmpDate.getMonth() + 1) + '.' +
-              tmpDate.getFullYear();
-
-            return dateString;
-          }
-
         }
       };
     }

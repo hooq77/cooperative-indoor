@@ -49,8 +49,19 @@ module.exports = function(app) {
       }
     })
   });
-
-
+  
+  app.get('/api/history/area/:id', function (req, res) {
+    console.log("id = " + req.params.id);
+    indoor.getAreaHistory(req.params.id, (err, history) => {
+      if(err) {
+        console.error(err.stack);
+        res.send([]);
+      } else {
+        res.send(history)
+      }
+    })
+  });
+  
   /**
    * App route to the map features.
    * Calls the dbHandler to get all features of a specific map and returns them as JSON

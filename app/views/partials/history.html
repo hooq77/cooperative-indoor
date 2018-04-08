@@ -1,45 +1,63 @@
 <div class="historyContainer">
-  <div style="margin: auto; width: 43px;" ng-show="loading">
-    <div class="loading"></div>
-  </div>
-  <div ng-show="isShowMapHistory">
-    <div ng-hide="loading">
-      <div ng-hide="history">
-        No history available yet.
-      </div>
+  <div ng-show="loading">
+    <br>
+    <div style="margin: auto; width: 43px;">
+      <div class="loading"></div>
     </div>
-    <span ng-show="history" style="padding-left: 10px">Filter:
+    <br>
+  </div>
+  <div ng-show="isShowFloorHistory">
+    <span ng-show="history" style="padding-left: 10px">过滤器:
       <input type="text" ng-model="queryText">
     </span>
 
-    <div ng-repeat="action in history | filter: queryText | orderBy: 'date':true track by $index">
-      <div ng-if="action.actions">
-        <div class="history stacked">
-          <div class="historyDropdown stringLink" ng-click="showHistoryDetails(action)">Show details</div>
-          {{action.user}} made {{action.number}} changes.
-          <br>
-          <div class="historyDate">{{action.dateString}}</div>
+    <div ng-repeat="feature in history | filter: queryText | orderBy: 'date':true track by $index">
+      <div class="history" ng-click="panToFeature(feature.id)">
+        <div class="historyHeader">
+          元素 #{{feature.id}}
         </div>
-      </div>
-      <div ng-if="action.action">
-        <div class="history" ng-click="panToFeature(action.id)">
-
-          <div class="historyDropdown dropdown"><a class="dropdown-toggle" role="button" data-toggle="dropdown" href="javascript:;">Actions<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a tabindex="-1" data-ng-click="showFeatureHistory(action.id)">View History</a>
-              </li>
-            </ul>
-          </div>
-
-          {{action.user}}: {{action.action}}
-          <br>Revision: {{action.rev.split('-')[0]}}
-          <br>
-          <div class="historyDate">{{action.dateString}}</div>
+        <div class="stringLink dropdown" ng-click="showFeatureHistory(feature.id)">历史版本</div>
+        <div class="historyInfo">
+          版本号： {{feature.properties.version}} <br>
+          所有者： {{feature.properties.owner}} <br>
+          创建时间： {{feature.properties.time}}
         </div>
       </div>
     </div>
   </div>
   <div ng-show="isShowFeatureHistory">
-    <feature-history></feature-history>
+    <input type="button" class="btn btn-default" value="返回列表" ng-click="closeFeatureHistory()">
+    <div class="historyHeader">
+      元素 #{{currentfId}}
+    </div>
+    <div ng-repeat="action in featureHistory | orderBy: 'version':true track by $index">
+      <div ng-if="action.actions">
+        <div class="history stacked">
+          <div class="historyDropdown stringLink" ng-click="showHistoryDetails(action)">显示细节</div>
+          <div class="historyInfo">
+            版本号： {{action.from}} - {{action.to}}<br>
+            所有者： {{action.owner}} <br>
+            创建时间： {{action.time}}
+          </div>
+        </div>
+      </div>
+      <div ng-if="action.operation">
+        <div class="history" ng-click="panToFeature(action.id)">
+          <div class="historyDropdown dropdown"><a class="dropdown-toggle" role="button" data-toggle="dropdown" href="javascript:;">动作<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a tabindex="-1" data-ng-click="showFeatureHistory(action.id)">合并</a>
+              </li>
+              <li><a tabindex="1" data-ng-click="showFeatureHistory(action.id)">回退</a>
+              </li>
+            </ul>
+          </div>
+          <div class="historyInfo">
+            版本号： {{action.version}}<br>
+            所有者： {{action.owner}} <br>
+            创建时间： {{action.time}}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

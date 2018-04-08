@@ -30,3 +30,13 @@ exports.findAreasById = function(floorId, callback){
     callback(undefined, res);
   }).catch(err => callback(err))
 };
+
+exports.getAreaHistoryById = function (id, callback) {
+  model.AreaHistory.findAll({
+    where: {
+      id: id
+    }
+  }).then((res) => {
+    callback(undefined, res)
+  }).catch(err => callback(err))
+}

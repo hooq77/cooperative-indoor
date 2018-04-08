@@ -20,6 +20,10 @@ angular.module('CooperativeIndoorMap')
         getLines: function(floorId) {
           return $http.get('/api/lines/' + floorId);
         },
+        getAreaHistory: function(id) {
+          return $http.get('/api/history/area/' + id);
+        },
+        
         /**
          * Returns a promise which will be resolved current features of the map
          * @param  {String} mapId the map id

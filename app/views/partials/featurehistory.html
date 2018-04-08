@@ -1,6 +1,5 @@
 <div class="paddingLeft">
-  <input type="button" class="btn btn-default" value="Back to History" ng-click="backToHistory()" style="float:right">
-  <br>
+  <input type="button" class="btn btn-default" value="返回列表" ng-click="backToHistory()" style="float:right">
   <br>
   <div ng-show="loading">
     <br>
@@ -10,7 +9,7 @@
     <br>
   </div>
   <div ng-show="currentRevision">
-    <h4>Feature: {{currentRevision._id}}</h4>
+    <h4>Feature: {{currentRevision.id}}</h4>
     Number of Revisions: {{numberOfRevisions}}
     <br>Displayed Revision: {{numberOfRevisions-currentRevisionIndex}}
 

@@ -80,3 +80,13 @@ exports.getAreasById = function (floorId, callback) {
     }
   })
 }
+
+exports.getAreaHistory = function (id, callback) {
+  dbHelper.getAreaHistoryById(id, (err, res) => {
+    if(err) {
+      callback(err, res);
+    } else {
+      callback(err, res);
+    }
+  })
+}

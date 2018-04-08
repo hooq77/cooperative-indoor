@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('CooperativeIndoorMap')
-  .directive('featureHistory', ['MapHandler', 'ApiService',
-    function(MapHandler, ApiService) {
+  .directive('featureHistory', ['MapHandler', 'ApiService', 'IndoorHandler',
+    function(MapHandler, ApiService, IndoorHandler) {
 
       /**
        * Initialize the textual diff
@@ -127,8 +127,8 @@ angular.module('CooperativeIndoorMap')
            * Event called when clicking the "view changes" buttons.
            * Initializes the feature history with the given feature id
            */
-          $scope.$on('showFeatureHistory', function(e, fid) {
-            init(fid);
+          $scope.$on('showFeatureHistory', function(e, id) {
+            init(id);
           });
 
           /**
@@ -143,13 +143,30 @@ angular.module('CooperativeIndoorMap')
 
           /**
            * Load the document revisions history and clear eixisting values.
-           * @param  {string} fid feature id
+           * @param  {string} id feature id
            */
 
-          function init(fid) {
+          function init(id) {
             $scope.documentRevision = [];
             $scope.currentRevisionIndex = 0;
-            loadDocumentHistory(fid);
+            let feature = IndoorHandler.getFeatureById(id);
+            switch (feature.model) {
+              case 'area':
+                getAreaHistory(id);
+                break;
+              case 'line':
+                getLineHistory(id);
+                break;
+              case 'poi':
+                getPoiHistory(id);
+                break;
+              case 'floor':
+                getFloorHistory(id);
+                break;
+              case 'building':
+                getBuildingHistory(id);
+                break;
+            }
           }
 
           /**
@@ -171,8 +188,8 @@ angular.module('CooperativeIndoorMap')
            */
 
           function setOriginalFeature() {
-            MapHandler.removeLayerFid('diff-' + $scope.currentRevision._id);
-            MapHandler.addFeatureAfterDiff($scope.currentRevision._id, documentRevisions[0]);
+            // MapHandler.removeLayerFid('diff-' + $scope.currentRevision.id);
+            // MapHandler.addFeatureAfterDiff($scope.currentRevision._id, documentRevisions[0]);
           }
 
           /**
@@ -180,7 +197,7 @@ angular.module('CooperativeIndoorMap')
            */
 
           function removeOriginalFeature() {
-            var fid = documentRevisions[0]._id;
+            var fid = documentRevisions[0].id;
             MapHandler.removeLayerFid(fid);
           }
 
@@ -263,35 +280,13 @@ angular.module('CooperativeIndoorMap')
             $scope.currentRevisionIndex = index;
             $scope.currentRevision = documentRevisions[index];
             getPropertyDiff(index);
-            var fid = 'diff-' + $scope.currentRevision._id;
+            var fid = 'diff-' + $scope.currentRevision.id;
             $scope.sliderValue = $scope.numberOfRevisions - index;
             MapHandler.removeLayerFid(fid);
             MapHandler.updateLayerForDiff(fid, $scope.currentRevision);
             MapHandler.highlightFeatureId(fid);
           }
-
-
-          /**
-           * Request all revisions from the database.
-           * Initialize the views.
-           * @param {String} fid feature id
-           */
-
-          function loadDocumentHistory(fid) {
-            if (fid) {
-              $scope.loading = true;
-              init();
-              ApiService.getFeatureHistory($scope.$root.mapId, fid)
-                .then(function(result) {
-                  $scope.loading = false;
-                  if (result.data) {
-                    documentRevisions = result.data;
-                    initView();
-                  }
-                });
-            }
-          }
-
+  
           /**
            * Revert a feature to a given revision.
            * @param {String} id the feature id

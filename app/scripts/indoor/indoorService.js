@@ -3,11 +3,11 @@
 angular.module('CooperativeIndoorMap')
   .service('IndoorHandler', ['Socket', 'ApiService', 'DrawEditHandler',
     function (Socket, ApiService, DrawEditHandler) {
-      var map, mapScope;
+      let map, mapScope;
       let indoors = {};
       let indoorId = undefined;
       let indoorLevel = null;
-
+      
       /**
        * 获取当前视图下室内地图列表
        */
@@ -23,22 +23,26 @@ angular.module('CooperativeIndoorMap')
             }
             for(let key in blds) {
               let building = blds[key];
-              if (!indoorId)
+              
+              if (!indoorId) {
                 indoorId = building.id;
+              }
+
               if (!indoors[building.id]) {
                 indoors[building.id] = L.indoor(building,{});
                 loadIndoorMap(building.id);
+                // 楼层信息加载之后就把室内地图添加到map
                 indoors[building.id].on("indoor:loaded", function (evt) {
                   if(evt.id === indoorId)
                     indoors[indoorId].addTo(map);
-                })
+                });
+                // 室内地图切换楼层的时候，在AngularJS应用内部广播
                 indoors[building.id].on("indoor:level", function (evt) {
                   indoorLevel = evt.level;
-                  $scope.$root.$broadcast("indoor:level", {level: evt.level, id: building.id});
-                })
-              } else {
-                if(building.id === indoorId)
-                  indoors[indoorId].addTo(map);
+                  mapScope.$root.$broadcast("indoor:level", {level: evt.level, id: building.id});
+                });
+              } else if(building.id === indoorId){
+                indoors[indoorId].addTo(map);
               }
             }
           })
@@ -46,6 +50,7 @@ angular.module('CooperativeIndoorMap')
             console.log("获取地图列表失败，错误代码" + status);
           });
       }
+      
       /**
        * 获取室内地图
        * @param mapId 室内地图id
@@ -53,7 +58,6 @@ angular.module('CooperativeIndoorMap')
       function loadIndoorMap(mapId) {
         ApiService.getFloors(mapId)
           .success(floors =>{
-            console.log("楼层数为", floors.length)
             let indoor = indoors[mapId];
             indoor.addFloors(floors);
             for(let key in floors) {
@@ -63,6 +67,7 @@ angular.module('CooperativeIndoorMap')
             indoor.addTo(map);
           })
       }
+      
       /**
        * 获取室内地图
        * @param mapId 室内地图id
@@ -71,9 +76,7 @@ angular.module('CooperativeIndoorMap')
       function loadAreas(mapId, floorId) {
         ApiService.getAreas(floorId)
           .success(areas =>{
-            console.log("区域数为", areas.length)
             indoors[mapId].addAreas(floorId, areas);
-            console.log(indoors[mapId])
           })
       }
 
@@ -157,6 +160,49 @@ angular.module('CooperativeIndoorMap')
             DrawEditHandler.disableFeatureDrawEidt(indoor._lines[level]);
             DrawEditHandler.disableFeatureDrawEidt(indoor._pois[level]);
           }
+        },
+  
+        /**
+         * 获取当前当前的建筑物ID和显示楼层
+         * @returns {{building: *, level: *}}
+         */
+        getCurrentBuildingAndLevel: function() {
+          return {
+            building: indoorId,
+            level: indoorLevel
+          }
+        },
+        
+        /**
+         * 获取当前楼层的所有元素
+         * @returns {{building: *, level: *}}
+         */
+        getCurrentFloorFeatures: function() {
+          let indoor = indoors[indoorId];
+          let features = [];
+          if(indoor) {
+            let level = indoor._level;
+            indoor._areas[level].eachLayer(function (layer) {
+              features.push(layer.feature);
+            });
+            
+            indoor._lines[level].eachLayer(function (layer) {
+              features.push(layer.feature);
+            });
+            
+            indoor._pois[level].eachLayer(function (layer) {
+              if(layer.id && layer.properties)
+                features.push(layer.feature);
+            });
+            // features = features.concat(indoor._areas[level].getLayers());
+            // features = features.concat(indoor._lines[level].getLayers());
+            // features = features.concat(indoor._pois[level].getLayers());
+          }
+          return features;
+        },
+        getFeatureById: function (id) {
+          let indoor = indoors[indoorId];
+          return indoor._data[id];
         }
       }
     }]);
