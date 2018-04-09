@@ -1,4 +1,4 @@
-const model = require('./sequelize');
+const model = require('./model');
 const wkx = require('wkx');
 
 exports.findBuildingsByBounds = function(bounds, callback){
