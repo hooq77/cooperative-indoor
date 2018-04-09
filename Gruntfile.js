@@ -148,7 +148,7 @@ module.exports = function(grunt) {
     },
 
     // Automatically inject Bower components into the app
-    'bower-install': {
+    wiredep: {
       app: {
         html: '<%= yeoman.app %>/views/index.html',
         ignorePath: '<%= yeoman.app %>/'
@@ -350,21 +350,6 @@ module.exports = function(grunt) {
         src: ['./server/**/*.js', './app/scripts/**/*.js'],
         options: {
           destination: 'doc'
-        }
-      }
-    },
-
-    sloc: {
-      'client': {
-        files: {
-          'app/scripts': ['**/*.js'],
-          'app/styles': ['*.css'],
-          'app/views': ['**/*.html']
-        }
-      },
-      'server': {
-        files: {
-          'server': ['*.js', './**/*.json']
         }
       }
     }
