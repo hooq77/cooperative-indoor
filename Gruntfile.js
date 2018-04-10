@@ -12,8 +12,6 @@ module.exports = function(grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
-  grunt.loadNpmTasks('grunt-wiredep');
-
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -62,7 +60,7 @@ module.exports = function(grunt) {
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
-        tasks: ['newer:copy:styles', 'autoprefixer']
+        tasks: ['newer:copy:styles', 'postcss']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -133,9 +131,11 @@ module.exports = function(grunt) {
     },
 
     // Add vendor prefixed styles
-    autoprefixer: {
+    postcss: {
       options: {
-        browsers: ['last 1 version']
+        processors:[
+          require('autoprefixer')({browsers: ['last 1 version']})
+        ]
       },
       dist: {
         files: [{
@@ -148,9 +148,9 @@ module.exports = function(grunt) {
     },
 
     // Automatically inject Bower components into the app
-    'bower-install': {
-      app: {
-        html: '<%= yeoman.app %>/views/index.html',
+    wiredep: {
+      task: {
+        src:['<%= yeoman.app %>/views/index.html'] ,
         ignorePath: '<%= yeoman.app %>/'
       }
     },
@@ -352,21 +352,6 @@ module.exports = function(grunt) {
           destination: 'doc'
         }
       }
-    },
-
-    sloc: {
-      'client': {
-        files: {
-          'app/scripts': ['**/*.js'],
-          'app/styles': ['*.css'],
-          'app/views': ['**/*.html']
-        }
-      },
-      'server': {
-        files: {
-          'server': ['*.js', './**/*.json']
-        }
-      }
     }
   });
 
@@ -393,9 +378,9 @@ module.exports = function(grunt) {
 
     grunt.task.run([
       'clean:server',
-      'grunt-wiredep',
+      'wiredep',
       'concurrent:server',
-      'autoprefixer',
+      'postcss',
       'express:dev',
       'open',
       'watch'
@@ -405,16 +390,16 @@ module.exports = function(grunt) {
   grunt.registerTask('test', [
     'clean:server',
     'concurrent:test',
-    'autoprefixer',
+    'postcss',
     'karma'
   ]);
 
   grunt.registerTask('build', [
     'clean:dist',
-    'grunt-wiredep',
+    'wiredep',
     'useminPrepare',
     'concurrent:dist',
-    'autoprefixer',
+    'postcss',
     'concat',
     'ngmin',
     'copy:dist',
