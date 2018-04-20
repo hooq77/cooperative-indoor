@@ -19,7 +19,7 @@ module.exports = function(server) {
      * @param  {Object} data tester data for the TesterService methods
      */
     socket.on('tester', function(data) {
-      console.log(data)
+      console.log(data);
       io.sockets.emit('tester-commands', data);
     });
 
@@ -152,7 +152,7 @@ module.exports = function(server) {
      * Removes a user from the users list and emits the new userlist to the map clients
      */
     socket.on('disconnect', function() {
-      console.log("disconnect")
+      console.log("disconnect");
       for (var key in maps) {
         if (maps[key].users && maps[key].users[socket.id]) {
           storeMapAction({'mapId': key}, 'connect');

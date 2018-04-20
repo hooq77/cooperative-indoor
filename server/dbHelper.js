@@ -3,12 +3,12 @@ const wkx = require('wkx');
 
 exports.findBuildingsByBounds = function(bounds, callback){
   let geometry = wkx.Geometry.parseGeoJSON(bounds.geometry);
-  let wkt = "SRID=4326;" + geometry.toWkt()
+  let wkt = "SRID=4326;" + geometry.toWkt();
   model.Building.findAll({
     where: model.sequelize.fn('st_intersects', model.sequelize.col('outline'), wkt)
   }).then((res) => {
     callback(undefined, res);
-  }).catch(err => callback(err))
+  }).catch(err => callback(err));
 };
 
 exports.findFloorsById = function(mapId, callback){
@@ -18,7 +18,7 @@ exports.findFloorsById = function(mapId, callback){
     }
   }).then((res) => {
     callback(undefined, res);
-  }).catch(err => callback(err))
+  }).catch(err => callback(err));
 };
 
 exports.findAreasById = function(floorId, callback){
@@ -28,7 +28,7 @@ exports.findAreasById = function(floorId, callback){
     }
   }).then((res) => {
     callback(undefined, res);
-  }).catch(err => callback(err))
+  }).catch(err => callback(err));
 };
 
 exports.getAreaHistoryById = function (id, callback) {
@@ -37,6 +37,6 @@ exports.getAreaHistoryById = function (id, callback) {
       id: id
     }
   }).then((res) => {
-    callback(undefined, res)
-  }).catch(err => callback(err))
-}
+    callback(undefined, res);
+  }).catch(err => callback(err));
+};

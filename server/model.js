@@ -437,7 +437,7 @@ sequelize.sync()
   .then(() => console.log("数据库已同步"))
   .catch(err => {
     console.log("数据库同步失败！");
-    console.error(err.stack)
+    console.error(err.stack);
   });
 
 exports.User = User;

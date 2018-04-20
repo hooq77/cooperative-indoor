@@ -12,7 +12,7 @@ const fs = require('fs');
 module.exports = function(app) {
 
   app.post('/api/buildings', function (req, res) {
-    console.log(req.data);
+    console.log('buildings');
     if(req.body || req.body.geometry || req.body.geometry.type ||
       req.body.geometry.type === 'Polygon') {
       indoor.getIndoorListByBounds(req.body, (err, blds) => {
@@ -20,24 +20,24 @@ module.exports = function(app) {
             console.error(err.stack);
             res.send([]);
           } else {
-            res.send(blds)
+            res.send(blds);
           }
-      })
+      });
     } else {
-      req.send([])
+      req.send([]);
     }
   });
 
   app.get('/api/floors/:mapId', function (req, res) {
-    console.log("floors")
+    console.log("floors");
     indoor.getFloorsById(req.params.mapId, (err, floors) => {
       if(err) {
         console.error(err.stack);
         res.send([]);
       } else {
-        res.send(floors)
+        res.send(floors);
       }
-    })
+    });
   });
 
   app.get('/api/areas/:floorId', function (req, res) {
@@ -46,9 +46,9 @@ module.exports = function(app) {
         console.error(err.stack);
         res.send([]);
       } else {
-        res.send(floors)
+        res.send(floors);
       }
-    })
+    });
   });
   
   app.get('/api/history/area/:id', function (req, res) {
@@ -58,9 +58,9 @@ module.exports = function(app) {
         console.error(err.stack);
         res.send([]);
       } else {
-        res.send(history)
+        res.send(history);
       }
-    })
+    });
   });
   
   /**

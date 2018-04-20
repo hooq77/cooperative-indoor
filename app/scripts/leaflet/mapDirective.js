@@ -4,33 +4,6 @@ angular.module('CooperativeIndoorMap')
   .directive('map', ['MapHandler', 'SynchronizeMap', 'ApiService', 'DataImport','IndoorHandler','DrawEditHandler',
     function(MapHandler, SynchronizeMap, ApiService, DataImport, IndoorHandler, DrawEditHandler) {
       var mapLoadingDiv;
-
-      /**
-       * Load the features for the current map from the database
-       * @param  {String} mapId      the map id
-       * @param  {Object} map        the map
-       * @param  {Object} drawnItems layer group for the drawn items
-       */
-
-      function loadFeatures(mapId, map, drawnItems) {
-        showLoading();
-        var featuresLength = 0;
-        ApiService.getFeaturesOboe(mapId)
-          .node('rows.*', function(row) {
-            featuresLength++;
-            // This callback will be called everytime a new object is
-            // found in the foods array.
-            MapHandler.addGeoJSONFeature(map, {
-              'feature': row.doc,
-              'fid': row.doc._id
-            }, drawnItems);
-          })
-          .done(function() {
-            if (featuresLength) map.fitBounds(drawnItems.getBounds());
-            removeLoading();
-          });
-      }
-
       /**
        * Creates a loading div
        */
@@ -50,6 +23,32 @@ angular.module('CooperativeIndoorMap')
         document.body.removeChild(mapLoadingDiv);
       }
 
+      /**
+       * Load the features for the current map from the database
+       * @param  {String} mapId      the map id
+       * @param  {Object} map        the map
+       * @param  {Object} drawnItems layer group for the drawn items
+       */
+      function loadFeatures(mapId, map, drawnItems) {
+        showLoading();
+        var featuresLength = 0;
+        ApiService.getFeaturesOboe(mapId)
+          .node('rows.*', function(row) {
+            featuresLength++;
+            // This callback will be called everytime a new object is
+            // found in the foods array.
+            MapHandler.addGeoJSONFeature(map, {
+              'feature': row.doc,
+              'fid': row.doc._id
+            }, drawnItems);
+          })
+          .done(function() {
+            if (featuresLength) {
+              map.fitBounds(drawnItems.getBounds());
+            }
+            removeLoading();
+          });
+      }
 
       return {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment

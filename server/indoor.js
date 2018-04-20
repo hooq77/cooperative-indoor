@@ -11,7 +11,7 @@ exports.getIndoorListByBounds = function (bounds, callback) {
         let geojson = {
           type: 'Feature',
           properties: {}
-        }
+        };
         geojson.id = building.id;
         geojson.properties = building;
         geojson.model = "building";
@@ -22,10 +22,10 @@ exports.getIndoorListByBounds = function (bounds, callback) {
           delete geojson.properties.deleted;
         geojsons.push(geojson);
       }
-      callback(err, geojsons)
+      callback(err, geojsons);
     }
-  })
-}
+  });
+};
 
 exports.getFloorsById = function (indoorId, callback) {
   dbHelper.findFloorsById(indoorId, (err, res) => {
@@ -38,7 +38,7 @@ exports.getFloorsById = function (indoorId, callback) {
         let geojson = {
           type: 'Feature',
           properties: {}
-        }
+        };
         geojson.id = floor.id;
         geojson.properties = floor;
         geojson.model = "floor";
@@ -49,10 +49,10 @@ exports.getFloorsById = function (indoorId, callback) {
           delete geojson.properties.deleted;
         geojsons.push(geojson);
       }
-      callback(err, geojsons)
+      callback(err, geojsons);
     }
-  })
-}
+  });
+};
 
 exports.getAreasById = function (floorId, callback) {
   dbHelper.findAreasById(floorId, (err, res) => {
@@ -65,7 +65,7 @@ exports.getAreasById = function (floorId, callback) {
         let geojson = {
           type: 'Feature',
           properties: {}
-        }
+        };
         geojson.id = area.id;
         geojson.properties = area;
         geojson.geometry = area.outline;
@@ -76,10 +76,10 @@ exports.getAreasById = function (floorId, callback) {
           delete geojson.properties.deleted;
         geojsons.push(geojson);
       }
-      callback(err, geojsons)
+      callback(err, geojsons);
     }
-  })
-}
+  });
+};
 
 exports.getAreaHistory = function (id, callback) {
   dbHelper.getAreaHistoryById(id, (err, res) => {
@@ -88,5 +88,5 @@ exports.getAreaHistory = function (id, callback) {
     } else {
       callback(err, res);
     }
-  })
-}
+  });
+};
