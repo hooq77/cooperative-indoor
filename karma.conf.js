@@ -1,6 +1,6 @@
 // Karma configuration
 // http://karma-runner.github.io/0.10/config/configuration-file.html
-
+'use strict';
 module.exports = function(config) {
   config.set({
     // base path, that will be used to resolve files and exclude
@@ -17,8 +17,9 @@ module.exports = function(config) {
       'app/bower_components/angular-cookies/angular-cookies.js',
       'app/bower_components/angular-sanitize/angular-sanitize.js',
       'app/bower_components/angular-route/angular-route.js',
-      // 'https://cdn.bootcss.com/leaflet.draw/1.0.2/leaflet.draw-src.js',
-      // 'https://cdn.bootcss.com/leaflet/1.3.1/leaflet-src.js',
+      'app/asset/leaflet/leaflet-src.js',
+      'app/asset/indoor/indoor-src.js',
+      'app/asset/leaflet.draw/leaflet.draw-src.js',
       'app/scripts/*.js',
       'app/scripts/**/*.js',
       'test/spec/**/*.js'
@@ -28,7 +29,7 @@ module.exports = function(config) {
     exclude: [],
 
     // web server port
-    port: 8080,
+    port: 9876,
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
@@ -37,8 +38,15 @@ module.exports = function(config) {
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
-
-
+    reporter:[
+      'progress',
+      'html'
+    ],
+    htmlReporter:{
+      outputDir: './report_output',
+      reportName: 'unit',
+      namedFiles: true
+    },
     // Start these browsers, currently available:
     // - Chrome
     // - ChromeCanary
@@ -52,6 +60,10 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    singleRun: false,
+
+    // Concurrency level
+    // how many browser should be started simultaneous
+    concurrency: Infinity
   });
 };

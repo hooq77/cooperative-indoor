@@ -51,6 +51,7 @@ describe('MapHandler', function() {
       'fid': '140317650070370229',
       'user': 'tes234fdsf'
     };
+    mapHandlerService.initMapHandler(map, drawnItems, {}, undefined);
     mapHandlerService.addGeoJSONFeature(map, event, drawnItems, false, '#FFFFFF');
     expect(drawnItems._layers[event.fid]).toBeDefined();
   });
@@ -70,6 +71,7 @@ describe('MapHandler', function() {
       'fid': '140317650070370229',
       'user': 'tes234fdsf'
     };
+    mapHandlerService.initMapHandler(map, drawnItems, {}, undefined);
     mapHandlerService.addGeoJSONFeature(map, event, drawnItems, false, '#FFFFFF');
     mapHandlerService.removeLayer(drawnItems, event, drawnItems);
     expect(drawnItems._layers[event.fid]).toBeUndefined();

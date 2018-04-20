@@ -12,6 +12,7 @@ const fs = require('fs');
 module.exports = function(app) {
 
   app.post('/api/buildings', function (req, res) {
+    console.log(req.data);
     if(req.body || req.body.geometry || req.body.geometry.type ||
       req.body.geometry.type === 'Polygon') {
       indoor.getIndoorListByBounds(req.body, (err, blds) => {

@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('indoordb', 'root', '123456', {
+var Sequelize = require('sequelize');
+var sequelize = new Sequelize('indoordb', 'root', '123456', {
   host: 'localhost',
   dialect: 'postgres',
   pool: {
@@ -14,8 +14,8 @@ const sequelize = new Sequelize('indoordb', 'root', '123456', {
   },
   operatorsAliases: false
 });
-const pg = require('pg');
-client = new pg.Client('postgres://root:123456@localhost:5432/indoor_new');
+var pg = require('pg');
+var client = new pg.Client('postgres://root:123456@localhost:5432/indoor_new');
 
 var User = sequelize.define('user', {
   name:{

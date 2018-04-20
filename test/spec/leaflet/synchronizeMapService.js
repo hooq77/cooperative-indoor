@@ -65,7 +65,7 @@ describe('SynchronizeMap', function() {
     };
     sockets['test-mapMovement'](event);
 
-    expect(map.getCenter().lat).toNotEqual(lat);
+    expect(map.getCenter().lat).not.toEqual(lat);
   }));
 
   it('user bounds should be stored on map movements', inject(function(MapHandler) {
@@ -190,7 +190,7 @@ describe('SynchronizeMap', function() {
       }
     };
     sockets['test-mapDraw'](event);
-    expect(drawnItems._layers['140318644934434313']._latlng.lat).toNotEqual(oldLat);
+    expect(drawnItems._layers['140318644934434313']._latlng.lat).not.toEqual(oldLat);
   }));
 
   it('feature should be deleted if received via Websockets', inject(function(MapHandler) {
