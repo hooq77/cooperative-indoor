@@ -3,21 +3,12 @@
 angular.module('CooperativeIndoorMap')
   .directive('featureHistory', ['MapHandler', 'ApiService', 'IndoorHandler',
     function(MapHandler, ApiService, IndoorHandler) {
+      function isArray(value) {
+        return value && typeof value === 'object' && value.constructor === Array;
+      }
 
-      /**
-       * Initialize the textual diff
-       * @pram {Object} objA Object 1
-       * @pram {Object} objB Object 2
-       * @pram {String} divId id of the html parent element
-       * @pram {String} name headline for the view
-       */
-
-      function startCompare(objA, objB, divId, name, hasChanges) {
-        hasChanges[divId] = false;
-        var results = document.getElementById(divId);
-        results.innerHTML = '';
-
-        compareTree(objA, objB, name, results, divId, hasChanges);
+      function typeofReal(value) {
+        return isArray(value) ? 'array' : typeof value;
       }
 
       /**
@@ -55,27 +46,27 @@ angular.module('CooperativeIndoorMap')
         }
 
         if (typeA === 'object' || typeA === 'array' || typeB === 'object' || typeB === 'array') {
-          var keys = [];
-          for (var i in a) {
+          let keys = [];
+          for (let i in a) {
             if (a.hasOwnProperty(i)) {
               keys.push(i);
             }
           }
-          for (var i in b) {
+          for (let i in b) {
             if (b.hasOwnProperty(i)) {
               keys.push(i);
             }
           }
           keys.sort();
 
-          var listNode = document.createElement('ul');
+          let listNode = document.createElement('ul');
           listNode.appendChild(leafNode);
 
-          for (var i = 0; i < keys.length; i++) {
+          for (let i = 0; i < keys.length; i++) {
             if (keys[i] === keys[i - 1]) {
               continue;
             }
-            var li = document.createElement('li');
+            let li = document.createElement('li');
             listNode.appendChild(li);
 
             compareTree(a && a[keys[i]], b && b[keys[i]], keys[i], li, divId, hasChanges);
@@ -87,12 +78,20 @@ angular.module('CooperativeIndoorMap')
         }
       }
 
-      function isArray(value) {
-        return value && typeof value === 'object' && value.constructor === Array;
-      }
+      /**
+       * Initialize the textual diff
+       * @pram {Object} objA Object 1
+       * @pram {Object} objB Object 2
+       * @pram {String} divId id of the html parent element
+       * @pram {String} name headline for the view
+       */
 
-      function typeofReal(value) {
-        return isArray(value) ? 'array' : typeof value;
+      function startCompare(objA, objB, divId, name, hasChanges) {
+        hasChanges[divId] = false;
+        var results = document.getElementById(divId);
+        results.innerHTML = '';
+
+        compareTree(objA, objB, name, results, divId, hasChanges);
       }
 
 
@@ -112,6 +111,134 @@ angular.module('CooperativeIndoorMap')
 
           var documentRevisions;
           var slider = element[0].getElementsByClassName('verticalSlider')[0];
+
+          /**
+           * Load the document revisions history and clear eixisting values.
+           * @param  {string} id feature id
+           */
+          /**
+           * Fill the changes diff with the textual diff representation
+           * @param  {Number} index document revision array index
+           */
+
+          function getPropertyDiff(index) {
+            if ($scope.numberOfRevisions > index + 1 && !$scope.currentRevision._deleted) {
+              //Textual diff for properties
+              startCompare(documentRevisions[index + 1].properties, documentRevisions[index].properties, 'diffProperties', 'Properties', $scope.hasChanges);
+              //Textual diff for geometry
+              //startCompare(documentRevisions[index + 1].geometry.coordinates, documentRevisions[index].geometry.coordinates, 'diffGeometry', 'Geometry', $scope.hasChanges);
+            }
+          }
+          /**
+           * Sets a revision to the scope variables based on its index in the revisions array.
+           *
+           * @param {Number} index array index
+           */
+
+          function setCurrentRevision(index) {
+            $scope.currentRevisionIndex = index;
+            $scope.currentRevision = documentRevisions[index];
+            getPropertyDiff(index);
+            var fid = 'diff-' + $scope.currentRevision.id;
+            $scope.sliderValue = $scope.numberOfRevisions - index;
+            MapHandler.removeLayerFid(fid);
+            MapHandler.updateLayerForDiff(fid, $scope.currentRevision);
+            MapHandler.highlightFeatureId(fid);
+          }
+
+          /**
+           * Remove the original feature from the map
+           */
+
+          function removeOriginalFeature() {
+            var fid = documentRevisions[0].id;
+            MapHandler.removeLayerFid(fid);
+          }
+
+          /**
+           * Initializes the range slider with the number of document revisions.
+           * Sets the current value to the number of revisions so that the slider starts with the top position.
+           */
+
+          function setUpSlider() {
+            if (slider) {
+              slider.max = $scope.numberOfRevisions;
+              $scope.sliderValue = $scope.numberOfRevisions;
+              slider.min = 1;
+            }
+          }
+
+          /**
+           * Assignes the scope variables with the current revisions.
+           * Removes the original feature from the map so that only the "diff features" are shown.
+           * Init the slider setup.
+           */
+
+          function initView() {
+            if (documentRevisions) {
+              $scope.numberOfRevisions = documentRevisions.length;
+              if ($scope.numberOfRevisions > 0) {
+                removeOriginalFeature();
+                setCurrentRevision(0);
+                setUpSlider();
+              }
+            }
+          }
+
+          function init(id) {
+            $scope.documentRevision = [];
+            $scope.currentRevisionIndex = 0;
+            initView();
+            let feature = IndoorHandler.getFeatureById(id);
+            switch (feature.model) {
+              case 'area':
+                // getAreaHistory(id);
+                break;
+              case 'line':
+                // getLineHistory(id);
+                break;
+              case 'poi':
+                // getPoiHistory(id);
+                break;
+              case 'floor':
+                // getFloorHistory(id);
+                break;
+              case 'building':
+                // getBuildingHistory(id);
+                break;
+            }
+          }
+
+          /**
+           * Remove the "diffFeature" from the map and redraw the newest revision
+           */
+
+          function setOriginalFeature() {
+            // MapHandler.removeLayerFid('diff-' + $scope.currentRevision.id);
+            // MapHandler.addFeatureAfterDiff($scope.currentRevision._id, documentRevisions[0]);
+          }
+
+          /**
+           * Remove the document revisions from all variables.
+           * This automatically clears the view.
+           * Redraws the newest revision in the map.
+           */
+
+          function cleanUp() {
+            setOriginalFeature();
+            $scope.currentRevisionIndex = 0;
+            $scope.currentRevision = undefined;
+            $scope.documentRevision = [];
+            $scope.numberOfRevisions = undefined;
+          }
+
+          /**
+           * OnChange method of the range slider. Numbers have to be inverted so that the newest revision is on top.
+           */
+          $scope.sliderChange = function() {
+            setCurrentRevision($scope.numberOfRevisions - $scope.sliderValue);
+          };
+
 
           /**
            * Cleans up the revision variables and emits the 'closeFeatureHistory' event.
@@ -142,117 +269,6 @@ angular.module('CooperativeIndoorMap')
           });
 
           /**
-           * Load the document revisions history and clear eixisting values.
-           * @param  {string} id feature id
-           */
-
-          function init(id) {
-            $scope.documentRevision = [];
-            $scope.currentRevisionIndex = 0;
-            let feature = IndoorHandler.getFeatureById(id);
-            switch (feature.model) {
-              case 'area':
-                getAreaHistory(id);
-                break;
-              case 'line':
-                getLineHistory(id);
-                break;
-              case 'poi':
-                getPoiHistory(id);
-                break;
-              case 'floor':
-                getFloorHistory(id);
-                break;
-              case 'building':
-                getBuildingHistory(id);
-                break;
-            }
-          }
-
-          /**
-           * Remove the document revisions from all variables.
-           * This automatically clears the view.
-           * Redraws the newest revision in the map.
-           */
-
-          function cleanUp() {
-            setOriginalFeature();
-            $scope.currentRevisionIndex = 0;
-            $scope.currentRevision = undefined;
-            $scope.documentRevision = [];
-            $scope.numberOfRevisions = undefined;
-          }
-
-          /**
-           * Remove the "diffFeature" from the map and redraw the newest revision
-           */
-
-          function setOriginalFeature() {
-            // MapHandler.removeLayerFid('diff-' + $scope.currentRevision.id);
-            // MapHandler.addFeatureAfterDiff($scope.currentRevision._id, documentRevisions[0]);
-          }
-
-          /**
-           * Remove the original feature from the map
-           */
-
-          function removeOriginalFeature() {
-            var fid = documentRevisions[0].id;
-            MapHandler.removeLayerFid(fid);
-          }
-
-          /**
-           * Assignes the scope variables with the current revisions.
-           * Removes the original feature from the map so that only the "diff features" are shown.
-           * Init the slider setup.
-           */
-
-          function initView() {
-            if (documentRevisions) {
-              $scope.numberOfRevisions = documentRevisions.length;
-              if ($scope.numberOfRevisions > 0) {
-                removeOriginalFeature();
-                setCurrentRevision(0);
-                setUpSlider();
-              }
-            }
-          }
-
-          /**
-           * Initializes the range slider with the number of document revisions.
-           * Sets the current value to the number of revisions so that the slider starts with the top position.
-           */
-
-          function setUpSlider() {
-            if (slider) {
-              slider.max = $scope.numberOfRevisions;
-              $scope.sliderValue = $scope.numberOfRevisions;
-              slider.min = 1;
-            }
-          }
-
-          /**
-           * OnChange method of the range slider. Numbers have to be inverted so that the newest revision is on top.
-           */
-          $scope.sliderChange = function() {
-            setCurrentRevision($scope.numberOfRevisions - $scope.sliderValue);
-          };
-
-          /**
-           * Fill the changes diff with the textual diff representation
-           * @param  {Number} index document revision array index
-           */
-
-          function getPropertyDiff(index) {
-            if ($scope.numberOfRevisions > index + 1 && !$scope.currentRevision._deleted) {
-              //Textual diff for properties
-              startCompare(documentRevisions[index + 1].properties, documentRevisions[index].properties, 'diffProperties', 'Properties', $scope.hasChanges);
-              //Textual diff for geometry
-              //startCompare(documentRevisions[index + 1].geometry.coordinates, documentRevisions[index].geometry.coordinates, 'diffGeometry', 'Geometry', $scope.hasChanges);
-            }
-          }
-
-          /**
            * Sets the current revision with the next revision index
            */
           $scope.previousRevision = function() {
@@ -271,32 +287,12 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Sets a revision to the scope variables based on its index in the revisions array.
-           *
-           * @param {Number} index array index
-           */
-
-          function setCurrentRevision(index) {
-            $scope.currentRevisionIndex = index;
-            $scope.currentRevision = documentRevisions[index];
-            getPropertyDiff(index);
-            var fid = 'diff-' + $scope.currentRevision.id;
-            $scope.sliderValue = $scope.numberOfRevisions - index;
-            MapHandler.removeLayerFid(fid);
-            MapHandler.updateLayerForDiff(fid, $scope.currentRevision);
-            MapHandler.highlightFeatureId(fid);
-          }
-  
-          /**
            * Revert a feature to a given revision.
            * @param {String} id the feature id
            * @param {String} rev the revision to which the feature will be reverted
            */
           $scope.revertFeature = function(id, rev) {
             MapHandler.revertFeature($scope.$root.mapId, id, rev, $scope.$root.userName);
-            setTimeout(function() {
-              loadDocumentHistory(id);
-            }, 100);
           };
 
           /**
@@ -306,9 +302,6 @@ angular.module('CooperativeIndoorMap')
            */
           $scope.restoreDeletedFeature = function(id, feature) {
             MapHandler.restoreDeletedFeature($scope.$root.mapId, id, feature, $scope.$root.userName);
-            setTimeout(function() {
-              loadDocumentHistory(id);
-            }, 100);
           };
 
           //Variables are changed while the textual diff is created.

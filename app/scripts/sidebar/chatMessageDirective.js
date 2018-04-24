@@ -10,27 +10,7 @@ angular.module('CooperativeIndoorMap')
           message: '='
         },
         link: function postLink(scope, element) {
-
-          function exchangeFid() {
-            var index = message.indexOf('#');
-            if (index > -1) {
-              var fidString = message.substring(index).split(' ')[0];
-              message = createButton(fidString);
-            }
-            if (message.indexOf('#') > -1) {
-              exchangeFid();
-            }
-          }
-
-          function createButton(fidString) {
-            var fid = fidString.substring(1);
-            var className = getClassForFeature(fid);
-            if (className) {
-              return message.replace(fidString, '<div class="featureInChat '+className+'" ng-click="panToFeature(\'' + fid + '\')"></div> ');
-            } else {
-              return fidString;
-            }
-          }
+          var message = '';
 
           function getClassForFeature(fid) {
             var type = MapHandler.getLayerTypeFid(fid);
@@ -45,12 +25,33 @@ angular.module('CooperativeIndoorMap')
             }
           }
 
+          function createButton(fidString) {
+            var fid = fidString.substring(1);
+            var className = getClassForFeature(fid);
+            if (className) {
+              return message.replace(fidString, '<div class="featureInChat '+className+'" ng-click="panToFeature(\'' + fid + '\')"></div> ');
+            } else {
+              return fidString;
+            }
+          }
+
+          function exchangeFid() {
+            var index = message.indexOf('#');
+            if (index > -1) {
+              var fidString = message.substring(index).split(' ')[0];
+              message = createButton(fidString);
+            }
+            if (message.indexOf('#') > -1) {
+              exchangeFid();
+            }
+          }
+
           scope.panToFeature = function(fid) {
             MapHandler.panToFeature(fid);
             MapHandler.highlightFeatureId(fid);
           };
 
-          var message = '';
+
           if (scope.message && scope.message.message) {
             message = scope.message.message;
           }

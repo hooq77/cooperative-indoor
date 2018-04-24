@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('CooperativeIndoorMap')
-  .service('MapMovementEvents', ['ApiService', function(ApiService) {
+  .service('MapMovementEvents', [function() {
     return {
 
       /**
@@ -11,7 +11,7 @@ angular.module('CooperativeIndoorMap')
        */
       connectMapEvents: function(map, callback) {
         // catches any map movements (drag, zoom, resize, ...)
-        map.on('moveend', function(e) {
+        map.on('moveend', function() {
           var bounds = map.getBounds();
           callback({
             'nE': [bounds._northEast.lat, bounds._northEast.lng],

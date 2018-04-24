@@ -1,5 +1,5 @@
 'use strict';
-
+/* jshint -W083 */
 angular.module('CooperativeIndoorMap')
   .controller('TesterCtrl', ['$http', '$scope', 'Socket', 'Utils',
     function($http, $scope, Socket, Utils) {
@@ -25,9 +25,10 @@ angular.module('CooperativeIndoorMap')
         });
       };
 
-      $scope.createRandomFeatures = function() {
-        sendRandomPoints($scope.numberOfMarkerFeatures, $scope.randomMarkerFeatureDelay);
-      };
+      function randomNumberFromInterval(min, max) {
+        max = max - 1;
+        return Math.random() * (max - min + 1) + min;
+      }
 
       function sendRandomPoints(number, delay) {
 
@@ -61,8 +62,8 @@ angular.module('CooperativeIndoorMap')
         }
       }
 
-      $scope.createRandomBuildings = function() {
-        sendMuensterBuildings($scope.numberOfBuildingFeatures, $scope.randomFeatureBuildingDelay);
+      $scope.createRandomFeatures = function() {
+        sendRandomPoints($scope.numberOfMarkerFeatures, $scope.randomMarkerFeatureDelay);
       };
 
       function sendMuensterBuildings(number, delay) {
@@ -73,9 +74,7 @@ angular.module('CooperativeIndoorMap')
               $http({
                 method: 'GET',
                 url: 'http://giv-wilhelm.uni-muenster.de:9090'
-              })
-                .
-              success(function(data) { //, status, headers, config) {
+              }).success(function(data) { //, status, headers, config) {
                 Socket.emit('mapDraw', {
                   mapId: $scope.destinationMap,
                   'event': {
@@ -85,9 +84,7 @@ angular.module('CooperativeIndoorMap')
                     'fid': Utils.createId()
                   }
                 });
-              })
-                .
-              error(function(data) { //, status, headers, config) {
+              }).error(function(data) { //, status, headers, config) {
                 console.log(data);
               });
             }, delay * i);
@@ -96,11 +93,9 @@ angular.module('CooperativeIndoorMap')
         }
       }
 
-      $scope.createMapMovementEvents = function() {
-        sendMovementEvents($scope.numberOfMovements, $scope.movementDelay);
-
+      $scope.createRandomBuildings = function() {
+        sendMuensterBuildings($scope.numberOfBuildingFeatures, $scope.randomFeatureBuildingDelay);
       };
-
 
       function sendMovementEvents(number, delay) {
         var i = 0;
@@ -122,31 +117,24 @@ angular.module('CooperativeIndoorMap')
         }
       }
 
-      function randomNumberFromInterval(min, max) {
-        max = max - 1;
-        return Math.random() * (max - min + 1) + min;
+      $scope.createMapMovementEvents = function() {
+        sendMovementEvents($scope.numberOfMovements, $scope.movementDelay);
+
+      };
+
+      function sendMovement(event) {
+        Socket.emit('mapMovement', {
+          mapId: $scope.destinationMap,
+          'event': event.event
+        });
       }
 
-
-      $scope.playbackFromDb = function() {
-        var dbName = $scope.playbackDatabase;
-        if (dbName) {
-          $http({
-            method: 'GET',
-            url: 'api/features/' + dbName
-          })
-            .
-          success(function(data) { //, status, headers, config) {
-            if (data && data.rows) {
-              playBack(data.rows);
-            }
-          })
-            .
-          error(function(data) { //, status, headers, config) {
-            console.log(data);
-          });
-        }
-      };
+      function sendDraw(event){
+        Socket.emit('mapDraw',{
+          mapId: $scope.destinationMap,
+          'event': event.event
+        });
+      }
 
       function playBack(data) {
         var delay = $scope.playbackDelay || 1000;
@@ -168,20 +156,24 @@ angular.module('CooperativeIndoorMap')
         });
       }
 
-
-      function sendMovement(event) {
-        Socket.emit('mapMovement', {
-          mapId: $scope.destinationMap,
-          'event': event.event
-        });
-      }
-
-      function sendDraw(event){
-        Socket.emit('mapDraw',{
-          mapId: $scope.destinationMap,
-          'event': event.event
-        });
-      }
-
+      $scope.playbackFromDb = function() {
+        var dbName = $scope.playbackDatabase;
+        if (dbName) {
+          $http({
+            method: 'GET',
+            url: 'api/features/' + dbName
+          })
+            .
+          success(function(data) { //, status, headers, config) {
+            if (data && data.rows) {
+              playBack(data.rows);
+            }
+          })
+            .
+          error(function(data) { //, status, headers, config) {
+            console.log(data);
+          });
+        }
+      };
     }
   ]);

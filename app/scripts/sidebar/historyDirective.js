@@ -14,6 +14,126 @@ angular.module('CooperativeIndoorMap')
 
           scope.isShowFloorHistory = true;
           scope.isShowFeatureHistory = false;
+          /**
+           * Combine similar actions to avoid a map history pollution if one person makes many changes.
+           * @param  {Array} values the history actions
+           * @return {Array}        the aggregated history actions
+           */
+
+          function reduceActions(values) {
+            var result = [];
+            values.forEach(function(elem) {
+              if (result.length === 0) {
+                result.push(elem);
+              } else {
+                if (elem.owner === result[result.length - 1].owner) {
+                  if (result[result.length - 1].actions) {
+                    result[result.length - 1].actions.push(elem);
+                    result[result.length - 1].number++;
+                    result[result.length - 1].time = elem.time;
+                    result[result.length - 1].to = elem.version;
+                  } else {
+                    result[result.length - 1] = {
+                      owner: elem.owner,
+                      actions: [result[result.length - 1], elem],
+                      number: 2,
+                      time: elem.time,
+                      from: elem.version
+                    };
+                  }
+                } else {
+                  result.push(elem);
+                }
+              }
+            });
+            return result;
+          }
+
+          /**
+           * 加载当前楼层中每个feature的最新版本
+           */
+          function loadFloorHistory() {
+            IndoorHandler.getCurrentBuildingAndLevel();
+            // let indoor = IndoorHandler.getCurrentBuildingAndLevel();
+            scope.isShowFloorHistory = true;
+            scope.isShowFeatureHistory = false;
+            scope.history = IndoorHandler.getCurrentFloorFeatures();
+          }
+
+          function getAreaHistory(id) {
+            scope.currentfId = id;
+            scope.loading = true;
+            ApiService.getAreaHistory(id)
+              .then(function(result) {
+                scope.loading = false;
+                if (result.data) {
+                  scope.featureHistory = reduceActions(result.data);
+                }
+              });
+          }
+
+          function getFloorHistory(id) {
+            ApiService.getMapHistory(scope.$root.mapId)
+              .then(function(result) {
+                if (result && result.data) {
+                  result.data.forEach(function(action) {
+                    if (action.date) {
+
+                    }
+                  });
+                  scope.history = reduceActions(result.data);
+                }
+              });
+
+            scope.$root.$broadcast('showFeatureHistory', id);
+          }
+          function getBuildingHistory(id) {
+            ApiService.getMapHistory(scope.$root.mapId)
+              .then(function(result) {
+                if (result && result.data) {
+                  result.data.forEach(function(action) {
+                    if (action.date) {
+
+                    }
+                  });
+                  scope.history = reduceActions(result.data);
+                }
+              });
+
+            scope.$root.$broadcast('showFeatureHistory', id);
+          }
+
+          function getLineHistory(id) {
+            ApiService.getMapHistory(scope.$root.mapId)
+              .then(function(result) {
+                if (result && result.data) {
+                  result.data.forEach(function(action) {
+                    if (action.date) {
+
+                    }
+                  });
+                  scope.history = reduceActions(result.data);
+                }
+              });
+
+            scope.$root.$broadcast('showFeatureHistory', id);
+          }
+
+          function getPoiHistory(id) {
+            ApiService.getMapHistory(scope.$root.mapId)
+              .then(function(result) {
+                if (result && result.data) {
+                  result.data.forEach(function(action) {
+                    if (action.date) {
+
+                    }
+                  });
+                  scope.history = reduceActions(result.data);
+                }
+              });
+
+            scope.$root.$broadcast('showFeatureHistory', id);
+          }
 
           /**
            * 监听history侧边栏打开事件，侧边栏打开的时候加载历史版本信息
@@ -23,16 +143,6 @@ angular.module('CooperativeIndoorMap')
               loadFloorHistory();
             }
           });
-          
-          /**
-           * 加载当前楼层中每个feature的最新版本
-           */
-          function loadFloorHistory() {
-            let indoor = IndoorHandler.getCurrentBuildingAndLevel();
-            scope.isShowFloorHistory = true;
-            scope.isShowFeatureHistory = false;
-            scope.history = IndoorHandler.getCurrentFloorFeatures();
-          }
   
           /**
            * 浏览单个feature的历史版本信息
@@ -80,8 +190,8 @@ angular.module('CooperativeIndoorMap')
            * Replace aggregated object in the history with the single actions
            * @param  {Object} action the aggregated object
            */
-          scope.showHistoryDetails = function(fid) {
-            var index = scope.history.indexOf(action);
+          scope.showHistoryDetails = function() {
+            var index = scope.history.indexOf();
             var tmp = scope.history[index];
             delete scope.history[index];
             scope.history = scope.history.concat(tmp.actions);
@@ -94,118 +204,6 @@ angular.module('CooperativeIndoorMap')
           scope.panToFeature = function(fid) {
             MapHandler.panToFeature(fid);
           };
-  
-  
-          function getAreaHistory(id) {
-            scope.currentfId = id;
-            scope.loading = true;
-            ApiService.getAreaHistory(id)
-              .then(function(result) {
-                scope.loading = false;
-                if (result.data) {
-                  scope.featureHistory = reduceActions(result.data);
-                }
-              });
-          }
-  
-          function getFloorHistory(id) {
-            ApiService.getMapHistory(scope.$root.mapId)
-              .then(function(result) {
-                if (result && result.data) {
-                  result.data.forEach(function(action) {
-                    if (action.date) {
-                      action.dateString = createDateString(action.date);
-                    }
-                  });
-                  scope.history = reduceActions(result.data);
-                }
-              });
-    
-            scope.$root.$broadcast('showFeatureHistory', id);
-          }
-          function getBuildingHistory(id) {
-            ApiService.getMapHistory(scope.$root.mapId)
-              .then(function(result) {
-                if (result && result.data) {
-                  result.data.forEach(function(action) {
-                    if (action.date) {
-                      action.dateString = createDateString(action.date);
-                    }
-                  });
-                  scope.history = reduceActions(result.data);
-                }
-              });
-    
-            scope.$root.$broadcast('showFeatureHistory', id);
-          }
-  
-          function getLineHistory(id) {
-            ApiService.getMapHistory(scope.$root.mapId)
-              .then(function(result) {
-                if (result && result.data) {
-                  result.data.forEach(function(action) {
-                    if (action.date) {
-                      action.dateString = createDateString(action.date);
-                    }
-                  });
-                  scope.history = reduceActions(result.data);
-                }
-              });
-    
-            scope.$root.$broadcast('showFeatureHistory', id);
-          }
-  
-          function getPoiHistory(id) {
-            ApiService.getMapHistory(scope.$root.mapId)
-              .then(function(result) {
-                if (result && result.data) {
-                  result.data.forEach(function(action) {
-                    if (action.date) {
-                      action.dateString = createDateString(action.date);
-                    }
-                  });
-                  scope.history = reduceActions(result.data);
-                }
-              });
-    
-            scope.$root.$broadcast('showFeatureHistory', id);
-          }
-  
-  
-          /**
-           * Combine similar actions to avoid a map history pollution if one person makes many changes.
-           * @param  {Array} values the history actions
-           * @return {Array}        the aggregated history actions
-           */
-  
-          function reduceActions(values) {
-            var result = [];
-            values.forEach(function(elem) {
-              if (result.length === 0) {
-                result.push(elem);
-              } else {
-                if (elem.owner === result[result.length - 1].owner) {
-                  if (result[result.length - 1].actions) {
-                    result[result.length - 1].actions.push(elem);
-                    result[result.length - 1].number++;
-                    result[result.length - 1].time = elem.time;
-                    result[result.length - 1].to = elem.version;
-                  } else {
-                    result[result.length - 1] = {
-                      owner: elem.owner,
-                      actions: [result[result.length - 1], elem],
-                      number: 2,
-                      time: elem.time,
-                      from: elem.version
-                    };
-                  }
-                } else {
-                  result.push(elem);
-                }
-              }
-            });
-            return result;
-          }
         }
       };
     }

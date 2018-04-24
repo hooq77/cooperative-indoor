@@ -1,7 +1,7 @@
 'use strict';
 angular.module('CooperativeIndoorMap')
-  .service('MapDrawEvents', ['MapHandler',
-    function(MapHandler) {
+  .service('MapDrawEvents', [
+    function() {
 
       var mapScope;
 

@@ -31,6 +31,17 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
+           * Scroll down the chatmessages to the bottom
+           */
+
+          function scrollDown() {
+            var elem = $('.chatMessages')[0];
+            if (elem) {
+              elem.scrollTop = elem.scrollHeight;
+            }
+          }
+
+          /**
            * Connects to the WebSocket stream.
            * Retrieved messages are pushed to the messages array which is used in the ng-repeat
            */
@@ -45,16 +56,7 @@ angular.module('CooperativeIndoorMap')
 
           receiveMessage();
 
-          /**
-           * Scroll down the chatmessages to the bottom
-           */
 
-          function scrollDown() {
-            var elem = $('.chatMessages')[0];
-            if (elem) {
-              elem.scrollTop = elem.scrollHeight;
-            }
-          }
 
           /**
            * Send a chat message. Called via the Send button or by pressing enter in the GUI

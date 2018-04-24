@@ -9,6 +9,172 @@ angular.module('CooperativeIndoorMap')
         templateUrl: 'partials/featureproperties',
         replace: true,
         link: function postLink($scope) {
+          //NEW CATEGORIES SYSTEM
+          var presets;
+          var fields;
+          var categories;
+
+          /**
+           * Select the suitable categories for the given feature based on the geometry type.
+           * Put the selection in the scope variable for the GUI
+           * @param  {Object} layer selected feature
+           */
+
+          function selectCategoriesForGeomType(layer) {
+            var geomType = MapHandler.getLayerType(layer);
+            $scope.categories = {};
+
+            for (var key in categories) {
+              if (categories[key].geometry.indexOf(geomType) > -1) {
+                $scope.categories[key] = categories[key];
+              }
+            }
+          }
+
+          /**
+           * Remove selected category and preset from the scope
+           */
+
+          function cleanSelection() {
+            $scope.presets = undefined;
+            $scope.selectedCategory = undefined;
+            $scope.selectedPreset = undefined;
+          }
+
+          /**
+           * GET request to load the category/preset and fields information from the server.
+           * Stores the categories in the scope for the select box.
+           * Fields and presets will be used as soon as a category has been chosen.
+           */
+
+          function getPresetData() {
+
+            ApiService.getPresetData().then(function(result) {
+              if (result && result.length === 3) {
+                categories = result[0];
+                fields = result[1];
+                presets = result[2];
+              }
+            });
+          }
+
+          /**
+           * Removes existing simplestyle properties from the given feature
+           * @param  {Object} feature the GeoJSON feature
+           */
+
+          function removeExistingStyle(feature) {
+            var simpleStyleKeys = [
+              'marker-size',
+              'marker-symbol',
+              'marker-color',
+              'stroke',
+              'stroke-opacity',
+              'stroke-width',
+              'fill',
+              'fill-opacity'
+            ];
+            simpleStyleKeys.forEach(function(styleKey) {
+              delete feature.properties[styleKey];
+            });
+          }
+          /**
+           * Removes existing simplestyle properties and sets the new ones
+           * based on the configured category styles.
+           * @param {Object} category the chosen osm category
+           */
+
+          function setStyleFromCategory(category) {
+            var style = categories[category].style;
+            var selFeature = $scope.selectedFeature.feature;
+            removeExistingStyle(selFeature);
+            for (var key in style) {
+              selFeature.properties[key] = style[key];
+            }
+          }
+
+          /**
+           * Append the presets to the scope variable to fill the select box.
+           */
+
+          function setPresetsInScope(category) {
+            $scope.presets = [];
+            $scope.presets = [];
+            //Get the member of the chosen category = presets
+            var members = categories[category].members || [];
+            members.forEach(function(member) {
+              $scope.presets.push(presets[member]);
+            });
+
+          }
+
+          /**
+           * Returns the index of a preset in the categories member array
+           * @param  {String} presetKey object key
+           * @return {String}           Key of the categories member array
+           */
+
+          function getPresetIndex(presetKey) {
+            var members = categories[$scope.selectedCategory].members;
+            for (var key in members) {
+              if (presetKey === members[key]) {
+                return key;
+              }
+            }
+          }
+
+          /**
+           * 更新列表元素属性显示
+           */
+
+          function updateFeature() {
+            $scope.selectedFeature.properties.forEach(function(prop) {
+              $scope.selectedFeature.feature.properties[prop.key] = prop.value;
+            });
+            MapHandler.updateOnlyProperties($scope.selectedFeature);
+          }
+
+          /**
+           * 设定元素类型
+           * @param {String} type the property type
+           */
+
+          function addNewPropertyType(type) {
+            $scope.selectedFeature.properties.push({
+              'key': type,
+              'value': ''
+            });
+            updateFeature();
+          }
+
+          /**
+           * 去除元素类型
+           * @param type
+           */
+          function removePropertyType(type) {
+            for (var i = $scope.selectedFeature.properties.length - 1; i >= 0; i--) {
+              if ($scope.selectedFeature.properties[i].key === type) {
+                $scope.selectedFeature.properties.splice(i, 1);
+              }
+            }
+            delete $scope.selectedFeature.feature.properties[type];
+          }
+
+          //Variable used to controle the 'hide' class via ng-class
+          $scope.hideNewProperty = true;
+
+          /**
+           * Returns the key of the selected preset (sub-category)
+           * @param  {String} index the key of the categories member object
+           * @return {String}       preset name
+           */
+
+          function getSelectedPresetName(index) {
+            if (index && $scope.categories[$scope.selectedCategory] && $scope.categories[$scope.selectedCategory].members && $scope.categories[$scope.selectedCategory].members[index]) {
+              return $scope.categories[$scope.selectedCategory].members[index];
+            }
+          }
+
           /**
            * 通过属性视图给选定的feature设置属性，将属性数组放入到scope中，
            * 并使用ng-repeat指令在mapService中使用
@@ -31,6 +197,21 @@ angular.module('CooperativeIndoorMap')
             };
 
             selectCategoriesForGeomType(feature);
+            /**
+             * Checks if a property should be displayed or not
+             * @param  {String} prop the property
+             * @return {Boolean}      true if the property should be displayed, false if not
+             */
+
+            function allowedProp(prop) {
+              var notAllowed = ['category', 'preset', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'fill'];
+              //var notAllowed = ['category', 'preset'];
+              if (notAllowed.indexOf(prop) > -1) {
+                return false;
+              } else {
+                return true;
+              }
+            }
 
             var tmpGeoJSON = $scope.selectedFeature.feature = feature.toGeoJSON();
 
@@ -83,23 +264,6 @@ angular.module('CooperativeIndoorMap')
             $scope.$root.$broadcast('openToolbox', 'historyView');
           };
 
-          /**
-           * Checks if a property should be displayed or not
-           * @param  {String} prop the property
-           * @return {Boolean}      true if the property should be displayed, false if not
-           */
-
-          function allowedProp(prop) {
-            var notAllowed = ['category', 'preset', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-linecap', 'fill'];
-            //var notAllowed = ['category', 'preset'];
-            if (notAllowed.indexOf(prop) > -1) {
-              return false;
-            } else {
-              return true;
-            }
-          }
-
-
           var lastChange = -1;
           /**
            * 对于属性的更改，每秒钟同步一次
@@ -136,17 +300,6 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * 更新列表元素属性显示
-           */
-
-          function updateFeature() {
-            $scope.selectedFeature.properties.forEach(function(prop) {
-              $scope.selectedFeature.feature.properties[prop.key] = prop.value;
-            });
-            MapHandler.updateOnlyProperties($scope.selectedFeature);
-          }
-
-          /**
            * 增加一个新属性
            * @param {event} key 按键
            */
@@ -172,35 +325,6 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * 设定元素类型
-           * @param {String} type the property type
-           */
-
-          function addNewPropertyType(type) {
-            $scope.selectedFeature.properties.push({
-              'key': type,
-              'value': ''
-            });
-            updateFeature();
-          }
-
-          /**
-           * 去除元素类型
-           * @param type
-           */
-          function removePropertyType(type) {
-            for (var i = $scope.selectedFeature.properties.length - 1; i >= 0; i--) {
-              if ($scope.selectedFeature.properties[i].key === type) {
-                $scope.selectedFeature.properties.splice(i, 1);
-              }
-            }
-            delete $scope.selectedFeature.feature.properties[type];
-          }
-
-          //Variable used to controle the 'hide' class via ng-class
-          $scope.hideNewProperty = true;
-
-          /**
            * 显示增加新元素的输入框
            */
           $scope.addNewProperty = function() {
@@ -218,54 +342,7 @@ angular.module('CooperativeIndoorMap')
             updateFeature();
           };
           
-          //NEW CATEGORIES SYSTEM
-          var presets;
-          var fields;
-          var categories;
 
-          /**
-           * Select the suitable categories for the given feature based on the geometry type.
-           * Put the selection in the scope variable for the GUI
-           * @param  {Object} layer selected feature
-           */
-
-          function selectCategoriesForGeomType(layer) {
-            var geomType = MapHandler.getLayerType(layer);
-            $scope.categories = {};
-
-            for (var key in categories) {
-              if (categories[key].geometry.indexOf(geomType) > -1) {
-                $scope.categories[key] = categories[key];
-              }
-            }
-          }
-
-          /**
-           * Remove selected category and preset from the scope
-           */
-
-          function cleanSelection() {
-            $scope.presets = undefined;
-            $scope.selectedCategory = undefined;
-            $scope.selectedPreset = undefined;
-          }
-
-          /**
-           * GET request to load the category/preset and fields information from the server.
-           * Stores the categories in the scope for the select box.
-           * Fields and presets will be used as soon as a category has been chosen.
-           */
-
-          function getPresetData() {
-
-            ApiService.getPresetData().then(function(result) {
-              if (result && result.length === 3) {
-                categories = result[0];
-                fields = result[1];
-                presets = result[2];
-              }
-            });
-          }
 
           /**
            * If a category is selected, append the sub categories (presets) to a second select box.
@@ -289,71 +366,6 @@ angular.module('CooperativeIndoorMap')
             }
           };
 
-          /**
-           * Removes existing simplestyle properties and sets the new ones
-           * based on the configured category styles.
-           * @param {Object} category the chosen osm category
-           */
-
-          function setStyleFromCategory(category) {
-            var style = categories[category].style;
-            var selFeature = $scope.selectedFeature.feature;
-            removeExistingStyle(selFeature);
-            for (var key in style) {
-              selFeature.properties[key] = style[key];
-            }
-          }
-
-          /**
-           * Removes existing simplestyle properties from the given feature
-           * @param  {Object} feature the GeoJSON feature
-           */
-
-          function removeExistingStyle(feature) {
-            var simpleStyleKeys = [
-              'marker-size',
-              'marker-symbol',
-              'marker-color',
-              'stroke',
-              'stroke-opacity',
-              'stroke-width',
-              'fill',
-              'fill-opacity'
-            ];
-            simpleStyleKeys.forEach(function(styleKey) {
-              delete feature.properties[styleKey];
-            });
-          }
-
-          /**
-           * Append the presets to the scope variable to fill the select box.
-           */
-
-          function setPresetsInScope(category) {
-            $scope.presets = [];
-            $scope.presets = [];
-            //Get the member of the chosen category = presets
-            var members = categories[category].members || [];
-            members.forEach(function(member) {
-              $scope.presets.push(presets[member]);
-            });
-
-          }
-
-          /**
-           * Returns the index of a preset in the categories member array
-           * @param  {String} presetKey object key
-           * @return {String}           Key of the categories member array
-           */
-
-          function getPresetIndex(presetKey) {
-            var members = categories[$scope.selectedCategory].members;
-            for (var key in members) {
-              if (presetKey === members[key]) {
-                return key;
-              }
-            }
-          }
 
           /**
            * Called if the preset is selected.
@@ -405,18 +417,6 @@ angular.module('CooperativeIndoorMap')
               });
             }
           };
-
-          /**
-           * Returns the key of the selected preset (sub-category)
-           * @param  {String} index the key of the categories member object
-           * @return {String}       preset name
-           */
-
-          function getSelectedPresetName(index) {
-            if (index && $scope.categories[$scope.selectedCategory] && $scope.categories[$scope.selectedCategory].members && $scope.categories[$scope.selectedCategory].members[index]) {
-              return $scope.categories[$scope.selectedCategory].members[index];
-            }
-          }
 
           getPresetData();
         }

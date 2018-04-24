@@ -84,27 +84,12 @@ angular.module('CooperativeIndoorMap')
 
 
       /**
-       * Select/ Reselect a feature
-       * @param  {Object} map
-       * @param  {Object} event = mapDraw event
-       */
-
-      function updatePropertiesView(map, event) {
-        //without a timeout, the autobinding of angular doesn't seem to work
-        setTimeout(function() {
-          mapScope.selectFeature(map._layers[event.fid]);
-          // TODO: 这里的event.fid需要处理下，否则程序不会正常运行
-        }, 50);
-      }
-
-
-      /**
        * Checks if a toolbox windows is currently opened and initializes view updates
        * @param  {Object} map
        * @param  {Object} event = mapDraw event
        */
 
-      function refreshSidebar(map, event) {
+      function refreshSidebar() {
         // console.log(mapScope.selectedFeature)
         // console.log(event)
         // if (mapScope.username === event.user
@@ -113,7 +98,6 @@ angular.module('CooperativeIndoorMap')
         //   updatePropertiesView(map, event);
         // }
       }
-
 
       /**
        * Connects to the mapDraw Websockets.
@@ -150,7 +134,6 @@ angular.module('CooperativeIndoorMap')
         });
       }
 
-
       /**
        * Connects to the users WebSockets and updates the users in scope
        * @param  {String} mapId
@@ -175,16 +158,6 @@ angular.module('CooperativeIndoorMap')
         });
       }
 
-      function editFeatureEvents(mapId){
-        mapScope.$root.$on('editHandler', function(event, active, fid){
-          sendEditFeatureEvent(mapId, active, fid);
-        });
-
-        Socket.on(mapId + '-editFeature', function(data){
-          MapHandler.setEditFeatureEvent(data);
-        });
-      }
-
       function sendEditFeatureEvent(mapId, active, fid){
         var message = {
           'mapId': mapId,
@@ -194,6 +167,16 @@ angular.module('CooperativeIndoorMap')
         };
         Socket.emit('editFeature', message, function(res) {
           console.log(res);
+        });
+      }
+
+      function editFeatureEvents(mapId){
+        mapScope.$root.$on('editHandler', function(event, active, fid){
+          sendEditFeatureEvent(mapId, active, fid);
+        });
+
+        Socket.on(mapId + '-editFeature', function(data){
+          MapHandler.setEditFeatureEvent(data);
         });
       }
 

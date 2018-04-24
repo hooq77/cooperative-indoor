@@ -23,7 +23,7 @@ angular.module('CooperativeIndoorMap').
       patchLStamp: function() {
         L.userStamp = function(obj) {
           // jshint camelcase: false
-          console.log("user define stamp function has run")
+          console.log('user define stamp function has run');
           obj._leaflet_id = obj._leaflet_id || this.createId();
           return obj._leaflet_id;
         }.bind(this);

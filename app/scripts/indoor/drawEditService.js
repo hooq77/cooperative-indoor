@@ -162,8 +162,9 @@ angular.module('CooperativeIndoorMap')
           }
           //Create a delete handler
           var delLayer = map._layers[editFeatureId];
-          if(!delLayer)
+          if(!delLayer) {
             return;
+          }
           var deleteHandler = new L.EditToolbar.Delete(map, {
             featureGroup: L.featureGroup([delLayer]),
           });
@@ -394,11 +395,15 @@ angular.module('CooperativeIndoorMap')
          * @param  {e} e event
          */
         onLayerClick: function(e) {
+
           let layer = e.target;
           if(layer instanceof L.Marker && layer.isPopupOpen()) {
             layer.closePopup();
           }
+          /*jshint ignore:start */
           mapScope.selectFeature(layer, this.editByUser[layer._leaflet_id]);
+          /*jshint ignore:end */
+
           this.editFeature(layer);
         },
 
@@ -539,6 +544,5 @@ angular.module('CooperativeIndoorMap')
             return this.getLayerType(layer);
           }
         }
-      }
-
+      };
     }]);

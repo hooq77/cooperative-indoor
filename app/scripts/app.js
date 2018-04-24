@@ -9,10 +9,6 @@ angular.module('CooperativeIndoorMap', [
   .config(function($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/start',
-        controller: 'StartCtrl'
-      })
-      .when('/map/:mapid', {
         templateUrl: 'partials/main',
         controller: 'MainCtrl'
       })
@@ -33,7 +29,7 @@ angular.module('SocketModule', []);
 angular.module('ng').run(function($rootScope) {
   $rootScope.safeApply = function(fn) {
     var phase = this.$root.$$phase;
-    if(phase == '$apply' || phase == '$digest') {
+    if(phase === '$apply' || phase === '$digest') {
       if(fn && (typeof(fn) === 'function')) {
         fn();
       }

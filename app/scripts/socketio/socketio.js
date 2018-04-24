@@ -26,7 +26,7 @@ angular.module('SocketModule')
          */
         on: function(eventName, callback) {
           socket.on(eventName, function() {
-            console.log("on " + eventName);
+            console.log('on ' + eventName);
             console.log(arguments[0]);
             var args = arguments;
             $rootScope.$apply(function() {
@@ -42,7 +42,7 @@ angular.module('SocketModule')
          * @param {Function} callback
          */
         emit: function(eventName, data, callback) {
-          console.log("emit " + eventName);
+          console.log('emit ' + eventName);
           console.log(data);
           socket.emit(eventName, data, function() {
             var args = arguments;

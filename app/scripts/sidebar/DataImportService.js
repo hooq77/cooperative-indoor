@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('CooperativeIndoorMap')
-  .service('DataImport', ['MapHandler', 'Utils',
-    function(MapHandler, Utils) {
+  .service('DataImport', ['MapHandler',
+    function(MapHandler) {
 
       var map, drawnItems;
 

@@ -124,7 +124,7 @@ angular.module('CooperativeIndoorMap')
           L.drawLocal.edit.handlers.edit.tooltip.subtext = '点击保存或删除退出编辑状态';
           L.drawLocal.edit.handlers.edit.tooltip.text = '进入编辑状态';
           //Drawn features have to be added to the layer group
-          map.on('draw:created', function(e) {
+          map.on('draw:created', function() {
             // drawnItems.addLayer(e.layer);
             // MapHandler.editFeature(e.layer);
           });

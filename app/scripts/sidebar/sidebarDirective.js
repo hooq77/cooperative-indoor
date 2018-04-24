@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('CooperativeIndoorMap')
   .directive('sidebar', ['$compile', 'MapHandler','Users', 'IndoorHandler',
     function($compile, MapHandler, Users, IndoorHandler) {
@@ -5,7 +7,7 @@ angular.module('CooperativeIndoorMap')
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'partials/sidebar',
         replace: true,
-        link: function postLink($scope, elements) {
+        link: function postLink($scope) {
           var map = window._map;
           var sidebar = window._sidebar = L.control.sidebar('sidebar').addTo(map);
           /**
@@ -36,13 +38,13 @@ angular.module('CooperativeIndoorMap')
             }
           };
 
-          $scope.currentView = "";
+          $scope.currentView = '';
 
           function getCurrentView() {
             sidebar.on('content', function (event) {
               if(event && event.id){
                 $scope.currentView = event.id;
-                if($scope.currentView === "propertis") {
+                if($scope.currentView === 'propertis') {
                   IndoorHandler.enableIndoorEdit();
                 } else {
                   IndoorHandler.disableIndoorEdit();
@@ -52,7 +54,7 @@ angular.module('CooperativeIndoorMap')
             });
             sidebar.on('closing', function () {
               $scope.$root.$broadcast('sidebar:off');
-              if($scope.currentView === "propertis") {
+              if($scope.currentView === 'propertis') {
                 IndoorHandler.disableIndoorEdit();
               }
               $scope.currentView = undefined;
@@ -93,12 +95,13 @@ angular.module('CooperativeIndoorMap')
            */
           function highlightOnChatMessage() {
             $scope.$on('chatmessage', function () {
-              if(!$("#message").hasClass("active"))
-                $("#message").addClass("orangeBackground");
+              if(!$('#message').hasClass('active')) {
+                $('#message').addClass('orangeBackground');
+              }
             });
             sidebar.on('content', function (evt) {
               if (evt.id === 'user') {
-                $("#message").removeClass("orangeBackground");
+                $('#message').removeClass('orangeBackground');
               }
             });
           }

@@ -434,12 +434,13 @@ angular.module('CooperativeIndoorMap')
          */
         addGeoJSONFeature: function(map, event, drawnItems, isntEditable, color) {
           //jshint camelcase:false
-          var editModeOnFeatureUpdate = editHandler && editFeatureId === event.fid
+          var editModeOnFeatureUpdate = editHandler && editFeatureId === event.fid;
           if (editModeOnFeatureUpdate) {
             this.removeEditHandler();
           }
-          if (event.action === 'edited' || event.action === 'edited geometry' || event.action === 'edited properties' || event.action === 'reverted')
+          if (event.action === 'edited' || event.action === 'edited geometry' || event.action === 'edited properties' || event.action === 'reverted'){
             this.removeLayer(map, event, drawnItems);
+          }
           var newLayer = this.createSimpleStyleGeoJSONFeature(event.feature);
           var tmpLayer;
           for (var key in newLayer._layers) {
@@ -454,8 +455,9 @@ angular.module('CooperativeIndoorMap')
               this.highlightFeature(tmpLayer, color);
             }
           }
-          if (editModeOnFeatureUpdate)
+          if (editModeOnFeatureUpdate){
             this.editFeature(tmpLayer);
+          }
         },
 
 
