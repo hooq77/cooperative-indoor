@@ -15,8 +15,7 @@ angular.module('CooperativeIndoorMap')
           var categories;
 
           /**
-           * Select the suitable categories for the given feature based on the geometry type.
-           * Put the selection in the scope variable for the GUI
+           * 给元素选择合适的类别
            * @param  {Object} layer selected feature
            */
 
@@ -32,7 +31,7 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Remove selected category and preset from the scope
+           * 移除类别和选定的类别
            */
 
           function cleanSelection() {
@@ -42,9 +41,7 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * GET request to load the category/preset and fields information from the server.
-           * Stores the categories in the scope for the select box.
-           * Fields and presets will be used as soon as a category has been chosen.
+           * 获取服务器预定义的类别信息
            */
 
           function getPresetData() {
@@ -59,7 +56,7 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Removes existing simplestyle properties from the given feature
+           * 移除已存在的简单类型属性
            * @param  {Object} feature the GeoJSON feature
            */
 
@@ -79,8 +76,7 @@ angular.module('CooperativeIndoorMap')
             });
           }
           /**
-           * Removes existing simplestyle properties and sets the new ones
-           * based on the configured category styles.
+           * 基于类别选择，移除原有的简单属性，并按照类别设置新的属性
            * @param {Object} category the chosen osm category
            */
 
@@ -94,7 +90,7 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Append the presets to the scope variable to fill the select box.
+           * 选择输入界面，设置Scope内容
            */
 
           function setPresetsInScope(category) {
@@ -109,7 +105,7 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Returns the index of a preset in the categories member array
+           * 按照key返回preset
            * @param  {String} presetKey object key
            * @return {String}           Key of the categories member array
            */
@@ -164,7 +160,7 @@ angular.module('CooperativeIndoorMap')
           $scope.hideNewProperty = true;
 
           /**
-           * Returns the key of the selected preset (sub-category)
+           * 获取选定的组合名称
            * @param  {String} index the key of the categories member object
            * @return {String}       preset name
            */
@@ -198,7 +194,7 @@ angular.module('CooperativeIndoorMap')
 
             selectCategoriesForGeomType(feature);
             /**
-             * Checks if a property should be displayed or not
+             * 检查属性是否应该被显示
              * @param  {String} prop the property
              * @return {Boolean}      true if the property should be displayed, false if not
              */
@@ -345,8 +341,7 @@ angular.module('CooperativeIndoorMap')
 
 
           /**
-           * If a category is selected, append the sub categories (presets) to a second select box.
-           * Saves the category in the feature and call the update function to sync the feature.
+           * 如果一个类别被选择，则显示其二级类别，同时保存到元素的属性中
            */
           $scope.selectPresets = function() {
             $scope.cancelEditMode();
@@ -368,10 +363,7 @@ angular.module('CooperativeIndoorMap')
 
 
           /**
-           * Called if the preset is selected.
-           * Updates the feature and cally update to sync.
-           *
-           * Checks if the preset is associated with fields and adds new ones to the properties.
+           * 选择类别的时候响应函数
            */
           $scope.selectFields = function() {
             $scope.cancelEditMode();

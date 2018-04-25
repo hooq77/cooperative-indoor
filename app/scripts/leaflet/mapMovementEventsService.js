@@ -5,7 +5,7 @@ angular.module('CooperativeIndoorMap')
     return {
 
       /**
-       * Connects the events
+       * 监听地图移动结束的事件
        * @param  {Object}   map      the map
        * @param  {Function} callback
        */

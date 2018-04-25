@@ -11,9 +11,8 @@ angular.module('CooperativeIndoorMap')
           var map = window._map;
           var sidebar = window._sidebar = L.control.sidebar('sidebar').addTo(map);
           /**
-           * Store all users which are supposed to be watched. Is used by the mapMovement service to check if the map should change when other users move the map
+           * 监听用户列表与监听用户按键的响应函数
            */
-
           $scope.watchUsers = {};
           $scope.watchUser = function (userId, event) {
             if ($scope.watchUsers[userId]) {
@@ -26,7 +25,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Paint a rectangle on the map to show the viewport of other users
+           * 用户边界列表与用户边界显示按键的响应函数
            */
           $scope.userBounds = {};
           $scope.getUserBounds = function (userId) {
@@ -40,6 +39,9 @@ angular.module('CooperativeIndoorMap')
 
           $scope.currentView = '';
 
+          /**
+           * 获取当前的视图
+           */
           function getCurrentView() {
             sidebar.on('content', function (event) {
               if(event && event.id){
@@ -62,7 +64,9 @@ angular.module('CooperativeIndoorMap')
           }
 
           getCurrentView();
-
+          /**
+           * 获取所有用户的边界，并显示这些边界的总边界
+           */
           $scope.getAllUserBounds = function () {
             var users = {};
             for (var key in $scope.userBounds) {
@@ -74,7 +78,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Watch all users
+           * 监听所有用户
            */
           $scope.isWatchingAll = false;
           $scope.watchAll = function () {
@@ -82,7 +86,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Pans to a selcted featured
+           * 缩放并着重显示特定的元素
            * @param {String} id feature id
            */
           $scope.panToFeature = function(id) {
@@ -91,7 +95,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Highlights the user Button if a chat message comes in and the user tab is not opened
+           * 新消息到来，如果用户会话窗口没有打开，高亮打开按钮
            */
           function highlightOnChatMessage() {
             $scope.$on('chatmessage', function () {

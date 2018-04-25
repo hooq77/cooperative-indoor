@@ -12,8 +12,7 @@ angular.module('SocketModule').directive('socketStatus', [
         scope.showStatus = false;
 
         /**
-         * Displays a message if the socketIO connection is established.
-         * The message will be hidden after 3 seconds
+         * 显示WebSocket已连接，3s后消失
          */
         scope.$on('socketio-connected', function() {
           element[0].innerHTML = '协同服务器已连接...';
@@ -27,7 +26,7 @@ angular.module('SocketModule').directive('socketStatus', [
         });
 
         /**
-         * Displays a message if the socketIO connection is lost.
+         * 显示丢失连接，自动重连
          */
         scope.$on('socketio-disconnected', function() {
           element[0].innerHTML = '连接丢失，重新连接中...';

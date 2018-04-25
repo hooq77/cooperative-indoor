@@ -9,7 +9,7 @@ angular.module('CooperativeIndoorMap')
       let indoorLevel = null;
 
       /**
-       * 获取室内地图
+       * 获取室内地图区隔信息
        * @param mapId 室内地图id
        * @param floorId 楼层的id
        */
@@ -20,7 +20,7 @@ angular.module('CooperativeIndoorMap')
           });
       }
       /**
-       * 获取室内地图
+       * 加载特定的室内地图
        * @param mapId 室内地图id
        */
       function loadIndoorMap(mapId) {
@@ -43,7 +43,7 @@ angular.module('CooperativeIndoorMap')
         var bounds = map.getBounds();
         ApiService.getBuildings(L.rectangle(bounds).toGeoJSON())
           .success(blds => {
-            console.log('获取地图列表成功，地图数目：' + blds.length);
+            console.log('获取地图列表成功，列表长度：' + blds.length);
             if(blds.length === 0 && indoorId) {
               // 当前区域没有室内地图
               indoors[indoorId].remove();
@@ -82,10 +82,9 @@ angular.module('CooperativeIndoorMap')
 
       return {
         /**
-         * Initialize the service.
-         * Patches the Leaflet LStamp Function to get more unique ids.
-         * @param  {Object} m     the map
-         * @param  {Object} scope Angular scope
+         * 初始化室内地图服务，设置map对象，scope对象，监听moveend事件，获取室内地图等
+         * @param  {Object} m     map对象
+         * @param  {Object} scope Angular scope对象
          */
         initIndoorHandler: function(m, scope) {
           map = m;
@@ -95,6 +94,9 @@ angular.module('CooperativeIndoorMap')
           map._indoor = indoors;
         },
 
+        /**
+         * 打开室内地图的编辑功能
+         */
         enableIndoorEdit: function () {
           let indoor = indoors[indoorId];
           if(indoor) {
@@ -105,6 +107,9 @@ angular.module('CooperativeIndoorMap')
           }
         },
 
+        /**
+         * 关闭室内地图的编辑功能
+         */
         disableIndoorEdit: function () {
           let indoor = indoors[indoorId];
           if(indoor) {
@@ -154,6 +159,12 @@ angular.module('CooperativeIndoorMap')
           }
           return features;
         },
+
+        /**
+         * 通过ID获取当前室内地图元素
+         * @param id 元素id
+         * @returns {*} 元素信息
+         */
         getFeatureById: function (id) {
           let indoor = indoors[indoorId];
           return indoor._data[id];

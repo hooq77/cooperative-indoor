@@ -7,7 +7,7 @@ angular.module('CooperativeIndoorMap')
 
 
       /**
-       * Sends a Websocket event containing movement information
+       * 地图在移动之后，通过WebSocket发送移动之后的地图界面信息
        * @param  {String} mapId
        * @param  {Object} event = {sE, nW}
        */
@@ -25,7 +25,7 @@ angular.module('CooperativeIndoorMap')
 
 
       /**
-       * Checks if the user is setting as watched or if all users are being watched
+       * 检查用于是否被Watching
        * @param  {String}  userId
        * @return {Boolean}
        */
@@ -37,7 +37,7 @@ angular.module('CooperativeIndoorMap')
 
 
       /**
-       * Stores the mapBounds of a user. If the user is being watched, update the current map bounds
+       * 处理地图的移动
        * @param  {Object} movement = {event: {nE, sW, userId}}
        */
 
@@ -53,7 +53,7 @@ angular.module('CooperativeIndoorMap')
 
 
       /**
-       * Connects to the Websocket mapMovement channel
+       * 接受服务器广播的地图移动
        * @param  {String} mapId
        */
 
@@ -65,7 +65,7 @@ angular.module('CooperativeIndoorMap')
 
 
       /**
-       * Sends the current map position via WebSockets
+       * 发送地图绘制信息
        * @param  {String} mapId
        * @param  {Object} event = {action //edited/deleted/created, feature //Leaflet feature, fid //feature id, user}
        */
@@ -84,7 +84,7 @@ angular.module('CooperativeIndoorMap')
 
 
       /**
-       * Checks if a toolbox windows is currently opened and initializes view updates
+       * 检查toolbox窗口是否打开
        * @param  {Object} map
        * @param  {Object} event = mapDraw event
        */
@@ -100,9 +100,7 @@ angular.module('CooperativeIndoorMap')
       }
 
       /**
-       * Connects to the mapDraw Websockets.
-       * Initializes a toobox refresh
-       * Checks for the action type (created, edited, deleted) and adds/updates/deletes a layer.
+       * 监听服务器的地图绘制广播，按照动作的类型进行不同的操作
        * @param  {String} mapId
        * @param  {Object} map
        * @param  {Object} drawnItems = layer group on which the features are drawn
@@ -135,7 +133,7 @@ angular.module('CooperativeIndoorMap')
       }
 
       /**
-       * Connects to the users WebSockets and updates the users in scope
+       * 监听用户的信息的进入和退出情况
        * @param  {String} mapId
        */
 
@@ -146,7 +144,7 @@ angular.module('CooperativeIndoorMap')
       }
 
       /**
-       * Sends the user name to the Server via Websockets
+       * 发送用户名和用户地图ID
        * @param  {String} mapId
        * @param  {String} userName
        */
@@ -158,6 +156,12 @@ angular.module('CooperativeIndoorMap')
         });
       }
 
+      /**
+       * 发送地图编辑信息
+       * @param mapId 地图id
+       * @param active 动作
+       * @param fid 元素id
+       */
       function sendEditFeatureEvent(mapId, active, fid){
         var message = {
           'mapId': mapId,
@@ -170,6 +174,10 @@ angular.module('CooperativeIndoorMap')
         });
       }
 
+      /**
+       * 元素编辑是时间
+       * @param mapId 地图id
+       */
       function editFeatureEvents(mapId){
         mapScope.$root.$on('editHandler', function(event, active, fid){
           sendEditFeatureEvent(mapId, active, fid);
@@ -183,9 +191,7 @@ angular.module('CooperativeIndoorMap')
       return {
 
         /**
-         * Initializes the map synchronization:
-         * Connects to all WebSocket events:
-         * -mapDraw, -mapMovements, -users
+         * 初始化地图同步服务
          * @param  {Object} map
          * @param  {Object} scope Angular scope
          * @param  {Object} drawnItems layer group for drawn features

@@ -1,8 +1,8 @@
 'use strict';
 /* jshint -W083 */
 angular.module('CooperativeIndoorMap')
-  .controller('TesterCtrl', ['$http', '$scope', 'Socket', 'Utils',
-    function($http, $scope, Socket, Utils) {
+  .controller('TesterCtrl', ['$http', '$scope', 'Socket',
+    function($http, $scope, Socket) {
 
       $scope.destinationMap = 'tester';
 
@@ -53,7 +53,6 @@ angular.module('CooperativeIndoorMap')
                   'feature': feature,
                   'user': 'testerBot',
                   'action': 'created feature',
-                  'fid': Utils.createId()
                 }
               });
             }, delay * i);
@@ -81,7 +80,6 @@ angular.module('CooperativeIndoorMap')
                     'feature': data,
                     'user': 'testerBot',
                     'action': 'created feature',
-                    'fid': Utils.createId()
                   }
                 });
               }).error(function(data) { //, status, headers, config) {

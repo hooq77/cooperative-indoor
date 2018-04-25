@@ -12,7 +12,7 @@ angular.module('CooperativeIndoorMap')
       }
 
       /**
-       * Actual diff method
+       * 比较两个元素
        * @param {Object} a Object 1
        * @param {Object} b Object 2
        * @param {String} name headline for the view
@@ -79,7 +79,7 @@ angular.module('CooperativeIndoorMap')
       }
 
       /**
-       * Initialize the textual diff
+       * 初始化文本的比较
        * @pram {Object} objA Object 1
        * @pram {Object} objB Object 2
        * @pram {String} divId id of the html parent element
@@ -113,12 +113,8 @@ angular.module('CooperativeIndoorMap')
           var slider = element[0].getElementsByClassName('verticalSlider')[0];
 
           /**
-           * Load the document revisions history and clear eixisting values.
-           * @param  {string} id feature id
-           */
-          /**
-           * Fill the changes diff with the textual diff representation
-           * @param  {Number} index document revision array index
+           * 获取属性的不同
+           * @param  {Number} index 版本序号
            */
 
           function getPropertyDiff(index) {
@@ -130,8 +126,7 @@ angular.module('CooperativeIndoorMap')
             }
           }
           /**
-           * Sets a revision to the scope variables based on its index in the revisions array.
-           *
+           * 将历史版本显示为当前版本
            * @param {Number} index array index
            */
 
@@ -147,19 +142,16 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Remove the original feature from the map
+           * 从地图中移除原始元素
            */
-
           function removeOriginalFeature() {
             var fid = documentRevisions[0].id;
             MapHandler.removeLayerFid(fid);
           }
 
           /**
-           * Initializes the range slider with the number of document revisions.
-           * Sets the current value to the number of revisions so that the slider starts with the top position.
+           * 初始化滑动器栏
            */
-
           function setUpSlider() {
             if (slider) {
               slider.max = $scope.numberOfRevisions;
@@ -169,11 +161,8 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Assignes the scope variables with the current revisions.
-           * Removes the original feature from the map so that only the "diff features" are shown.
-           * Init the slider setup.
+           * 利用当前版本进行赋值，移除原始元素，初始化滑动器
            */
-
           function initView() {
             if (documentRevisions) {
               $scope.numberOfRevisions = documentRevisions.length;
@@ -185,6 +174,10 @@ angular.module('CooperativeIndoorMap')
             }
           }
 
+          /**
+           * 初始化函数，在界面上显示特定元素的历史版本信息
+           * @param id
+           */
           function init(id) {
             $scope.documentRevision = [];
             $scope.currentRevisionIndex = 0;
@@ -210,18 +203,15 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Remove the "diffFeature" from the map and redraw the newest revision
+           * 移除元素对比信息
            */
-
           function setOriginalFeature() {
             // MapHandler.removeLayerFid('diff-' + $scope.currentRevision.id);
             // MapHandler.addFeatureAfterDiff($scope.currentRevision._id, documentRevisions[0]);
           }
 
           /**
-           * Remove the document revisions from all variables.
-           * This automatically clears the view.
-           * Redraws the newest revision in the map.
+           * 清空视图，移除所有的版本信息
            */
 
           function cleanUp() {
@@ -233,7 +223,7 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * OnChange method of the range slider. Numbers have to be inverted so that the newest revision is on top.
+           * 滑动器滑动监听函数
            */
           $scope.sliderChange = function() {
             setCurrentRevision($scope.numberOfRevisions - $scope.sliderValue);
@@ -241,8 +231,7 @@ angular.module('CooperativeIndoorMap')
 
 
           /**
-           * Cleans up the revision variables and emits the 'closeFeatureHistory' event.
-           * Used by the mapHistoryDirective to show the default map history
+           * 关闭版本浏览界面，回到主界面
            */
           $scope.backToHistory = function() {
             cleanUp();
@@ -251,15 +240,14 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Event called when clicking the "view changes" buttons.
-           * Initializes the feature history with the given feature id
+           * showFeatureHistory事件响应函数
            */
           $scope.$on('showFeatureHistory', function(e, id) {
             init(id);
           });
 
           /**
-           * Remove the feature revisions if a different toolbox view is opened.
+           * toolbox事件响应函数
            */
           $scope.$on('toolbox', function() {
             if ($scope.currentRevision) {
@@ -269,7 +257,7 @@ angular.module('CooperativeIndoorMap')
           });
 
           /**
-           * Sets the current revision with the next revision index
+           * 设定当前版本为上一版本
            */
           $scope.previousRevision = function() {
             if ($scope.numberOfRevisions > $scope.currentRevisionIndex + 1) {
@@ -278,7 +266,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Sets the current revision with the previous revision index
+           * 设定当前版本为下一版本
            */
           $scope.nextRevision = function() {
             if ($scope.currentRevisionIndex > 0) {
@@ -287,7 +275,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Revert a feature to a given revision.
+           * 回退到特定版本
            * @param {String} id the feature id
            * @param {String} rev the revision to which the feature will be reverted
            */
@@ -296,7 +284,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Recreate a deleted feature
+           * 恢复删除的元素
            * @param {String} id feature id
            * @param {Object} feature the feature
            */
@@ -312,7 +300,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Checks the action attribute of a feature to decide if there have been geometry changes (true) or property changes (false).
+           * 判断是否有元素图形发生改变
            * @param  {String}  action the action string of the feature
            * @return {Boolean}        true if there are geometry changes
            */
@@ -322,8 +310,7 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Open the textual diff
-           * Close the revisions view and the map diff
+           * 打开对比窗口
            * @param {String} fid the feature id
            * @param {String} rev the revision key
            * @param {Number} index index of the revisions array

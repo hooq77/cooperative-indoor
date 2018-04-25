@@ -5,25 +5,59 @@ angular.module('CooperativeIndoorMap')
     function($http, $q) {
 
       return {
+        /**
+         * 获取当前区域内的室内地图子图（建筑物）列表
+         * @param bounds 边界
+         * @returns {HttpPromise} promise 类型
+         */
         getBuildings: function(bounds){
           return $http.post('/api/buildings', bounds);
         },
+        /**
+         * 获取特定建筑物的楼层列表
+         * @param mapId 建筑物ID
+         * @returns {HttpPromise} promise类型
+         */
         getFloors: function(mapId){
           return $http.get('/api/floors/' + mapId);
         },
+
+        /**
+         * 获取特定楼层的区隔列表
+         * @param floorId 楼层ID
+         * @returns {HttpPromise} promise类型
+         */
         getAreas: function(floorId){
           return $http.get('/api/areas/' + floorId);
         },
+        /**
+         * 获取特定楼层的POI列表
+         * @param floorId 楼层ID
+         * @returns {HttpPromise} promise类型
+         */
         getPois: function(floorId) {
           return $http.get('/api/pois/' + floorId);
         },
+
+        /**
+         * 获取特定楼层的连接线信息
+         * @param floorId 楼层ID
+         * @returns {HttpPromise} promise类型
+         */
         getLines: function(floorId) {
           return $http.get('/api/lines/' + floorId);
         },
+
+        /**
+         * 获取特定区隔的历史信息
+         * @param id 区隔ID
+         * @returns {HttpPromise} promise类型
+         */
         getAreaHistory: function(id) {
           return $http.get('/api/history/area/' + id);
         },
-        
+
+        // 以下为原始内容
         /**
          * Returns a promise which will be resolved current features of the map
          * @param  {String} mapId the map id

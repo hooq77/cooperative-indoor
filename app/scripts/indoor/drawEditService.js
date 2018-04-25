@@ -8,12 +8,11 @@ angular.module('CooperativeIndoorMap')
       return {
 
         /**
-         * Initialize the service.
-         * Patches the Leaflet LStamp Function to get more unique ids.
-         * @param  {Object} m     the map
-         * @param  {Object} dI    drawnItems (layer group for the features)
-         * @param  {Object} scope Angular scope
-         * @param  {Object} dControl the drawControl of leaflet.draw
+         * 初始化drawEdit服务，设定drawstart事件响应函数
+         * @param  {Object} m     map对象
+         * @param  {Object} dI    drawItem，绘制图形元素的容器
+         * @param  {Object} scope Angular scope对象
+         * @param  {Object} dControl 绘制元素的控制组件
          */
         initDrawEditHandler: function(m, dI, scope, dControl) {
           map = m;
@@ -29,8 +28,8 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Called to start editing a feature with leaflet.draw manually.
-         * @param {Object} layer the leaflet layer
+         * 手动调用leaflet.draw编辑特定元素
+         * @param {Object} layer 被编辑的元素
          */
         editFeature: function(layer) {
           //If a feature is already in editing mode, stop before creating a new editHandler
@@ -66,6 +65,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
+         * 返回一个JSON对象，表示元素在编辑的时候的样式
          * Returns a JSON object with style properties for the Leaflet.draw editing
          * @return {Object} leaflet style object
          */
@@ -85,20 +85,8 @@ angular.module('CooperativeIndoorMap')
           };
         },
 
-
         /**
-         * Save the changes made via the leaflet.draw edit and remove the edit handler
-         */
-        saveEditedFeature: function() {
-          if (editHandler) {
-            editHandler.save();
-            this.removeEditHandler();
-          }
-        },
-
-        /**
-         * Remove an existing editHandler and cancel the edit mode.
-         * Emits an "editHandler" event
+         * 退出编辑模式，移除正在编辑样式，产生editHandler事件
          */
         removeEditHandler: function() {
           if (editHandler) {
@@ -117,10 +105,29 @@ angular.module('CooperativeIndoorMap')
           }
         },
 
-        editByUser: {},
         /**
-         * Stores the current editors by feature id. Called through the synchronizeMapService socket listeners.
-         * Used to display if different persons are editing the same geometry
+         * 使用Leaflet.Draw保存更改，并移除editHandler
+         */
+        saveEditedFeature: function() {
+          if (editHandler) {
+            editHandler.save();
+            this.removeEditHandler();
+          }
+        },
+
+        editByUser: {},
+
+        /**
+         * 多个用户共同编辑的时候，触发editHandlerUpdate事件
+         * @param  {[type]} event {user, id, active, mapId}
+         */
+        fireEditFeatureEvent: function(event) {
+          if (editFeatureId === event.fid) {
+            mapScope.$emit('editHandlerUpdate', this.editByUser[editFeatureId]);
+          }
+        },
+        /**
+         * 存储特定元素的编辑用户，如果多个用户对一个元素进行编辑
          * @param {Object} event {user, id, active, mapId}
          */
         setEditFeatureEvent: function(event) {
@@ -142,18 +149,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Fires an angular event if a feature is being edited
-         * @param  {[type]} event [description]
-         * @return {[type]}       [description]
-         */
-        fireEditFeatureEvent: function(event) {
-          if (editFeatureId === event.fid) {
-            mapScope.$emit('editHandlerUpdate', this.editByUser[editFeatureId]);
-          }
-        },
-
-        /**
-         * Deletes the currently selected feature
+         * 删除当前选定的元素
          */
         deleteFeature: function() {
           //Stop the edit mode
@@ -177,12 +173,11 @@ angular.module('CooperativeIndoorMap')
           this.removeLayer(map, {
             fid: editFeatureId
           }, drawnItems);
-
         },
 
         /**
-         * Update a layer for displayling the geometry diffs.
-         * Doesn't add the layer to the drawnItems group and doesn't make it editable.
+         * 更新一个元素，用于显示元素之间的不同
+         * 不要把元素添加到drawItem中，也不要使元素可编辑
          * @param  {String} fid          feature id
          * @param  {Object} geoJsonLayer geojson object
          */
@@ -197,8 +192,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Removes the layer from the drawnItem feature group and from the map.
-         * Serves as a wrapper as no drawnItems and map variable is needed.
+         * 从map中和drawItem中移除特定的元素
          * @param  {String} fid the feature id
          */
         removeLayerFid: function(fid) {
@@ -209,8 +203,7 @@ angular.module('CooperativeIndoorMap')
 
 
         /**
-         * Adds a layer if it doesn't already exist.
-         * Used after the user has reviewed older revisions.
+         * 添加一个还没有添加的元素，用于版本回退
          * @param {String} fid          the feature id
          * @param {Object} geoJsonLayer geojson object
          */
@@ -225,8 +218,8 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Updates a feature by removing the layer and redrawing the feature.
-         * Fires a 'propertyEdited' event.
+         * 更新元素，先移除，然后重新绘制
+         * 出发propertyEdited事件
          * @param  {Object} layer leaflet layer
          */
         updateFeature: function(layer) {
@@ -239,8 +232,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Update the properties of a layer but reuse the existing geometry. Used by the featurePropertiesDirective.
-         * Prevents the loss of geometry changes which may have occured while editing the properties.
+         * 更新属性信息，重用geometry
          * @param  {Object} layer feature
          */
         updateOnlyProperties: function(layer) {
@@ -252,7 +244,7 @@ angular.module('CooperativeIndoorMap')
         },
         
         /**
-         * Disable the default click event and return the
+         * 添加一次性click事件，用于元素拾取
          */
         getLayerIdOnce: function(cb) {
           //jshint camelcase:false
@@ -266,7 +258,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Fits the map to a given bounding box
+         * 缩放地图到特定的范围之中
          * @param  {Object} bounds leaflet bouding box (L.LatLngBounds)
          */
         fitBounds: function(bounds) {
@@ -274,8 +266,8 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Creates a Leaflet bounding box (L.LatLngBounds)
-         * @param  {Array} nE [lat,lng]
+         * 创建一个Leaflet bounding box
+         * @param  {Array} nE [lat, lng]
          * @param  {Array} sW [lat, lng]
          * @return {Object}    leafet bounding box (L.LatLngBounds)
          */
@@ -284,9 +276,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Draws a rectangle with a users bounding box on the map.
-         * Removes the layer after 3000ms.
-         * Zooms to the rectangle
+         * 绘制用于的视图边界，3000ms之后自动移除
          * @param  {Object} bounds Leaflet bounding box (L.LatLngBounds)
          */
         paintUserBounds: function(bounds, color) {
@@ -309,8 +299,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Same functionality as paintUserBounds but creates boundaries for multiple users.
-         * Therefore creates a LayerGroup to get the bounds of all rectangles
+         * 绘制所有用户的边界，并自动缩放到这些边界的最大外围矩形
          * @param  {Object} user {userid:{bounds, color}}
          */
         paintAllUserBounds: function(user) {
@@ -339,7 +328,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Sends the event to revert a feature via Websockets
+         * 对特定元素进行版本回退的时候，将回退的版本信息发送到服务器
          * @param  {String} mapId the map id
          * @param  {String} fid   feature id
          * @param  {String} toRev revision to which the feature should be reverted
@@ -357,7 +346,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Sends the event to restore a deleted feature via Websockets
+         * 使用WebSocket发送消息，恢复已经删除的元素
          * @param  {String} mapId the map id
          * @param  {String} fid   feature id
          * @param  {Object} feature leaflet feature
@@ -376,7 +365,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Zoom/Pan to feature with a given ID
+         * 缩放地图到指定的元素
          * @param  {String} id feature id (= layer id)
          */
         panToFeature: function(id) {
@@ -395,15 +384,12 @@ angular.module('CooperativeIndoorMap')
          * @param  {e} e event
          */
         onLayerClick: function(e) {
-
+          //jshint camelcase:false
           let layer = e.target;
           if(layer instanceof L.Marker && layer.isPopupOpen()) {
             layer.closePopup();
           }
-          /*jshint ignore:start */
           mapScope.selectFeature(layer, this.editByUser[layer._leaflet_id]);
-          /*jshint ignore:end */
-
           this.editFeature(layer);
         },
 
@@ -442,7 +428,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Highlights a feature for a few seconds (differentation between svgs and html elements)
+         * 着重显示一个元素
          * @param  {Object} feature leaflet feature
          */
         highlightFeature: function(feature, color) {
@@ -479,7 +465,7 @@ angular.module('CooperativeIndoorMap')
 
 
         /**
-         * Wrapper for the highlightFeature function to highlight a feature with the feature id as parameter instead of the layer.
+         * 包装highlightFeature函数，着重显示一个元素通过元素id
          * @param  {String} fid feature id
          */
         highlightFeatureId: function(fid) {
@@ -487,7 +473,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Removes a layer from the map.
+         * 移除一个特定的元素
          * @param  {Object} map        the map
          * @param  {Object} event      remove event ({fid, feature, user})
          * @param  {Object} drawnItems layer group for the features
@@ -501,7 +487,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Check if the selected feature has been edited
+         * 检查一个元素是否被编辑
          * @return {Boolean} is edited
          */
         hasGeometryEdits: function() {
@@ -519,7 +505,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Return the osm geometry type of a given layer
+         * 返回元素的类型
          * @param  {Object} layer leaflet layer
          * @return {String}       geometry type (point, area, line)
          */
@@ -534,7 +520,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Return the osm geometry type of a layer based on the feature id
+         * 根据元素的id返回元素的类型
          * @param  {String} fid feature id
          * @return {String}     geometry type
          */

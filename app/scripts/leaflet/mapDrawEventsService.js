@@ -24,7 +24,7 @@ angular.module('CooperativeIndoorMap')
       return {
 
         /**
-         * Listens for leaflet draw events. Packs the events in a message and calls the callback
+         * 连接服务器之后即开始监听元素创建时间和元素编辑事件
          * @param  {Object}   map      the map
          * @param  {Object}   scope    Angular scope
          * @param  {Function} callback

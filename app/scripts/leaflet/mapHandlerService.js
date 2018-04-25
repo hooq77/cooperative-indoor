@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('CooperativeIndoorMap')
-  .service('MapHandler', ['Utils', 'Socket',
-    function(Utils, Socket) {
+  .service('MapHandler', ['Socket',
+    function(Socket) {
 
       var map, drawnItems, mapScope, drawControl;
       var editHandler, editFeatureId;
@@ -18,9 +18,6 @@ angular.module('CooperativeIndoorMap')
          * @param  {Object} dControl the drawControl of leaflet.draw
          */
         initMapHandler: function(m, dI, scope, dControl) {
-          //patch L.stamp to get unique layer ids
-          Utils.patchLStamp();
-
           map = m;
           drawnItems = dI;
           mapScope = scope;

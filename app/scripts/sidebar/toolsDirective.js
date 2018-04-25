@@ -11,7 +11,7 @@ angular.module('CooperativeIndoorMap')
           $scope.jsonError = '';
 
           /**
-           * takes a GeoJSON string from the toolbox input field
+           * 导入GeoJSON并增加时间戳
            * and adds the data to the map
            */
           $scope.importDataString = function() {
@@ -24,7 +24,9 @@ angular.module('CooperativeIndoorMap')
               $scope.jsonError = 'invalid geojson: ' + err;
             }
           };
-
+          /**
+           * 导出地图
+           */
           $scope.exportMap = function() {
             $scope.dataInputField = JSON.stringify(DataImport.exportGeoJson(), null, 2);
           };

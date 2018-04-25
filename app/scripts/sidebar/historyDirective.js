@@ -15,7 +15,7 @@ angular.module('CooperativeIndoorMap')
           scope.isShowFloorHistory = true;
           scope.isShowFeatureHistory = false;
           /**
-           * Combine similar actions to avoid a map history pollution if one person makes many changes.
+           * 组合相似的编辑行为，避免历史列表过长
            * @param  {Array} values the history actions
            * @return {Array}        the aggregated history actions
            */
@@ -60,6 +60,10 @@ angular.module('CooperativeIndoorMap')
             scope.history = IndoorHandler.getCurrentFloorFeatures();
           }
 
+          /**
+           * 获取特定区隔的历史信息
+           * @param id 区隔id
+           */
           function getAreaHistory(id) {
             scope.currentfId = id;
             scope.loading = true;
@@ -72,6 +76,10 @@ angular.module('CooperativeIndoorMap')
               });
           }
 
+          /**
+           * 获取楼层的历史信息
+           * @param id 楼层id
+           */
           function getFloorHistory(id) {
             ApiService.getMapHistory(scope.$root.mapId)
               .then(function(result) {
@@ -87,6 +95,11 @@ angular.module('CooperativeIndoorMap')
 
             scope.$root.$broadcast('showFeatureHistory', id);
           }
+
+          /**
+           * 获取建筑物的历史信息
+           * @param id 建筑物id
+           */
           function getBuildingHistory(id) {
             ApiService.getMapHistory(scope.$root.mapId)
               .then(function(result) {
@@ -103,6 +116,10 @@ angular.module('CooperativeIndoorMap')
             scope.$root.$broadcast('showFeatureHistory', id);
           }
 
+          /**
+           * 获取连接线的历史信息
+           * @param id 连接线id
+           */
           function getLineHistory(id) {
             ApiService.getMapHistory(scope.$root.mapId)
               .then(function(result) {
@@ -119,6 +136,10 @@ angular.module('CooperativeIndoorMap')
             scope.$root.$broadcast('showFeatureHistory', id);
           }
 
+          /**
+           * 获取poi的历史信息
+           * @param id poi的id
+           */
           function getPoiHistory(id) {
             ApiService.getMapHistory(scope.$root.mapId)
               .then(function(result) {
@@ -173,22 +194,23 @@ angular.module('CooperativeIndoorMap')
           };
 
           /**
-           * Event listener for the feature history close event.
-           * Toggle the view for the map history and reload the history.
+           * 监听历史信息关闭事件，在当前地图和历史中切换
            */
           scope.$on('closeFeatureHistory', function() {
             scope.isShowFeatureHistory = false;
             scope.isShowFloorHistory = true;
             // loadFloorHistory();
           });
+          /**
+           * 历史信息关闭处理
+           */
           scope.closeFeatureHistory = function(){
             scope.isShowFeatureHistory = false;
             scope.isShowFloorHistory = true;
             // loadFloorHistory();
           };
            /**
-           * Replace aggregated object in the history with the single actions
-           * @param  {Object} action the aggregated object
+           * 替换渐进式的编辑行为为一个行为
            */
           scope.showHistoryDetails = function() {
             var index = scope.history.indexOf();
@@ -198,7 +220,7 @@ angular.module('CooperativeIndoorMap')
           };
           
           /**
-           * Pan to the a selected feature
+           * 缩放到特定的元素
            * @param  {String} fid feature id (= leaflet layer id)
            */
           scope.panToFeature = function(fid) {

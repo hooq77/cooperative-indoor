@@ -8,9 +8,7 @@ angular.module('CooperativeIndoorMap')
       return {
 
         /**
-         * Stores the users within the map and creates a random color for everyone.
-         * If a user is alredy existing, don't create a new color. 
-         * Supposed to be called by the SynchronizeMapService
+         * 存储协同编辑的用户信息，并为其分配一个特定的颜色
          * @param  {Object} newUsers {socketId: name}
          * @return {Object}          user object with colors {socketId:{name, color}}
          */
@@ -34,7 +32,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Return the user based on the socketID
+         * 根据SocketID返回特定的用户
          * @param  {String} key socket id
          * @return {Object}     user object {color, name}
          */
@@ -43,7 +41,7 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Return the color of a user based on the user name
+         * 根据用户名返回为用户所分配的颜色
          * @param  {String} name user name
          * @return {String}      hex color value
          */

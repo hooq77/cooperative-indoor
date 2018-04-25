@@ -13,8 +13,8 @@ angular.module('CooperativeIndoorMap')
         },
 
         /**
-         * Create MapObjects from external geoJSON resources,
-         * which are not from the draw toolbar nor database, and thus have no FID.
+         * 从GeoJSON导入地图元素
+         * 创建一个GeoJSON对象，并处罚地图创建事件
          * @param {Object} data The (valid) GeoJSON data
          */
         importGeoJson: function(data) {
@@ -31,9 +31,11 @@ angular.module('CooperativeIndoorMap')
 
           map.fitBounds(geojson);
         },
-
+        /**
+         * 将当前绘制的元素导出为GeoJSON
+         * @returns {*}
+         */
         exportGeoJson: function() {
-          // TODO: strip internal attributes (_rev, _id, user, ...)
           return drawnItems.toGeoJSON();
         }
       };

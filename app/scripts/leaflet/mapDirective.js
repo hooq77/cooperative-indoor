@@ -17,14 +17,14 @@ angular.module('CooperativeIndoorMap')
       }
 
       /**
-       * Removes the loading div from the page
+       * 移除loading信息div
        */
       function removeLoading() {
         document.body.removeChild(mapLoadingDiv);
       }
 
       /**
-       * Load the features for the current map from the database
+       * 从数据库中加载元素
        * @param  {String} mapId      the map id
        * @param  {Object} map        the map
        * @param  {Object} drawnItems layer group for the drawn items

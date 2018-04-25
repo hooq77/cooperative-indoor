@@ -15,7 +15,7 @@ angular.module('CooperativeIndoorMap')
           var userName = $scope.$parent.userName;
 
           /**
-           * Send a message via Websockets
+           * 通过WebSocket发送会话消息
            * @param {String} message the chat message
            */
 
@@ -31,9 +31,8 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Scroll down the chatmessages to the bottom
+           * 滚动到会话消息的底部
            */
-
           function scrollDown() {
             var elem = $('.chatMessages')[0];
             if (elem) {
@@ -42,10 +41,8 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
-           * Connects to the WebSocket stream.
-           * Retrieved messages are pushed to the messages array which is used in the ng-repeat
+           * 接受会话消息，广播消息通知，显示消息并滚动到最底部
            */
-
           function receiveMessage() {
             Socket.on(mapId + '-chat', function(res) {
               $scope.$root.$broadcast('chatmessage');
@@ -56,10 +53,8 @@ angular.module('CooperativeIndoorMap')
 
           receiveMessage();
 
-
-
           /**
-           * Send a chat message. Called via the Send button or by pressing enter in the GUI
+           * 监听enter按键，发送消息
            * @param {Number} key key code
            */
           $scope.sendMessage = function(key) {
@@ -80,14 +75,20 @@ angular.module('CooperativeIndoorMap')
 
           $scope.isReferTo = false;
 
+          /**
+           * 取消选取特定的元素
+           */
           $scope.cancelReferToFeature = function() {
             $scope.isReferTo = false;
             Tooltip.hideTooltip();
           };
 
+          /**
+           * 选取某个元素
+           */
           $scope.referToFeature = function() {
             $scope.isReferTo = true;
-            Tooltip.showTooltip('Click on the feature you want to refer to.');
+            Tooltip.showTooltip('选取元素.');
             MapHandler.getLayerIdOnce(function(fid) {
               if (fid !== '') {
                 $scope.chatMessage += ' #' + fid + ' ';
@@ -101,7 +102,6 @@ angular.module('CooperativeIndoorMap')
               // $scope.safeApply();
             });
           };
-
         }
       };
     }

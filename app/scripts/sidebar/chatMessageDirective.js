@@ -12,6 +12,11 @@ angular.module('CooperativeIndoorMap')
         link: function postLink(scope, element) {
           var message = '';
 
+          /**
+           * 按照元素类别确定元素的class信息
+           * @param fid
+           * @returns {*}
+           */
           function getClassForFeature(fid) {
             var type = MapHandler.getLayerTypeFid(fid);
             if (type === 'point') {
@@ -25,6 +30,11 @@ angular.module('CooperativeIndoorMap')
             }
           }
 
+          /**
+           * 在聊天界面中生成一个按钮，点击即可缩放到选取的元素上
+           * @param fidString
+           * @returns {*}
+           */
           function createButton(fidString) {
             var fid = fidString.substring(1);
             var className = getClassForFeature(fid);
@@ -35,6 +45,9 @@ angular.module('CooperativeIndoorMap')
             }
           }
 
+          /**
+           * 交换元素id
+           */
           function exchangeFid() {
             var index = message.indexOf('#');
             if (index > -1) {
@@ -45,7 +58,9 @@ angular.module('CooperativeIndoorMap')
               exchangeFid();
             }
           }
-
+          /**
+           * 缩放到特定的元素，并着重显示
+           */
           scope.panToFeature = function(fid) {
             MapHandler.panToFeature(fid);
             MapHandler.highlightFeatureId(fid);

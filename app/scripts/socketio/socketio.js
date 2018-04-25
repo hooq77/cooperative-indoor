@@ -5,14 +5,14 @@ angular.module('SocketModule')
       var socket = io.connect();
 
       /**
-       * Broadcast an event if the websocket connection is established
+       * 广播WebSocket已连接事件
        */
       socket.on('connect', function() {
         $rootScope.$broadcast('socketio-connected');
       });
 
       /**
-       * Broadcasts an event if the websocket connection is lost
+       * 广播WebSocket断开连接事件
        */
       socket.on('disconnect', function() {
         $rootScope.$broadcast('socketio-disconnected');
@@ -20,7 +20,7 @@ angular.module('SocketModule')
 
       return {
         /**
-         * Connect to a WebSocket stream
+         * 监听WebSocket事件，接受服务器推送信息
          * @param {String} eventName name of the stream
          * @param {Function} callback
          */
@@ -36,7 +36,7 @@ angular.module('SocketModule')
         },
 
         /**
-         * Emits/Sends a message to a WebSocket stream
+         * 广播WebSocket事件，向服务器发送数据
          * @param {String} eventName name of the stream
          * @param {Object} data  the data to be send
          * @param {Function} callback

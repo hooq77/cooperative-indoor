@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('CooperativeIndoorMap')
-  .controller('StartCtrl', ['$scope', '$rootScope', '$location', 'Utils', 'TesterService',
-    function($scope, $rootScope, $location, Utils, TesterService) {
+  .controller('StartCtrl', ['$scope', '$rootScope', '$location', 'TesterService',
+    function($scope, $rootScope, $location, TesterService) {
 
       function loadName() {
         var oldName = localStorage.getItem('cm-user');
@@ -22,7 +22,7 @@ angular.module('CooperativeIndoorMap')
 
       function startMap() {
         //a+  as couchdb db names can't start with a number
-        var mapId = $scope.mapIdInput || 'a' + Utils.createId();
+        var mapId = $scope.mapIdInput || 'temp';
         $rootScope.userName = $scope.userInput;
         saveName();
         $location.path('/map/' + mapId);
