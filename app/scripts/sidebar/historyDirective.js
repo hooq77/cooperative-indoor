@@ -61,6 +61,14 @@ angular.module('CooperativeIndoorMap')
           }
 
           /**
+           * 清空当前显示的历史信息
+           */
+          function clearFloorHistory() {
+            scope.history = null;
+            scope.isShowFloorHistory = false;
+            scope.isShowFeatureHistory = false;
+          }
+          /**
            * 获取特定区隔的历史信息
            * @param id 区隔id
            */
@@ -162,9 +170,18 @@ angular.module('CooperativeIndoorMap')
           scope.$on('sidebar:on', function(e, view) {
             if (view === 'history') {
               loadFloorHistory();
+            } else {
+              clearFloorHistory();
             }
           });
-  
+          /**
+           * 监听history侧边栏打开事件，侧边栏打开的时候加载历史版本信息
+           */
+          scope.$on('indoor:level', function() {
+            clearFloorHistory();
+            loadFloorHistory();
+
+          });
           /**
            * 浏览单个feature的历史版本信息
            * @param {String} id feature的id
@@ -201,6 +218,7 @@ angular.module('CooperativeIndoorMap')
             scope.isShowFloorHistory = true;
             // loadFloorHistory();
           });
+
           /**
            * 历史信息关闭处理
            */
@@ -209,6 +227,7 @@ angular.module('CooperativeIndoorMap')
             scope.isShowFloorHistory = true;
             // loadFloorHistory();
           };
+
            /**
            * 替换渐进式的编辑行为为一个行为
            */

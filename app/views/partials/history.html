@@ -16,7 +16,7 @@
         <div class="historyHeader">
           元素 #{{feature.id}}
         </div>
-        <div class="stringLink dropdown" ng-click="showFeatureHistory(feature.id)">历史版本</div>
+        <a class="stringLink dropdown" ng-click="showFeatureHistory(feature.id)" href="javascript:;">历史版本</a>
         <div class="historyInfo">
           版本号： {{feature.properties.version}} <br>
           所有者： {{feature.properties.owner}} <br>

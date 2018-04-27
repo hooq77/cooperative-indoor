@@ -1,11 +1,4 @@
-/**
- * A layer that will display indoor data
- *
- * addData takes a GeoJSON feature collection, each feature must have a level
- * property that indicates the level.
- *
- * getLevels can be called to get the array of levels that are present.
- */
+'use strict';
 /* global L */
 L.Control.Level = L.Control.extend({
   options: {
@@ -13,84 +6,85 @@ L.Control.Level = L.Control.extend({
   },
 
   initialize: function (indoor, options) {
-    L.setOptions(this, options)
-    this._indoor = indoor
-    this._map = null
-    this._buttons = {}
-    this._level = options.level
+    L.setOptions(this, options);
+    this._indoor = indoor;
+    this._map = null;
+    this._buttons = {};
+    this._level = options.level;
   },
-  onAdd: function (map) {
-    let div = L.DomUtil.create('div', 'leaflet-bar leaflet-control')
+  onAdd: function () {
+    let div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
 
-    div.style.font = '18px "Lucida Console",Monaco,monospace'
+    div.style.font = '18px "Lucida Console",Monaco,monospace';
 
-    let buttons = this._buttons
-    let activeLevel = this._level
+    let buttons = this._buttons;
+    let activeLevel = this._level;
 
-    let levels = []
+    let levels = [];
 
     for (let i = 0; i < this.options.levels.length; i++) {
-      let levelNum = this.options.levels[i]
-      let levelName = this.options.names[i]
+      let levelNum = this.options.levels[i];
+      let levelName = this.options.names[i];
       levels.push({
         num: Number.parseInt(levelNum),
         label: levelName
-      })
+      });
     }
 
     levels.sort(function (a, b) {
-      return a.num - b.num
-    })
+      return a.num - b.num;
+    });
 
     for (let i = levels.length - 1; i >= 0; i--) {
-      let level = levels[i].num
-      let originalLevel = levels[i].label
+      // jshint -W083
+      let level = levels[i].num;
+      let originalLevel = levels[i].label;
     
-      let levelBtn = L.DomUtil.create('a', 'leaflet-button-part', div)
-      levelBtn.href = '#'
+      let levelBtn = L.DomUtil.create('a', 'leaflet-button-part', div);
+      levelBtn.href = '#';
       if (level === activeLevel || originalLevel === activeLevel) {
-        levelBtn.style.backgroundColor = '#b0b0b0'
+        levelBtn.style.backgroundColor = '#b0b0b0';
       }
-      levelBtn.appendChild(levelBtn.ownerDocument.createTextNode(originalLevel))
+      levelBtn.appendChild(levelBtn.ownerDocument.createTextNode(originalLevel));
       L.DomEvent.on(levelBtn ,'click', L.DomEvent.stop);
       L.DomEvent.on(levelBtn, 'click',  function () {
-        this.setLevel(level)
-      }, this)
-      buttons[level] = levelBtn
+        this.setLevel(level);
+      }, this);
+      buttons[level] = levelBtn;
     }
-    return div
+    return div;
   },
   setLevel: function (newLevel) {
-    let oldLevel = this._level
+    let oldLevel = this._level;
     if (newLevel === oldLevel) {
-      return
+      return;
     }
 
-    this._level = newLevel
-    this._indoor.setLevel(newLevel)
+    this._level = newLevel;
+    this._indoor.setLevel(newLevel);
     
     if (this._map !== null) {
       if (typeof oldLevel !== 'undefined') {
-        this._buttons[oldLevel].style.backgroundColor = '#FFFFFF'
+        this._buttons[oldLevel].style.backgroundColor = '#FFFFFF';
       }
-      this._buttons[newLevel].style.backgroundColor = '#b0b0b0'
+      this._buttons[newLevel].style.backgroundColor = '#b0b0b0';
     }
   }
-})
+});
 
 L.Control.level = function (indoor, options) {
-  return new L.Control.Level(indoor, options)
+  return new L.Control.Level(indoor, options);
 };
 
 L.Indoor = L.Evented.extend({
   options: {
     style: function (feature) {
-      let fill = 'white'
+      let fill = 'white';
 
       if (feature.properties.type === '教室') {
-        fill = '#169EC6'
+        fill = '#169EC6';
       } else if (feature.properties.type === '储物间') {
-        fill = '#0A485B'
+        fill = '#0A485B';
       }
 
       return {
@@ -98,11 +92,12 @@ L.Indoor = L.Evented.extend({
         weight: 1,
         color: '#666',
         fillOpacity: 1
-      }
+      };
     }
   },
 
   initialize: function (building, options) {
+    // jshint camelcase:false
     L.setOptions(this, options);
     this._geojson = L.geoJSON({type: 'FeatureCollection',features: []}, this.options);
     this._map = null;
@@ -120,6 +115,7 @@ L.Indoor = L.Evented.extend({
     this._levelControl = null;
   },
   addFloors: function(features) {
+    // jshint camelcase:false
     let names = [];
 
     for (let i = 0; i < features.length; i++) {
@@ -136,8 +132,8 @@ L.Indoor = L.Evented.extend({
       levels: this._levels,
       level: this._levels[0],
       names: names
-    })
-    this.fire("indoor:loaded", {id: this._leaflet_id})
+    });
+    this.fire('indoor:loaded', {id: this._leaflet_id});
   },
   addAreas: function(floorId, features) {
     let floorNum = this._data[floorId].properties.number;
@@ -146,7 +142,7 @@ L.Indoor = L.Evented.extend({
       let props = features[i].properties;
       this._data[props.id] = features[i];
       let area = this._getGeoJSON(features[i]);
-      this._areas[floorNum].addLayer(area)
+      this._areas[floorNum].addLayer(area);
       area.addTo(map);
       let point = area.getCenter();
       area.remove();
@@ -155,11 +151,11 @@ L.Indoor = L.Evented.extend({
           html: props.name,
           iconSize: [60, 20],
           bgPos: [30, 10],
-          className: "leaflet-marker-poi"
+          className: 'leaflet-marker-poi'
         })
       });
       poi.bindPopup(JSON.stringify(props));
-      this._pois[floorNum].addLayer(poi)
+      this._pois[floorNum].addLayer(poi);
     }
     if(map.hasLayer(this._areas[floorNum])) {
       map.removeLayer(this._areas[floorNum]);
@@ -171,7 +167,7 @@ L.Indoor = L.Evented.extend({
     for (let i  = 0; i < features.length; i ++) {
       let props = features[i].properties;
       this._data[props.id] = features[i];
-      this._areas[floorNum].addLayer(this._getGeoJSON(features[i]))
+      this._areas[floorNum].addLayer(this._getGeoJSON(features[i]));
     }
   },
   addPois: function(floorId, features) {
@@ -179,15 +175,15 @@ L.Indoor = L.Evented.extend({
     for (let i  = 0; i < features.length; i ++) {
       let props = features[i].properties;
       this._data[props.id] = features[i];
-      this._areas[floorNum].addLayer(this._getGeoJSON(features[i]))
+      this._areas[floorNum].addLayer(this._getGeoJSON(features[i]));
     }
   },
   addTo: function (map) {
-    this._map = map
+    this._map = map;
 
     if (this._level === null) {
       if (this._levels.length !== 0) {
-        this._level = this._levels[0]
+        this._level = this._levels[0];
       }
     }
 
@@ -200,61 +196,62 @@ L.Indoor = L.Evented.extend({
     }
   },
   remove: function () {
-    this._map.removeLayer(this._floors[this._level])
-    this._map.removeLayer(this._areas[this._level])
-    this._map.removeLayer(this._lines[this._level])
-    this._map.removeLayer(this._pois[this._level])
+    this._map.removeLayer(this._floors[this._level]);
+    this._map.removeLayer(this._areas[this._level]);
+    this._map.removeLayer(this._lines[this._level]);
+    this._map.removeLayer(this._pois[this._level]);
 
     this._levelControl.remove();
-    this._map = null
+    this._map = null;
   },
   setLevel: function (newLevel) {
-    let oldLevel = this._level
+    let oldLevel = this._level;
     if (oldLevel === newLevel) {
-      return
+      return;
     }
 
-    this._level = newLevel
+    this._level = newLevel;
 
     if (this._map !== null) {
-      this._map.removeLayer(this._areas[oldLevel])
-      this._map.removeLayer(this._floors[oldLevel])
-      this._map.removeLayer(this._lines[oldLevel])
-      this._map.removeLayer(this._pois[oldLevel])
+      this._map.removeLayer(this._areas[oldLevel]);
+      this._map.removeLayer(this._floors[oldLevel]);
+      this._map.removeLayer(this._lines[oldLevel]);
+      this._map.removeLayer(this._pois[oldLevel]);
 
-      this._map.addLayer(this._floors[newLevel])
-      this._map.addLayer(this._areas[newLevel])
-      this._map.addLayer(this._lines[newLevel])
-      this._map.addLayer(this._pois[newLevel])
+      this._map.addLayer(this._floors[newLevel]);
+      this._map.addLayer(this._areas[newLevel]);
+      this._map.addLayer(this._lines[newLevel]);
+      this._map.addLayer(this._pois[newLevel]);
     }
 
-    this.fire('indoor:level', {level: this._level})
+    this.fire('indoor:level', {level: this._level});
   },
   resetStyle: function (layer) {
     // reset any custom styles
-    layer.options = layer.defaultOptions
-    this._setLayerStyle(layer, this.options.style)
-    return this
+    layer.options = layer.defaultOptions;
+    this._setLayerStyle(layer, this.options.style);
+    return this;
   },
   _getGeoJSON: function(feature) {
+    // jshint camelcase:false
     this._geojson.addData(feature);
     let layer = this._geojson.getLayers()[0];
     this._geojson.removeLayer(layer);
     
     layer._leaflet_id = feature.id;
-    return layer
+    return layer;
   },
   _setLayerStyle: function (layer, style) {
     if (typeof style === 'function') {
-      style = style(layer.feature)
+      style = style(layer.feature);
     }
     if (layer.setStyle) {
-      layer.setStyle(style)
+      layer.setStyle(style);
     }
   }
-})
+});
 
 L.indoor = function (data, options) {
-  return new L.Indoor(data, options)
-}
+  return new L.Indoor(data, options);
+};
 

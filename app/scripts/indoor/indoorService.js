@@ -140,22 +140,25 @@ angular.module('CooperativeIndoorMap')
           let features = [];
           if(indoor) {
             let level = indoor._level;
-            indoor._areas[level].eachLayer(function (layer) {
-              features.push(layer.feature);
-            });
-            
-            indoor._lines[level].eachLayer(function (layer) {
-              features.push(layer.feature);
-            });
-            
-            indoor._pois[level].eachLayer(function (layer) {
-              if(layer.id && layer.properties){
-                features.push(layer.feature);
-              }
-            });
-            // features = features.concat(indoor._areas[level].getLayers());
-            // features = features.concat(indoor._lines[level].getLayers());
-            // features = features.concat(indoor._pois[level].getLayers());
+            // indoor._areas[level].eachLayer(function (layer) {
+            //   features.push(layer.feature);
+            // });
+            //
+            // indoor._lines[level].eachLayer(function (layer) {
+            //   features.push(layer.feature);
+            // });
+            //
+            // indoor._pois[level].eachLayer(function (layer) {
+            //   if(layer.id && layer.properties){
+            //     features.push(layer.feature);
+            //   }
+            // });
+            features = features.concat(indoor._areas[level].getLayers());
+            features = features.concat(indoor._lines[level].getLayers());
+            features = features.concat(indoor._pois[level].getLayers());
+            for (let i = 0; i < features.length; i++) {
+              features[i] = features[i].feature;
+            }
           }
           return features;
         },
