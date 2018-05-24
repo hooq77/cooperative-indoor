@@ -145,8 +145,8 @@ angular.module('CooperativeIndoorMap')
           DrawEditHandler.initDrawEditHandler(map, drawnItems, $scope.$parent, drawControl);
 
           //Initialize the map synchronization (handles all Websocket related sync stuff)
-          SynchronizeMap.init(map, $scope.$parent, drawnItems);
-
+          // SynchronizeMap.init(map, $scope.$parent, drawnItems);
+          $scope.$parent.drawnItems = drawnItems;
           //Pass the map instance to the DataImporter
           DataImport.init(map, drawnItems);
         }

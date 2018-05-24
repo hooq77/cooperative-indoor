@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('CooperativeIndoorMap')
-  .directive('sidebar', ['$compile', 'MapHandler','Users', 'IndoorHandler',
-    function($compile, MapHandler, Users, IndoorHandler) {
+  .directive('sidebar', ['$rootScope', '$compile', 'SynchronizeMap', 'MapHandler','Users', 'IndoorHandler',
+    function($rootScope, $compile, SynchronizeMap, MapHandler, Users, IndoorHandler) {
       return {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         templateUrl: 'partials/sidebar',
@@ -10,6 +10,27 @@ angular.module('CooperativeIndoorMap')
         link: function postLink($scope) {
           var map = window._map;
           var sidebar = window._sidebar = L.control.sidebar('sidebar').addTo(map);
+          
+          $scope.isLogin = false;
+          $scope.username = '';
+          $scope.password = '';
+          function startMap() {
+            $rootScope.userName = $scope.username;
+            $scope.isLogin = true;
+            SynchronizeMap.init(map, $rootScope, $rootScope.drawnItems);
+            console.log($scope.username);
+            console.log($scope.password);
+          }
+  
+          $scope.startClick = function() {
+            startMap();
+          };
+  
+          $scope.startWithKey = function(e) {
+            if (e.keyCode === 13) {
+              startMap();
+            }
+          };
           /**
            * 监听用户列表与监听用户按键的响应函数
            */

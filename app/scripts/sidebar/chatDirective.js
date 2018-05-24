@@ -12,7 +12,6 @@ angular.module('CooperativeIndoorMap')
           $scope.messages = [];
           $scope.chatMessage = '';
           var mapId = $scope.$parent.mapId;
-          var userName = $scope.$parent.userName;
 
           /**
            * 通过WebSocket发送会话消息
@@ -20,6 +19,7 @@ angular.module('CooperativeIndoorMap')
            */
 
           function sendMessage(message) {
+            var userName = $scope.$parent.userName;
             message = {
               'message': message,
               'user': userName,

@@ -22,22 +22,23 @@
         <div class="sidebar-pane" id="user">
             <h1 class="sidebar-header">用户<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
             <div class="sidebar-body">
-                <!--<div class="startContainer">-->
-                    <!--<input type="text" ng-model="mapIdInput" placeholder="用户名" ng-keypress="startWithKey($event)" maxlength="15">-->
-                    <!--<input type="text" ng-model="userInput" placeholder="密码" ng-keypress="startWithKey($event)" maxlength="15">-->
-                    <!--<input type="button" class="btn btn-default" ng-click="startClick()" value="注册">-->
-                    <!--<input type="button" class="btn btn-default" ng-click="startClick()" value="登录">-->
-                <!--</div>-->
-                <div class="users">
-                    <div class="btn btn-default" ng-class="{'watching': isWatchingAll}" ng-click="watchAll()"
-                         title="Your map will automatically change if other users zoom or pan in their map so you can see what they are editing.">
-                        追踪所有用户视图
-                    </div>
-                    <div class="btn btn-default" ng-click="getAllUserBounds()" style="position: absolute; right: 0;"
-                         title="Displays the map extent of all users.">显示所有用户工作区
-                    </div>
+                <div class="startContainer" ng-show="!isLogin">
+                    <input type="text" ng-model="username" placeholder="用户名" ng-keypress="startWithKey($event)" maxlength="15">
+                    <input type="password" ng-model="password" placeholder="密码" ng-keypress="startWithKey($event)" maxlength="15">
+                    <input type="button" class="btn btn-default" ng-click="startClick()" value="注册">
+                    <input type="button" class="btn btn-default" ng-click="startClick()" value="登录">
+                </div>
+                <div ng-show="isLogin">
+                    <div class="users">
+                        <div class="btn btn-default" ng-class="{'watching': isWatchingAll}" ng-click="watchAll()"
+                             title="Your map will automatically change if other users zoom or pan in their map so you can see what they are editing.">
+                            追踪所有用户视图
+                        </div>
+                        <div class="btn btn-default" ng-click="getAllUserBounds()" style="position: absolute; right: 0;"
+                             title="Displays the map extent of all users.">显示所有用户工作区
+                        </div>
 
-                    <div ng-repeat="(key, value) in users">
+                        <div ng-repeat="(key, value) in users">
                         <span ng-if="value.name !== userName" style="display: inline-block;">
                             <div class="btn btn-default" ng-class="{'watching': watchUsers[key]}"
                                  ng-click="watchUser(key, $event)"
@@ -46,9 +47,10 @@
                                  title="Displays the map extent the user is currently able to see.">显示工作区</div>
                             <span style="border-left: solid {{value.color}}; padding-left: 3px; display: inline-block;">{{value.name}}</span>
                         </span>
+                        </div>
                     </div>
+                    <chat></chat>
                 </div>
-                <chat></chat>
             </div>
         </div>
 
